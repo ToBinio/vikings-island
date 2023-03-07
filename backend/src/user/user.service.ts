@@ -23,6 +23,7 @@ export function UserLogin(loginRequest: UserLoginRequest): string | UserLoginErr
 
     let user = getUser(index);
 
+    //todo hash once more
     if (user.password != loginRequest.password) return UserLoginError.wrongPassword;
 
     return generateToken(user.name, index);

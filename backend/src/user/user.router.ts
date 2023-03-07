@@ -14,6 +14,7 @@ export function getUserRouter(): Router {
         } else {
             res.status(403)
         }
+
         res.end();
     })
 
