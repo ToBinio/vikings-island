@@ -1,0 +1,17 @@
+### login
+POST localhost:3000/api/user/login
+Content-Type: application/json
+
+{
+  "name": "huff",
+  "password": "123"
+}
+
+### register
+POST localhost:3000/api/user/register
+Content-Type: application/json
+
+{
+  "name": "huff",
+  "password": "123"
+}
