@@ -1,6 +1,6 @@
 import {Router} from "express";
 import {UserLogin, UserLoginError, UserRegister} from "./user.service";
-import {UserLoginRequest, UserLoginResponse} from "../../../types/user";
+import {UserLoginRequest} from "../../../types/user";
 
 export function getUserRouter(): Router {
     let router = Router();
@@ -10,7 +10,7 @@ export function getUserRouter(): Router {
 
         if (token) {
             res.status(200);
-            res.send({token: token} as UserLoginResponse)
+            res.send(token)
         } else {
             res.status(403)
         }
@@ -24,10 +24,10 @@ export function getUserRouter(): Router {
         if (token == UserLoginError.userNameNotFound) {
             res.status(404);
         } else if (token == UserLoginError.wrongPassword) {
-            res.status(401);
+            res.status(409);
         } else {
             res.status(200);
-            res.send({token: token} as UserLoginResponse)
+            res.send(token)
         }
 
         res.end();

@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
-import {UserLoginRequest, UserLoginResponse} from "../../../../../types/user";
+import {UserLoginRequest} from "../../../../../types/user";
 import {Observable} from "rxjs";
 import {hashPassword} from "../loginUtil";
 
@@ -25,11 +25,11 @@ export class LoginFormComponent {
 
     this.sendDataToBackend({userName: this.userName, password: passwordHash} as UserLoginRequest)
       .subscribe(res => {
-        this.token = res.token;
+        this.token = res;
       })
   }
 
-  sendDataToBackend(userLoginRequest: UserLoginRequest): Observable<UserLoginResponse> {
-    return this.httpClient.post<UserLoginResponse>(this.baseURL, userLoginRequest);
+  sendDataToBackend(userLoginRequest: UserLoginRequest): Observable<string> {
+    return this.httpClient.post<string>(this.baseURL, userLoginRequest, {responseType: "text" as 'json'});
   }
 }
