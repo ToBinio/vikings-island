@@ -2,6 +2,7 @@ import {Component} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {UserLoginRequest, UserLoginResponse} from "../../../../../types/user";
 import {Observable} from "rxjs";
+import {hashPassword} from "../loginUtil";
 
 @Component({
   selector: 'app-login-form',
@@ -20,7 +21,7 @@ export class LoginFormComponent {
   token: string = "";
 
   async login() {
-    let passwordHash = await this.hash(this.password);
+    let passwordHash = await hashPassword(this.password);
 
     this.sendDataToBackend({userName: this.userName, password: passwordHash} as UserLoginRequest)
       .subscribe(res => {
@@ -30,14 +31,5 @@ export class LoginFormComponent {
 
   sendDataToBackend(userLoginRequest: UserLoginRequest): Observable<UserLoginResponse> {
     return this.httpClient.post<UserLoginResponse>(this.baseURL, userLoginRequest);
-  }
-
-  async hash(password: string) {
-    const utf8 = new TextEncoder().encode(password);
-    const hashBuffer = await crypto.subtle.digest('SHA-256', utf8);
-    const hashArray = Array.from(new Uint8Array(hashBuffer));
-    return hashArray
-      .map((bytes) => bytes.toString(16).padStart(2, '0'))
-      .join('');
   }
 }
