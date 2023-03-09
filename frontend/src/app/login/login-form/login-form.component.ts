@@ -1,7 +1,6 @@
 import {Component} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {UserLoginRequest} from "../../../../../types/user";
-import {Observable} from "rxjs";
 import {hashPassword} from "../loginUtil";
 
 @Component({
@@ -23,13 +22,31 @@ export class LoginFormComponent {
   async login() {
     let passwordHash = await hashPassword(this.password);
 
-    this.sendDataToBackend({userName: this.userName, password: passwordHash} as UserLoginRequest)
-      .subscribe(res => {
-        this.token = res;
-      })
+    this.httpClient.post<string>(this.baseURL, {
+      userName: this.userName,
+      password: passwordHash
+    } as UserLoginRequest, {responseType: "text" as 'json'})
+      .subscribe(
+        res => {
+          console.log("ok")
+          this.token = res;
+        },
+        error => {
+          switch (error.status) {
+            case 404: {
+              console.log("user not found");
+              break;
+            }
+            case 409: {
+              console.log("wrong password");
+              break;
+            }
+            default: {
+              console.log("something went wrong");
+            }
+          }
+        }
+      )
   }
 
-  sendDataToBackend(userLoginRequest: UserLoginRequest): Observable<string> {
-    return this.httpClient.post<string>(this.baseURL, userLoginRequest, {responseType: "text" as 'json'});
-  }
 }
