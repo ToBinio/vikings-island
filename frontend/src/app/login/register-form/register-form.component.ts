@@ -28,20 +28,34 @@ export class RegisterFormComponent {
 
   async register() {
     if (!this.checkPasswordCorrectness(this.password, this.passwordCheck)) {
-      alert("the passwords are different")
+      console.log("the passwords are different");
       return;
     }
 
     let passwordHash = await hashPassword(this.password);
 
-    this.sendDataToBackend({userName: this.userName, password: passwordHash} as UserLoginRequest)
-      .subscribe(res => {
-        this.token = res;
-      })
-  }
-
-  sendDataToBackend(userLoginRequest: UserLoginRequest): Observable<string> {
-    return this.httpClient.post<string>(this.baseURL, userLoginRequest, {responseType: "text" as 'json'});
+    this.httpClient.post<string>(this.baseURL, {
+      userName: this.userName,
+      password: passwordHash
+    } as UserLoginRequest, {responseType: "text" as 'json'})
+      .subscribe({
+          next: res => {
+            console.log("ok")
+            this.token = res;
+          },
+          error: err => {
+            switch (err.status) {
+              case 403: {
+                console.error("user already in database");
+                break;
+              }
+              default: {
+                console.error("something went wrong");
+              }
+            }
+          }
+        }
+      )
   }
 
   @Output() changeForm: EventEmitter<void> = new EventEmitter<void>();
