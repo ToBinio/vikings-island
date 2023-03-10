@@ -3,6 +3,7 @@ import {HttpClient} from "@angular/common/http";
 import {UserLoginRequest} from "../../../../../types/user";
 import {hashPassword} from "../loginUtil";
 import {Router} from "@angular/router";
+import {environment} from "../../../environments/environment";
 
 @Component({
   selector: 'app-register-form',
@@ -13,9 +14,7 @@ export class RegisterFormComponent {
 
   constructor(private httpClient: HttpClient, private router: Router) {
   }
-
-  baseURL: string = "http://localhost:3000/api/user/register"
-
+  
   userName: string = "";
   password: string = "";
   passwordCheck: string = "";
@@ -36,7 +35,7 @@ export class RegisterFormComponent {
 
     let passwordHash = await hashPassword(this.password);
 
-    this.httpClient.post<string>(this.baseURL, {
+    this.httpClient.post<string>(environment.apiUrl + "/user/register", {
       userName: this.userName,
       password: passwordHash
     } as UserLoginRequest, {responseType: "text" as 'json'})
