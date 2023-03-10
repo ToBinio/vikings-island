@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, EventEmitter, Output} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {UserLoginRequest} from "../../../../../types/user";
 import {Observable} from "rxjs";
@@ -31,5 +31,11 @@ export class LoginFormComponent {
 
   sendDataToBackend(userLoginRequest: UserLoginRequest): Observable<string> {
     return this.httpClient.post<string>(this.baseURL, userLoginRequest, {responseType: "text" as 'json'});
+  }
+
+  @Output() changeForm: EventEmitter<void> = new EventEmitter<void>();
+
+  changeFormFunc() {
+    this.changeForm.emit();
   }
 }

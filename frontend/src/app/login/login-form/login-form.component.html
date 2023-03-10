@@ -1,5 +1,21 @@
-<div>
-  <input type="text" name="userName" id="userName" [(ngModel)]="userName">
-  <input type="password" name="password" id="password" [(ngModel)]="password">
-  <button (click)="login()">LOGIN</button>
+<div class="center">
+  <h1>Login</h1>
+
+  <form>
+    <div class="txt_field">
+      <input type="text" name="userName" id="userName" [(ngModel)]="userName" required>
+      <span></span>
+      <label>Username</label>
+    </div>
+
+    <div class="txt_field">
+      <input type="password" name="password" id="password" [(ngModel)]="password" required>
+      <span></span>
+      <label>Passwort</label>
+    </div>
+
+    <button class="loginButton" (click)="login()">Login</button>
+
+    <div class="signup_link">Noch kein Account? <a (click)="changeFormFunc()">Registrieren</a></div>
+  </form>
 </div>

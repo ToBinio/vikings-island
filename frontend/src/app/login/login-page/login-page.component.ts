@@ -13,4 +13,9 @@ export class LoginPageComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  isLoginFormActive: boolean = true;
+
+  changeActiveForm() {
+    this.isLoginFormActive = !this.isLoginFormActive;
+  }
 }
