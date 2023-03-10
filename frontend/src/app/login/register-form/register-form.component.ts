@@ -1,4 +1,5 @@
-import {Component} from '@angular/core';
+import {Component, EventEmitter, Output} from '@angular/core';
+import {Observable} from "rxjs";
 import {HttpClient} from "@angular/common/http";
 import {UserLoginRequest} from "../../../../../types/user";
 import {hashPassword} from "../loginUtil";
@@ -55,5 +56,11 @@ export class RegisterFormComponent {
           }
         }
       )
+  }
+
+  @Output() changeForm: EventEmitter<void> = new EventEmitter<void>();
+
+  changeFormFunc() {
+    this.changeForm.emit();
   }
 }

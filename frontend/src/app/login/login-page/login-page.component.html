@@ -1,2 +1,10 @@
-<app-register-form></app-register-form>
-<app-login-form></app-login-form>
+<div>
+  <h1>Vikings-Island</h1>
+
+  <div *ngIf="isLoginFormActive">
+    <app-login-form (changeForm)="changeActiveForm()"></app-login-form>
+  </div>
+  <div *ngIf="!isLoginFormActive">
+    <app-register-form (changeForm)="changeActiveForm()"></app-register-form>
+  </div>
+</div>

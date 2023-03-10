@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, EventEmitter, Output} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {UserLoginRequest} from "../../../../../types/user";
 import {hashPassword} from "../loginUtil";
@@ -47,5 +47,11 @@ export class LoginFormComponent {
           }
         }
       })
+  }
+
+  @Output() changeForm: EventEmitter<void> = new EventEmitter<void>();
+
+  changeFormFunc() {
+    this.changeForm.emit();
   }
 }

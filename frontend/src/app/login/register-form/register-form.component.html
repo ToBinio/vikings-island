@@ -1,6 +1,27 @@
-<div>
-  <input type="text" name="userName" id="userName" [(ngModel)]="userName" placeholder="userName">
-  <input type="password" name="password" id="password" [(ngModel)]="password" placeholder="password">
-  <input type="password" name="passwordCheck" id="passwordCheck" [(ngModel)]="passwordCheck" placeholder="password">
-  <button (click)="register()">REGISTER</button>
+<div class="center">
+  <h1>Register</h1>
+
+  <form>
+    <div class="txt_field">
+      <input type="text" name="userName" id="userName" [(ngModel)]="userName" required>
+      <span></span>
+      <label>Username</label>
+    </div>
+
+    <div class="txt_field">
+      <input type="password" name="password" id="password" [(ngModel)]="password" required>
+      <span></span>
+      <label>Passwort</label>
+    </div>
+
+    <div class="txt_field">
+      <input type="password" name="password2" id="password2" [(ngModel)]="passwordCheck" required>
+      <span></span>
+      <label>Passwort wiederholen</label>
+    </div>
+
+    <button class="registerButton" (click)="register()">Registrieren</button>
+
+    <div class="signup_link">Bereits einen Account? <a (click)="changeFormFunc()">Login</a></div>
+  </form>
 </div>
