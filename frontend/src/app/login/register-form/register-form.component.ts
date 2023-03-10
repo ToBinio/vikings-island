@@ -37,23 +37,23 @@ export class RegisterFormComponent {
       userName: this.userName,
       password: passwordHash
     } as UserLoginRequest, {responseType: "text" as 'json'})
-      .subscribe(
-        res => {
-          console.log("ok")
-          this.token = res;
-        },
-        error => {
-          switch (error.status) {
-            case 403: {
-              console.log("user already in database");
-              break;
-            }
-            default: {
-              console.log("something went wrong");
+      .subscribe({
+          next: res => {
+            console.log("ok")
+            this.token = res;
+          },
+          error: err => {
+            switch (err.status) {
+              case 403: {
+                console.error("user already in database");
+                break;
+              }
+              default: {
+                console.error("something went wrong");
+              }
             }
           }
         }
       )
   }
-
 }

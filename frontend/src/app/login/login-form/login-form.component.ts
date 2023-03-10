@@ -26,27 +26,26 @@ export class LoginFormComponent {
       userName: this.userName,
       password: passwordHash
     } as UserLoginRequest, {responseType: "text" as 'json'})
-      .subscribe(
-        res => {
+      .subscribe({
+        next: res => {
           console.log("ok")
           this.token = res;
         },
-        error => {
-          switch (error.status) {
+        error: err => {
+          switch (err.status) {
             case 404: {
-              console.log("user not found");
+              console.error("user not found");
               break;
             }
             case 409: {
-              console.log("wrong password");
+              console.error("wrong password");
               break;
             }
             default: {
-              console.log("something went wrong");
+              console.error("something went wrong");
             }
           }
         }
-      )
+      })
   }
-
 }
