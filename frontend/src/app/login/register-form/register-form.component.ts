@@ -1,8 +1,8 @@
 import {Component, EventEmitter, Output} from '@angular/core';
-import {Observable} from "rxjs";
 import {HttpClient} from "@angular/common/http";
 import {UserLoginRequest} from "../../../../../types/user";
 import {hashPassword} from "../loginUtil";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-register-form',
@@ -11,7 +11,7 @@ import {hashPassword} from "../loginUtil";
 })
 export class RegisterFormComponent {
 
-  constructor(private httpClient: HttpClient) {
+  constructor(private httpClient: HttpClient, private router: Router) {
   }
 
   baseURL: string = "http://localhost:3000/api/user/register"
@@ -29,6 +29,8 @@ export class RegisterFormComponent {
   async register() {
     if (!this.checkPasswordCorrectness(this.password, this.passwordCheck)) {
       console.log("the passwords are different");
+      this.userError = false;
+      this.passwordError = true;
       return;
     }
 
@@ -41,12 +43,16 @@ export class RegisterFormComponent {
       .subscribe({
           next: res => {
             console.log("ok")
+            this.userError = false;
+            this.passwordError = false;
             this.token = res;
+            this.router.navigateByUrl("/game").then();
           },
           error: err => {
             switch (err.status) {
               case 403: {
                 console.error("user already in database");
+                this.userError = true;
                 break;
               }
               default: {
@@ -59,6 +65,8 @@ export class RegisterFormComponent {
   }
 
   @Output() changeForm: EventEmitter<void> = new EventEmitter<void>();
+  userError: boolean = false;
+  passwordError: boolean = false;
 
   changeFormFunc() {
     this.changeForm.emit();

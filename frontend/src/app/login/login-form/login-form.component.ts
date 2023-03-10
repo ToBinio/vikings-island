@@ -2,6 +2,7 @@ import {Component, EventEmitter, Output} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {UserLoginRequest} from "../../../../../types/user";
 import {hashPassword} from "../loginUtil";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-login-form',
@@ -9,7 +10,7 @@ import {hashPassword} from "../loginUtil";
   styleUrls: ['./login-form.component.scss']
 })
 export class LoginFormComponent {
-  constructor(private httpClient: HttpClient) {
+  constructor(private httpClient: HttpClient, private router: Router) {
   }
 
   baseURL: string = "http://localhost:3000/api/user/login"
@@ -29,16 +30,22 @@ export class LoginFormComponent {
       .subscribe({
         next: res => {
           console.log("ok")
+          this.passwordError = false;
+          this.userError = false;
           this.token = res;
+          this.router.navigateByUrl("/game").then();
         },
         error: err => {
           switch (err.status) {
             case 404: {
               console.error("user not found");
+              this.userError = true;
               break;
             }
             case 409: {
               console.error("wrong password");
+              this.userError = false;
+              this.passwordError = true;
               break;
             }
             default: {
@@ -54,4 +61,7 @@ export class LoginFormComponent {
   changeFormFunc() {
     this.changeForm.emit();
   }
+
+  userError: boolean = false;
+  passwordError: boolean = false;
 }

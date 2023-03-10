@@ -3,6 +3,9 @@
 
   <form>
     <div class="txt_field">
+       <span *ngIf="userError" class="error" matTooltip="Dieser Benutzername ist bereits vorhanden"
+             matTooltipClass="custom-tooltip"
+             matTooltipPosition="below">&#9888;</span>
       <input type="text" name="userName" id="userName" [(ngModel)]="userName" required>
       <span></span>
       <label>Username</label>
@@ -15,6 +18,9 @@
     </div>
 
     <div class="txt_field">
+           <span *ngIf="passwordError" class="error" matTooltip="Die Passwörter stimmen nicht überein"
+                 matTooltipClass="custom-tooltip"
+                 matTooltipPosition="below">&#9888;</span>
       <input type="password" name="password2" id="password2" [(ngModel)]="passwordCheck" required>
       <span></span>
       <label>Passwort wiederholen</label>
