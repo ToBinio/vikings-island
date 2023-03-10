@@ -1,3 +1,5 @@
 export const environment = {
-  production: true
+  production: true,
+  //empty so it uses host url
+  apiUrl: ""
 };
