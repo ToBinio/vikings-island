@@ -1,5 +1,4 @@
 import {Component, EventEmitter, Output} from '@angular/core';
-import {Observable} from "rxjs";
 import {HttpClient} from "@angular/common/http";
 import {UserLoginRequest} from "../../../../../types/user";
 import {hashPassword} from "../loginUtil";
@@ -47,6 +46,10 @@ export class RegisterFormComponent {
             switch (err.status) {
               case 403: {
                 console.error("user already in database");
+                break;
+              }
+              case 406: {
+                console.error("userName not allowed");
                 break;
               }
               default: {

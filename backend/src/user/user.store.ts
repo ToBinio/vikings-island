@@ -10,8 +10,9 @@ export function getAllUserNames(): string[] {
     return names;
 }
 
-export function addUser(name: string, hash: string) {
+export function addUser(name: string, hash: string): number {
     users.push({name, password: hash})
+    return users.length - 1;
 }
 
 export function getUser(index: number): User {

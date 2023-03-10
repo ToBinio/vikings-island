@@ -3,14 +3,14 @@ import {addUser, getAllUserNames, getUser} from "./user.store";
 import {sign} from "jsonwebtoken";
 import {JWT_TOKEN} from "../index";
 
-export function UserRegister(loginRequest: UserLoginRequest): string | undefined {
-    let allUserNames = getAllUserNames();
+export function UserRegister(loginRequest: UserLoginRequest): string | UserRegisterError {
+    if (!isUserNameValid(loginRequest.userName)) return UserRegisterError.userNameNotAllowed
 
-    let index = allUserNames.indexOf(loginRequest.userName);
-    if (index != -1) return undefined;
+    let allUserNames = getAllUserNames();
+    if (allUserNames.includes(loginRequest.userName)) return UserRegisterError.userNameAlreadyTaken;
 
     //todo hash once more
-    addUser(loginRequest.userName, loginRequest.password);
+    let index = addUser(loginRequest.userName, loginRequest.password);
 
     return generateToken(loginRequest.userName, index);
 }
@@ -33,7 +33,17 @@ function generateToken(userName: string, id: number): string {
     return sign({name: userName, id: id}, JWT_TOKEN);
 }
 
+function isUserNameValid(userName: string): boolean {
+    let exp = new RegExp("^[a-zA-Z1-9._]+$", "gm");
+    return exp.test(userName)
+}
+
 export enum UserLoginError {
     userNameNotFound,
     wrongPassword
+}
+
+export enum UserRegisterError {
+    userNameAlreadyTaken,
+    userNameNotAllowed
 }
