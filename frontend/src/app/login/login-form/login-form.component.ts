@@ -3,6 +3,7 @@ import {HttpClient} from "@angular/common/http";
 import {UserLoginRequest} from "../../../../../types/user";
 import {hashPassword} from "../loginUtil";
 import {Router} from "@angular/router";
+import {environment} from "../../../environments/environment";
 
 @Component({
   selector: 'app-login-form',
@@ -13,8 +14,6 @@ export class LoginFormComponent {
   constructor(private httpClient: HttpClient, private router: Router) {
   }
 
-  baseURL: string = "http://localhost:3000/api/user/login"
-
   userName: string = "";
   password: string = "";
 
@@ -23,7 +22,7 @@ export class LoginFormComponent {
   async login() {
     let passwordHash = await hashPassword(this.password);
 
-    this.httpClient.post<string>(this.baseURL, {
+    this.httpClient.post<string>(environment.apiUrl + "/user/login", {
       userName: this.userName,
       password: passwordHash
     } as UserLoginRequest, {responseType: "text" as 'json'})
