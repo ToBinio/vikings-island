@@ -93,11 +93,11 @@ form .txt_field {
   font-weight: 700;
   cursor: pointer;
   outline: none;
+  transition: 0.5s;
 }
 
 .loginButton:hover {
   transform: scale(103%);
-  transition: 0.5s;
 }
 
 .signup_link {
