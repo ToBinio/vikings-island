@@ -7,6 +7,20 @@ export function getGamesRouter(): Router {
     let router = Router();
 
     router.get("/", (req, res) => {
+
+        let token = verifyToken(req.headers.authorization);
+
+        switch (token) {
+            case TokenVerifyError.MISSING: {
+                res.status(401).send()
+                return;
+            }
+            case TokenVerifyError.INVALID: {
+                res.status(403).send()
+                return;
+            }
+        }
+
         res.status(200);
         res.send(getAllGameInfos() as GameInfoResponse);
     })
