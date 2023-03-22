@@ -6,11 +6,28 @@ export function generateToken(token: TokenData): string {
 }
 
 export function decodeToken(token: string): TokenData | undefined {
-    try {
-        return verify(token, JWT_TOKEN) as TokenData;
-    } catch (err) {
-        return undefined
-    }
+    let verifiedToken = verify(token, JWT_TOKEN);
+
+    if (typeof verifiedToken === 'string') return undefined
+
+    return verifiedToken as TokenData
+}
+
+export function verifyToken(authorizationHeader: string | undefined): TokenData | TokenVerifyError {
+    if (authorizationHeader == undefined || authorizationHeader.split(" ").length < 2)
+        return TokenVerifyError.MISSING
+
+    let token = decodeToken(authorizationHeader!.split(" ")[1]);
+
+    if (token == undefined)
+        return TokenVerifyError.INVALID;
+
+    return token;
+}
+
+export enum TokenVerifyError {
+    MISSING,
+    INVALID
 }
 
 export interface TokenData {
