@@ -5,7 +5,7 @@ export function generateToken(token: TokenData): string {
     return sign(token, JWT_TOKEN);
 }
 
-export function decodeToken(token: string): TokenData | undefined {
+function decodeToken(token: string): TokenData | undefined {
     let verifiedToken = verify(token, JWT_TOKEN);
 
     if (typeof verifiedToken === 'string') return undefined

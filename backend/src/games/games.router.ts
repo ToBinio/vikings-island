@@ -21,8 +21,7 @@ export function getGamesRouter(): Router {
             }
         }
 
-        res.status(200);
-        res.send(getAllGameInfos() as GameInfoResponse);
+        res.status(200).send(getAllGameInfos() as GameInfoResponse);
     })
 
     router.post("/", (req, res) => {
