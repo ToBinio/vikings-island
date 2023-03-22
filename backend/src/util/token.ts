@@ -6,11 +6,11 @@ export function generateToken(token: TokenData): string {
 }
 
 function decodeToken(token: string): TokenData | undefined {
-    let verifiedToken = verify(token, JWT_TOKEN);
-
-    if (typeof verifiedToken === 'string') return undefined
-
-    return verifiedToken as TokenData
+    try {
+        return verify(token, JWT_TOKEN) as TokenData;
+    } catch (err) {
+        return undefined
+    }
 }
 
 export function verifyToken(authorizationHeader: string | undefined): TokenData | TokenVerifyError {

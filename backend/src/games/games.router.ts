@@ -12,11 +12,11 @@ export function getGamesRouter(): Router {
 
         switch (token) {
             case TokenVerifyError.MISSING: {
-                res.status(401).send()
+                res.sendStatus(401)
                 return;
             }
             case TokenVerifyError.INVALID: {
-                res.status(403).send()
+                res.sendStatus(403);
                 return;
             }
         }
@@ -30,11 +30,11 @@ export function getGamesRouter(): Router {
 
         switch (token) {
             case TokenVerifyError.MISSING: {
-                res.status(401).send()
+                res.sendStatus(401)
                 return;
             }
             case TokenVerifyError.INVALID: {
-                res.status(403).send()
+                res.sendStatus(403)
                 return;
             }
         }
@@ -43,7 +43,7 @@ export function getGamesRouter(): Router {
 
         let newGameId = createGame(gameCreateRequest, token);
 
-        res.status(200).send(newGameId);
+        res.status(200).json(newGameId);
     })
 
     return router;

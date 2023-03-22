@@ -1,0 +1,41 @@
+// example token eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MCwiaWF0IjoxNjc5NDg1MTQwfQ.EtQbLM1NU4HXo6jo1ywQ5LgWuSbz5f6uklCy_WBebJ4
+
+### Get all Games
+GET localhost:3000/api/games/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MCwiaWF0IjoxNjc5NDg1MTQwfQ.EtQbLM1NU4HXo6jo1ywQ5LgWuSbz5f6uklCy_WBebJ4
+
+### Get all Games - no Auth
+GET localhost:3000/api/games/
+
+### Get all Games - invalid Auth
+GET localhost:3000/api/games/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MCwiaWF0IjoxNjc5NDg1MTQwfQ.EtQbLM1asdasd6jo1ywQ5LgWuSbz5f6uklCy_WBebJ4
+
+### Create game Game
+POST localhost:3000/api/games/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MCwiaWF0IjoxNjc5NDg1ODk2fQ.S3bk-9etTNsWnCNh9aUPlzv-xnRUYdidtMMYGq86pKU
+Content-Type: application/json
+
+{
+  "timestamp": 5,
+  "name": "huff"
+}
+
+### Create game Game - no Auth
+GET localhost:3000/api/games/
+Content-Type: application/json
+
+{
+  "timestamp": 5,
+  "name": "huff"
+}
+
+### Create game Game - invalid Auth
+GET localhost:3000/api/games/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MCwiaWF0IjoxNjc5NDg1MTQwfQ.EtQbLM1asdasd6jo1ywQ5LgWuSbz5f6uklCy_WBebJ4
+Content-Type: application/json
+
+{
+  "timestamp": 5,
+  "name": "huff"
+}
