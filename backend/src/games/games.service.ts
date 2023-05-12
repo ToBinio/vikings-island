@@ -1,15 +1,31 @@
 import {GameCreateRequest, GameInfo} from "../../../types/games";
-import {addNewGame, addPLayerToGame, getAllGames} from "./games.store";
+import {GamesStore} from "./games.store";
 import {TokenData} from "../util/token";
 
-export function getAllGameInfos(): GameInfo[] {
-    return getAllGames();
-}
+export class GamesService {
 
-export function createGame(gameCreateRequest: GameCreateRequest, token: TokenData): number {
-    let gameId = addNewGame(gameCreateRequest);
+    static instance: GamesService | undefined;
 
-    addPLayerToGame(gameId, token.id);
+    static get(): GamesService {
+        if (GamesService.instance == undefined) {
+            GamesService.instance = new GamesService();
+        }
 
-    return gameId;
+        return GamesService.instance;
+    }
+
+    private constructor() {
+    }
+
+    getAllGames(): GameInfo[] {
+        return GamesStore.get().getAllGames();
+    }
+
+    createGame(gameCreateRequest: GameCreateRequest, token: TokenData): number {
+        let gameId = GamesStore.get().createGame(gameCreateRequest);
+
+        GamesStore.get().addPLayerToGame(gameId, token.id);
+
+        return gameId;
+    }
 }

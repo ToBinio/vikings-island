@@ -1,22 +1,39 @@
-let users: User[] = [];
+export class UserStore {
 
-export function getAllUserNames(): string[] {
-    let names = [];
+    static instance: UserStore | undefined;
 
-    for (let user of users) {
-        names.push(user.name);
+    static get(): UserStore {
+        if (UserStore.instance == undefined) {
+            UserStore.instance = new UserStore();
+        }
+
+        return UserStore.instance;
     }
 
-    return names;
-}
+    private constructor() {
+    }
 
-export function addUser(name: string, hash: string): number {
-    users.push({name, password: hash})
-    return users.length - 1;
-}
+    users: User[] = [];
 
-export function getUser(index: number): User {
-    return users[index];
+    getAllUserNames(): string[] {
+        let names = [];
+
+        for (let user of this.users) {
+            names.push(user.name);
+        }
+
+        return names;
+    }
+
+    addUser(name: string, hash: string): number {
+        this.users.push({name, password: hash})
+        return this.users.length - 1;
+    }
+
+    getUser(index: number): User {
+        return this.users[index];
+    }
+
 }
 
 
