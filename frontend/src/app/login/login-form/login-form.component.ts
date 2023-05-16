@@ -29,8 +29,6 @@ export class LoginFormComponent {
       .subscribe({
         next: res => {
           console.log("ok")
-          this.passwordError = false;
-          this.userError = false;
           this.token = res;
           this.router.navigateByUrl("/game").then();
         },
@@ -38,13 +36,12 @@ export class LoginFormComponent {
           switch (err.status) {
             case 404: {
               console.error("user not found");
-              this.userError = true;
+              this.error("Dieser Benutzer existiert nicht!")
               break;
             }
             case 409: {
               console.error("wrong password");
-              this.userError = false;
-              this.passwordError = true;
+              this.error("Das Passwort ist falsch!")
               break;
             }
             default: {
@@ -61,6 +58,13 @@ export class LoginFormComponent {
     this.changeForm.emit();
   }
 
-  userError: boolean = false;
-  passwordError: boolean = false;
+  error(msg: string) {
+    this.errorMSG = "";
+
+    setTimeout(() => {
+      this.errorMSG = msg;
+    }, 100)
+  }
+
+  errorMSG: string = "";
 }

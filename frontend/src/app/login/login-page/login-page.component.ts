@@ -18,4 +18,5 @@ export class LoginPageComponent implements OnInit {
   changeActiveForm() {
     this.isLoginFormActive = !this.isLoginFormActive;
   }
+
 }
