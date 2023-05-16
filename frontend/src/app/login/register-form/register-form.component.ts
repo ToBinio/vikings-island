@@ -53,7 +53,7 @@ export class RegisterFormComponent {
               }
               case 406: {
                 console.error("userName not allowed");
-                this.error("Dieser Benutzername ist nicht erlaubt!")
+                this.error("Dieser Benutzername ist nicht erlaubt! Verwenden Sie: ^[a-zA-Z1-9._]+$")
                 break;
               }
               default: {

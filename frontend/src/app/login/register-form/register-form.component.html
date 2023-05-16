@@ -9,12 +9,19 @@
     <div>
       <div class="flex">
         <div class="txt_field">
-          <input type="text" name="userName" id="userName" [(ngModel)]="userName" #user="ngModel" required>
+          <input type="text" name="userName" id="userName" [(ngModel)]="userName" #user="ngModel" required
+                 pattern="^[a-zA-Z1-9._]+$">
           <span></span>
           <label>Benutzername:</label>
         </div>
         <div *ngIf="user.hasError('required') && user.touched">
           <span class="error" matTooltip="Sie müssen einen Benutzernamen angeben!"
+                matTooltipClass="custom-tooltip"
+                matTooltipPosition="below">&#9888;
+          </span>
+        </div>
+        <div *ngIf="user.hasError('pattern') && user.touched">
+          <span class="error" matTooltip="Dieser Benutzername ist nicht erlaubt!"
                 matTooltipClass="custom-tooltip"
                 matTooltipPosition="below">&#9888;
           </span>
