@@ -1,12 +1,12 @@
 import {Router} from "express";
-import {UserLogin, UserLoginError, UserRegister, UserRegisterError} from "./user.service";
+import {UserLoginError, UserRegisterError, UserService} from "./user.service";
 import {UserLoginRequest} from "../../../types/user";
 
 export function getUserRouter(): Router {
     let router = Router();
 
     router.post("/register", (req, res) => {
-        let token = UserRegister(req.body as UserLoginRequest);
+        let token = UserService.get().register(req.body as UserLoginRequest);
 
         if (token == UserRegisterError.userNameAlreadyTaken) {
             res.status(403)
@@ -22,7 +22,7 @@ export function getUserRouter(): Router {
     })
 
     router.post("/login", (req, res) => {
-        let token = UserLogin(req.body as UserLoginRequest);
+        let token = UserService.get().login(req.body as UserLoginRequest);
 
         if (token == UserLoginError.userNameNotFound) {
             res.status(404);

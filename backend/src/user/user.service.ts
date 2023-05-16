@@ -1,36 +1,52 @@
 import {UserLoginRequest} from "../../../types/user";
-import {addUser, getAllUserNames, getUser} from "./user.store";
 import {generateToken} from "../util/token";
+import {UserStore} from "./user.store";
 
-export function UserRegister(loginRequest: UserLoginRequest): string | UserRegisterError {
-    if (!isUserNameValid(loginRequest.userName)) return UserRegisterError.userNameNotAllowed
+export class UserService {
 
-    let allUserNames = getAllUserNames();
-    if (allUserNames.includes(loginRequest.userName)) return UserRegisterError.userNameAlreadyTaken;
+    static instance: UserService | undefined;
 
-    //todo hash once more
-    let index = addUser(loginRequest.userName, loginRequest.password);
+    static get(): UserService {
+        if (UserService.instance == undefined) {
+            UserService.instance = new UserService();
+        }
 
-    return generateToken({name: loginRequest.userName, id: index});
-}
+        return UserService.instance;
+    }
 
-export function UserLogin(loginRequest: UserLoginRequest): string | UserLoginError {
-    let allUserNames = getAllUserNames();
+    private constructor() {
+    }
 
-    let index = allUserNames.indexOf(loginRequest.userName);
-    if (index == -1) return UserLoginError.userNameNotFound;
+    register(loginRequest: UserLoginRequest): string | UserRegisterError {
+        if (!this.isUserNameValid(loginRequest.userName)) return UserRegisterError.userNameNotAllowed
 
-    let user = getUser(index);
+        let allUserNames = UserStore.get().getAllUserNames();
+        if (allUserNames.includes(loginRequest.userName)) return UserRegisterError.userNameAlreadyTaken;
 
-    //todo hash once more
-    if (user.password != loginRequest.password) return UserLoginError.wrongPassword;
+        //todo hash once more
+        let index = UserStore.get().addUser(loginRequest.userName, loginRequest.password);
 
-    return generateToken({name: user.name, id: index});
-}
+        return generateToken({name: loginRequest.userName, id: index});
+    }
 
-function isUserNameValid(userName: string): boolean {
-    let exp = new RegExp("^[a-zA-Z1-9._]+$", "gm");
-    return exp.test(userName)
+    login(loginRequest: UserLoginRequest): string | UserLoginError {
+        let allUserNames = UserStore.get().getAllUserNames();
+
+        let index = allUserNames.indexOf(loginRequest.userName);
+        if (index == -1) return UserLoginError.userNameNotFound;
+
+        let user = UserStore.get().getUser(index);
+
+        //todo hash once more
+        if (user.password != loginRequest.password) return UserLoginError.wrongPassword;
+
+        return generateToken({name: user.name, id: index});
+    }
+
+    isUserNameValid(userName: string): boolean {
+        let exp = new RegExp("^[a-zA-Z1-9._]+$", "gm");
+        return exp.test(userName)
+    }
 }
 
 export enum UserLoginError {
@@ -42,3 +58,4 @@ export enum UserRegisterError {
     userNameAlreadyTaken,
     userNameNotAllowed
 }
+

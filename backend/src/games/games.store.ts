@@ -1,45 +1,62 @@
 import {GameCreateRequest, GameInfo} from "../../../types/games";
+import {GamesService} from "./games.service";
 
-let games: GameInfo[] = []
+export class GamesStore {
 
-let idCount = 0;
+    static instance: GamesStore | undefined;
 
-export function getAllGames(): GameInfo[] {
-    return games;
-}
+    static get(): GamesStore {
+        if (GamesStore.instance == undefined) {
+            GamesStore.instance = new GamesStore();
+        }
 
-export function addNewGame(gameCreateRequest: GameCreateRequest): number {
-
-    let gameInfo: GameInfo = {
-        id: ++idCount,
-        players: [],
-        name: gameCreateRequest.name,
-        timestamp: gameCreateRequest.timeStamp
-    }
-    games.push(gameInfo)
-
-    return idCount;
-}
-
-
-// false -> game could NOT be found
-// true  -> game could be found
-export function addPLayerToGame(gameId: number, playerId: number): boolean {
-    const gameInfo = getGameById(gameId);
-
-    if (gameInfo == undefined)
-        return false
-
-    gameInfo.players.push(playerId);
-
-    return true;
-}
-
-function getGameById(gameId: number): GameInfo | undefined {
-    for (let game of games) {
-        if (game.id == gameId)
-            return game
+        return GamesStore.instance;
     }
 
-    return undefined
+    private constructor() {
+    }
+    
+    games: GameInfo[] = []
+
+    idCount = 0;
+
+    getAllGames(): GameInfo[] {
+        return this.games;
+    }
+
+    createGame(gameCreateRequest: GameCreateRequest): number {
+
+        let gameInfo: GameInfo = {
+            id: ++this.idCount,
+            players: [],
+            name: gameCreateRequest.name,
+            timestamp: gameCreateRequest.timeStamp
+        }
+        this.games.push(gameInfo)
+
+        return this.idCount;
+    }
+
+
+    // false -> game could NOT be found
+    // true  -> game could be found
+    addPLayerToGame(gameId: number, playerId: number): boolean {
+        const gameInfo = this.getGameById(gameId);
+
+        if (gameInfo == undefined)
+            return false
+
+        gameInfo.players.push(playerId);
+
+        return true;
+    }
+
+    getGameById(gameId: number): GameInfo | undefined {
+        for (let game of this.games) {
+            if (game.id == gameId)
+                return game
+        }
+
+        return undefined
+    }
 }

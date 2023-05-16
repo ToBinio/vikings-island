@@ -1,7 +1,7 @@
 import {Router} from "express";
-import {createGame, getAllGameInfos} from "./games.service";
 import {GameCreateRequest, GameInfoResponse} from "../../../types/games";
 import {TokenVerifyError, verifyToken} from "../util/token";
+import {GamesService} from "./games.service";
 
 export function getGamesRouter(): Router {
     let router = Router();
@@ -21,7 +21,7 @@ export function getGamesRouter(): Router {
             }
         }
 
-        res.status(200).send(getAllGameInfos() as GameInfoResponse);
+        res.status(200).send(GamesService.get().getAllGames() as GameInfoResponse);
     })
 
     router.post("/", (req, res) => {
@@ -41,7 +41,7 @@ export function getGamesRouter(): Router {
 
         let gameCreateRequest: GameCreateRequest = req.body;
 
-        let newGameId = createGame(gameCreateRequest, token);
+        let newGameId = GamesService.get().createGame(gameCreateRequest, token);
 
         res.status(200).json(newGameId);
     })
