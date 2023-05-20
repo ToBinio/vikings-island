@@ -1,7 +1,8 @@
 import {DataTypes, Sequelize} from "sequelize";
 import {dbSettings} from "./dbSettings";
+import Account from "./models/account";
 
-export const sequelize = new Sequelize(dbSettings.DB_NAME, dbSettings.USER, dbSettings.PASSWORD, {
+export const sequelizeConnection = new Sequelize(dbSettings.DB_NAME, dbSettings.USER, dbSettings.PASSWORD, {
     host: dbSettings.HOST,
     dialect: "postgres",
     define: {
@@ -9,19 +10,7 @@ export const sequelize = new Sequelize(dbSettings.DB_NAME, dbSettings.USER, dbSe
     }
 });
 
-const Account = sequelize.define('account', {
-    id: {
-        type: DataTypes.INTEGER,
-        autoIncrement: true,
-        primaryKey: true
-    },
-    user_name: {
-        type: DataTypes.TEXT,
-        unique: true,
-        allowNull: false
-    },
-    password: {
-        type: DataTypes.TEXT,
-        allowNull: false
-    }
-})
+const dbInit  = async () => {
+     await Account.sync()
+}
+export default dbInit

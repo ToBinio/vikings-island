@@ -1,3 +1,6 @@
+import {sequelizeConnection} from "../db/db";
+import Account from "../db/models/account";
+
 export class UserStore {
 
     static instance: UserStore | undefined;
@@ -13,31 +16,48 @@ export class UserStore {
     private constructor() {
     }
 
-    users: User[] = [];
+    async getAllUserNames(): Promise<string[]> {
+        let accounts = await Account.findAll();
 
-    getAllUserNames(): string[] {
-        let names = [];
+        return accounts.map((account) => {
+            return account.user_name
+        })
+    }
 
-        for (let user of this.users) {
-            names.push(user.name);
+    async addUser(name: string, hash: string): Promise<User> {
+        let account = await Account.create({user_name: name, password: hash});
+
+        return {id: account.id, name: account.user_name, password: account.password}
+    }
+
+    async getUserByID(id: number): Promise<User | undefined> {
+        let account = await Account.findByPk(id);
+
+        if (account == null)
+            return undefined
+
+        return {id: account.id, name: account.user_name, password: account.password}
+    }
+
+    async getUserByName(name: string): Promise<User | undefined> {
+        let accounts = await Account.findAll({
+            where: {
+                user_name: name
+            }
+        });
+
+        if (accounts.length != 1) {
+            return undefined
         }
 
-        return names;
-    }
-
-    addUser(name: string, hash: string): number {
-        this.users.push({name, password: hash})
-        return this.users.length - 1;
-    }
-
-    getUser(index: number): User {
-        return this.users[index];
+        return {id: accounts[0].id, name: accounts[0].user_name, password: accounts[0].password}
     }
 
 }
 
 
 interface User {
+    id: number
     name: string,
     password: string,
 }
