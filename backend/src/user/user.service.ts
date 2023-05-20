@@ -23,7 +23,6 @@ export class UserService {
         let allUserNames = UserStore.get().getAllUserNames();
         if (allUserNames.includes(loginRequest.userName)) return UserRegisterError.userNameAlreadyTaken;
 
-        //todo hash once more
         let index = UserStore.get().addUser(loginRequest.userName, loginRequest.password);
 
         return generateToken({name: loginRequest.userName, id: index});
@@ -37,7 +36,6 @@ export class UserService {
 
         let user = UserStore.get().getUser(index);
 
-        //todo hash once more
         if (user.password != loginRequest.password) return UserLoginError.wrongPassword;
 
         return generateToken({name: user.name, id: index});
