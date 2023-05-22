@@ -17,30 +17,26 @@ export class UserService {
     private constructor() {
     }
 
-    register(loginRequest: UserLoginRequest): string | UserRegisterError {
+    async register(loginRequest: UserLoginRequest): Promise<string | UserRegisterError> {
         if (!this.isUserNameValid(loginRequest.userName)) return UserRegisterError.userNameNotAllowed
 
-        let allUserNames = UserStore.get().getAllUserNames();
-        if (allUserNames.includes(loginRequest.userName)) return UserRegisterError.userNameAlreadyTaken;
+        if ((await UserStore.get().getUserByName(loginRequest.userName)) != undefined)
+            return UserRegisterError.userNameAlreadyTaken;
 
-        //todo hash once more
-        let index = UserStore.get().addUser(loginRequest.userName, loginRequest.password);
+        let user = await UserStore.get().addUser(loginRequest.userName, loginRequest.password);
 
-        return generateToken({name: loginRequest.userName, id: index});
+        return generateToken({name: user.name, id: user.id});
     }
 
-    login(loginRequest: UserLoginRequest): string | UserLoginError {
-        let allUserNames = UserStore.get().getAllUserNames();
+    async login(loginRequest: UserLoginRequest): Promise<string | UserLoginError> {
+        let user = await UserStore.get().getUserByName(loginRequest.userName);
 
-        let index = allUserNames.indexOf(loginRequest.userName);
-        if (index == -1) return UserLoginError.userNameNotFound;
+        if (user == undefined)
+            return UserLoginError.userNameNotFound;
 
-        let user = UserStore.get().getUser(index);
-
-        //todo hash once more
         if (user.password != loginRequest.password) return UserLoginError.wrongPassword;
 
-        return generateToken({name: user.name, id: index});
+        return generateToken({name: user.name, id: user.id});
     }
 
     isUserNameValid(userName: string): boolean {
