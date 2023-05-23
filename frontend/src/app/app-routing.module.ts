@@ -2,10 +2,12 @@ import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from "@angular/router";
 import {LoginPageComponent} from "./login/login-page/login-page.component";
 import {GameMenuComponent} from "./game-menu/game-menu.component";
+import {GameComponent} from "./game/game.component";
 
 const routes: Routes = [
   {path: 'login', component: LoginPageComponent},
-  {path: 'game', component: GameMenuComponent},
+  {path: 'games', component: GameMenuComponent},
+  {path: 'game', component: GameComponent},
   {path: '', pathMatch: 'full', redirectTo: 'login'}
 ];
 

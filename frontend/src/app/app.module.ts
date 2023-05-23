@@ -9,6 +9,7 @@ import {MatTooltipModule} from "@angular/material/tooltip";
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {FormsModule} from "@angular/forms";
 import { GameMenuComponent } from './game-menu/game-menu.component';
+import { GameComponent } from './game/game.component';
 
 @NgModule({
   declarations: [
@@ -16,7 +17,8 @@ import { GameMenuComponent } from './game-menu/game-menu.component';
     LoginFormComponent,
     RegisterFormComponent,
     LoginPageComponent,
-    GameMenuComponent
+    GameMenuComponent,
+    GameComponent
   ],
   imports: [
     HttpClientModule,
