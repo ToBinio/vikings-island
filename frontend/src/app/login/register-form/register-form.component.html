@@ -6,7 +6,7 @@
       <div class="flex">
         <div class="txt_field">
           <input type="text" name="userName" id="userName" [(ngModel)]="userName" #user="ngModel" required
-                 pattern="^[a-zA-Z1-9._]+$">
+                 pattern="^[a-zA-Z1-9._]+$" [ngClass]="{'has-value': userName != ''}">
           <span></span>
           <label>Benutzername:</label>
         </div>
@@ -16,7 +16,7 @@
                 matTooltipPosition="below">&#9888;
           </span>
         </div>
-        <div *ngIf="user.hasError('pattern') && user.touched">
+        <div *ngIf="user.hasError('pattern')">
           <span class="error" matTooltip="Dieser Benutzername ist nicht erlaubt!"
                 matTooltipClass="custom-tooltip"
                 matTooltipPosition="below">&#9888;
@@ -26,7 +26,7 @@
 
       <div class="flex">
         <div class="txt_field">
-          <input type="password" name="password" id="password" [(ngModel)]="password" #passwd="ngModel" required>
+          <input type="password" name="password" id="password" [(ngModel)]="password" #passwd="ngModel" required [ngClass]="{'has-value': password != ''}">
           <span></span>
           <label>Passwort:</label>
         </div>
@@ -41,7 +41,7 @@
 
     <div class="flex">
       <div class="txt_field">
-        <input type="password" name="password2" id="password2" [(ngModel)]="passwordCheck" #passwd2="ngModel" required>
+        <input type="password" name="password2" id="password2" [(ngModel)]="passwordCheck" #passwd2="ngModel" required [ngClass]="{'has-value': passwordCheck != ''}">
         <span></span>
         <label>Passwort wiederholen:</label>
       </div>
