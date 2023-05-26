@@ -1,6 +1,6 @@
 <div class="center">
   <form #loginForm="ngForm" (ngSubmit)="login()">
-    <h1>Login</h1>
+    <h1>Anmelden</h1>
 
     <div>
       <div class="flex">
@@ -40,6 +40,6 @@
     </div>
 
     <button type="submit" [disabled]="loginForm.invalid">Anmelden</button>
-    <div class="signup_link">Noch kein Account? <a (click)="changeFormFunc()">Registrieren</a></div>
+    <div class="signup_link">Sie besitzen noch keinen Account? <a (click)="changeFormFunc()">Registrieren</a></div>
   </form>
 </div>
