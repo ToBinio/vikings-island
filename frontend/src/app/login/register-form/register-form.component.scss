@@ -38,8 +38,8 @@ body {
 form .txt_field {
   position: relative;
   border-bottom: 2px solid #adadad;
-  margin: 15px 0;
-  height: 50px;
+  margin: 20px 0;
+  height: 40px;
 }
 
 .txt_field input {
@@ -74,7 +74,7 @@ form .txt_field {
 
 .txt_field input:focus ~ label,
 .txt_field input:valid ~ label {
-  top: -5px;
+  top: -15px;
   color: #2691d9;
 }
 
@@ -129,7 +129,7 @@ button[type="submit"]:not(:disabled):hover {
 .error {
   position: absolute;
   left: 0;
-  margin-top: 40px;
+  margin-top: 30px;
   color: red;
   font-size: 20px;
 }
