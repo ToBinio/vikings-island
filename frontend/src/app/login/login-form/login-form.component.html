@@ -6,7 +6,7 @@
       <div class="flex">
         <div class="txt_field">
           <input type="text" name="userName" id="userName" [(ngModel)]="userName" #user="ngModel" required
-                 pattern="^[a-zA-Z1-9._]+$" [ngClass]="{'has-value': userName != ''}">
+                 pattern="^[a-zA-Z0-9._]+$" [ngClass]="{'has-value': userName != ''}">
           <span></span>
           <label>Benutzername:</label>
         </div>
