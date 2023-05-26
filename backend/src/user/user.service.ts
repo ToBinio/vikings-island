@@ -40,7 +40,7 @@ export class UserService {
     }
 
     isUserNameValid(userName: string): boolean {
-        let exp = new RegExp("^[a-zA-Z1-9._]+$", "gm");
+        let exp = new RegExp("^[a-zA-Z0-9._]+$", "gm");
         return exp.test(userName)
     }
 }
