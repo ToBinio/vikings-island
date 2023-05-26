@@ -1,5 +1,4 @@
-import {sequelizeConnection} from "../db/db";
-import Account from "../db/models/account";
+import {db} from "../db/db";
 
 export class UserStore {
 
@@ -17,7 +16,9 @@ export class UserStore {
     }
 
     async getAllUserNames(): Promise<string[]> {
-        let accounts = await Account.findAll();
+        let accounts = await db.selectFrom('users')
+            .select(["user_name"])
+            .execute();
 
         return accounts.map((account) => {
             return account.user_name
@@ -25,32 +26,37 @@ export class UserStore {
     }
 
     async addUser(name: string, hash: string): Promise<User> {
-        let account = await Account.create({user_name: name, password: hash});
+        let account = await db.insertInto('users')
+            .values({user_name: name, password: hash})
+            .returningAll()
+            .executeTakeFirstOrThrow();
 
         return {id: account.id, name: account.user_name, password: account.password}
     }
 
     async getUserByID(id: number): Promise<User | undefined> {
-        let account = await Account.findByPk(id);
 
-        if (account == null)
+        let account = await db.selectFrom('users')
+            .where('id', '=', id)
+            .selectAll()
+            .executeTakeFirst();
+
+        if (account == undefined)
             return undefined
 
         return {id: account.id, name: account.user_name, password: account.password}
     }
 
     async getUserByName(name: string): Promise<User | undefined> {
-        let accounts = await Account.findAll({
-            where: {
-                user_name: name
-            }
-        });
+        let account = await db.selectFrom('users')
+            .where('user_name', '=', name)
+            .selectAll()
+            .executeTakeFirst();
 
-        if (accounts.length != 1) {
+        if (account == undefined)
             return undefined
-        }
 
-        return {id: accounts[0].id, name: accounts[0].user_name, password: accounts[0].password}
+        return {id: account.id, name: account.user_name, password: account.password}
     }
 
 }

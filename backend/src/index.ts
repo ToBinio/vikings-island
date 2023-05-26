@@ -3,8 +3,6 @@ import * as dotenv from "dotenv";
 import express from "express";
 import {getUserRouter} from "./user/user.router";
 import {getGamesRouter} from "./games/games.router";
-import db, {sequelizeConnection} from "./db/db";
-import dbInit from "./db/db";
 
 dotenv.config();
 const PORT: number = parseInt(process.env.PORT as string, 10);
@@ -27,11 +25,6 @@ server.get("/", (req, res) => {
 server.use("/api/user/", getUserRouter())
 server.use("/api/games/", getGamesRouter())
 
-dbInit().then(() => {
-    console.log(`DB init`);
-
-    server.listen(PORT, () => {
-        console.log(`Listening on port ${PORT}`);
-    })
+server.listen(PORT, () => {
+    console.log(`Listening on port ${PORT}`);
 })
-
