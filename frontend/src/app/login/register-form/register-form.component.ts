@@ -4,6 +4,7 @@ import {UserLoginRequest} from "../../../../../types/user";
 import {hashPassword} from "../loginUtil";
 import {Router} from "@angular/router";
 import {environment} from "../../../environments/environment";
+import {LoginService} from "../login.service";
 
 @Component({
   selector: 'app-register-form',
@@ -12,7 +13,7 @@ import {environment} from "../../../environments/environment";
 })
 export class RegisterFormComponent {
 
-  constructor(private httpClient: HttpClient, private router: Router) {
+  constructor(private httpClient: HttpClient, private router: Router, private loginService: LoginService) {
   }
 
   userName: string = "";
@@ -73,12 +74,10 @@ export class RegisterFormComponent {
   }
 
   error(msg: string) {
-    this.errorMSG = "";
+    this.loginService.errorMSG = "";
 
     setTimeout(() => {
-      this.errorMSG = msg;
+      this.loginService.errorMSG = msg;
     }, 100)
   }
-
-  errorMSG: string = "";
 }

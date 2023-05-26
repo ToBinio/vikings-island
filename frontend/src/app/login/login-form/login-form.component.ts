@@ -4,6 +4,7 @@ import {UserLoginRequest} from "../../../../../types/user";
 import {hashPassword} from "../loginUtil";
 import {Router} from "@angular/router";
 import {environment} from "../../../environments/environment";
+import {LoginService} from "../login.service";
 
 @Component({
   selector: 'app-login-form',
@@ -11,7 +12,7 @@ import {environment} from "../../../environments/environment";
   styleUrls: ['./login-form.component.scss']
 })
 export class LoginFormComponent {
-  constructor(private httpClient: HttpClient, private router: Router) {
+  constructor(private httpClient: HttpClient, private router: Router, private loginService: LoginService) {
   }
 
   userName: string = "";
@@ -59,12 +60,11 @@ export class LoginFormComponent {
   }
 
   error(msg: string) {
-    this.errorMSG = "";
+    this.loginService.errorMSG = "";
 
     setTimeout(() => {
-      this.errorMSG = msg;
-    }, 100)
+      this.loginService.errorMSG = msg;
+    }, 100);
   }
 
-  errorMSG: string = "";
 }

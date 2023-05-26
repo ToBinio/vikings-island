@@ -1,3 +1,7 @@
+<div id="backendErr" *ngIf="loginService.errorMSG != ''">
+  <app-alert [message]="loginService.errorMSG"></app-alert>
+</div>
+
 <div>
   <h1>Vikings Island</h1>
 
