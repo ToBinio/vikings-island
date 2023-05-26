@@ -5,6 +5,7 @@ import {hashPassword} from "../loginUtil";
 import {Router} from "@angular/router";
 import {environment} from "../../../environments/environment";
 import {LoginService} from "../login.service";
+import {AlertService} from "../../alert-system/alert.service";
 
 @Component({
   selector: 'app-register-form',
@@ -13,7 +14,7 @@ import {LoginService} from "../login.service";
 })
 export class RegisterFormComponent {
 
-  constructor(private httpClient: HttpClient, private router: Router, private loginService: LoginService) {
+  constructor(private httpClient: HttpClient, private router: Router, private alertSystemService: AlertService) {
   }
 
   userName: string = "";
@@ -74,10 +75,6 @@ export class RegisterFormComponent {
   }
 
   error(msg: string) {
-    this.loginService.errorMSG = "";
-
-    setTimeout(() => {
-      this.loginService.errorMSG = msg;
-    }, 100)
+    this.alertSystemService.error([msg]);
   }
 }

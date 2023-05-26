@@ -4,7 +4,7 @@ import {UserLoginRequest} from "../../../../../types/user";
 import {hashPassword} from "../loginUtil";
 import {Router} from "@angular/router";
 import {environment} from "../../../environments/environment";
-import {LoginService} from "../login.service";
+import {AlertService} from "../../alert-system/alert.service";
 
 @Component({
   selector: 'app-login-form',
@@ -12,7 +12,7 @@ import {LoginService} from "../login.service";
   styleUrls: ['./login-form.component.scss']
 })
 export class LoginFormComponent {
-  constructor(private httpClient: HttpClient, private router: Router, private loginService: LoginService) {
+  constructor(private httpClient: HttpClient, private router: Router, private alertSystemService: AlertService) {
   }
 
   userName: string = "";
@@ -47,6 +47,7 @@ export class LoginFormComponent {
             }
             default: {
               console.error("something went wrong");
+              this.error("error")
             }
           }
         }
@@ -60,11 +61,7 @@ export class LoginFormComponent {
   }
 
   error(msg: string) {
-    this.loginService.errorMSG = "";
-
-    setTimeout(() => {
-      this.loginService.errorMSG = msg;
-    }, 100);
+    this.alertSystemService.error([msg]);
   }
 
 }

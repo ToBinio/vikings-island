@@ -1,0 +1,7 @@
+<div class="outer" >
+  <div class="alert" [class.hide]="alertService.animation" *ngFor="let message of alertService.errorMessages">
+<!--    <div *ngIf="message != ''" class="alert" [class.hide]="alertService.animation">-->
+      {{message}}
+<!--    </div>-->
+  </div>
+</div>
