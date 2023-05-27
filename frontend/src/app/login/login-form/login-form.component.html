@@ -1,26 +1,45 @@
 <div class="center">
-  <h1>Login</h1>
+  <form #loginForm="ngForm" (ngSubmit)="login()">
+    <h1>Anmelden</h1>
 
-  <form>
-    <div class="txt_field">
-      <span *ngIf="userError" class="error" matTooltip="Dieser Benutzername existiert nicht"
-            matTooltipClass="custom-tooltip"
-            matTooltipPosition="below">&#9888;</span>
-      <input type="text" name="userName" id="userName" [(ngModel)]="userName" required>
-      <span></span>
-      <label>Username</label>
+    <div>
+      <div class="flex">
+        <div class="txt_field">
+          <input type="text" name="userName" id="userName" [(ngModel)]="userName" #user="ngModel" required
+                 pattern="^[a-zA-Z0-9._]+$" [ngClass]="{'has-value': userName != ''}">
+          <span></span>
+          <label>Benutzername:</label>
+        </div>
+        <div *ngIf="user.hasError('required') && user.touched">
+          <span class="error" matTooltip="Sie müssen einen Benutzernamen angeben!"
+                matTooltipClass="custom-tooltip"
+                matTooltipPosition="below">&#9888;
+          </span>
+        </div>
+        <div *ngIf="user.hasError('pattern')">
+          <span class="error" matTooltip="Dieser Benutzername ist nicht erlaubt!"
+                matTooltipClass="custom-tooltip"
+                matTooltipPosition="below">&#9888;
+          </span>
+        </div>
+      </div>
+
+      <div class="flex">
+        <div class="txt_field">
+          <input type="password" name="password" id="password" [(ngModel)]="password" #passwd="ngModel" required [ngClass]="{'has-value': password != ''}">
+          <span></span>
+          <label>Passwort:</label>
+        </div>
+        <div *ngIf="passwd.hasError('required') && passwd.touched">
+          <span class="error" matTooltip="Sie müssen ein Passwort angeben!"
+                matTooltipClass="custom-tooltip"
+                matTooltipPosition="below">&#9888;
+          </span>
+        </div>
+      </div>
     </div>
-    <div class="txt_field">
-     <span *ngIf="passwordError" class="error" matTooltip="Das Passwort ist falsch"
-           matTooltipClass="custom-tooltip"
-           matTooltipPosition="below">&#9888;</span>
-      <input type="password" name="password" id="password" [(ngModel)]="password" required>
-      <span></span>
-      <label>Passwort</label>
-    </div>
 
-    <button class="loginButton" (click)="login()">Login</button>
-
-    <div class="signup_link">Noch kein Account? <a (click)="changeFormFunc()">Registrieren</a></div>
+    <button type="submit" [disabled]="loginForm.invalid">Anmelden</button>
+    <div class="signup_link">Sie besitzen noch keinen Account? <a (click)="changeFormFunc()">Registrieren</a></div>
   </form>
 </div>
