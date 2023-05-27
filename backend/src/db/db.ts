@@ -1,16 +1,25 @@
-import {DataTypes, Sequelize} from "sequelize";
 import {dbSettings} from "./dbSettings";
-import Account from "./models/account";
+import {Generated, Kysely, PostgresDialect} from "kysely";
+import {Pool} from "pg";
 
-export const sequelizeConnection = new Sequelize(dbSettings.DB_NAME, dbSettings.USER, dbSettings.PASSWORD, {
-    host: dbSettings.HOST,
-    dialect: "postgres",
-    define: {
-        timestamps: false
-    }
-});
+export interface UserTable {
+    id: Generated<number>,
 
-const dbInit  = async () => {
-     await Account.sync()
+    user_name: string,
+    password: string
 }
-export default dbInit
+
+interface Database {
+    users: UserTable
+}
+
+export const db = new Kysely<Database>({
+    dialect: new PostgresDialect({
+        pool: new Pool({
+            host: dbSettings.HOST,
+            database: dbSettings.DB_NAME,
+            password: dbSettings.PASSWORD,
+            user: dbSettings.USER
+        })
+    })
+})

@@ -4,6 +4,7 @@ import {UserLoginRequest} from "../../../../../types/user";
 import {hashPassword} from "../loginUtil";
 import {Router} from "@angular/router";
 import {environment} from "../../../environments/environment";
+import {AlertService} from "../../alert-system/alert.service";
 
 @Component({
   selector: 'app-login-form',
@@ -11,7 +12,7 @@ import {environment} from "../../../environments/environment";
   styleUrls: ['./login-form.component.scss']
 })
 export class LoginFormComponent {
-  constructor(private httpClient: HttpClient, private router: Router) {
+  constructor(private httpClient: HttpClient, private router: Router, private alertSystemService: AlertService) {
   }
 
   userName: string = "";
@@ -29,8 +30,6 @@ export class LoginFormComponent {
       .subscribe({
         next: res => {
           console.log("ok")
-          this.passwordError = false;
-          this.userError = false;
           this.token = res;
           this.router.navigateByUrl("/game").then();
         },
@@ -38,17 +37,17 @@ export class LoginFormComponent {
           switch (err.status) {
             case 404: {
               console.error("user not found");
-              this.userError = true;
+              this.alertSystemService.error("Dieser Benutzer existiert nicht!")
               break;
             }
             case 409: {
               console.error("wrong password");
-              this.userError = false;
-              this.passwordError = true;
+              this.alertSystemService.error("Das Passwort ist falsch!")
               break;
             }
             default: {
               console.error("something went wrong");
+              this.alertSystemService.error("error")
             }
           }
         }
@@ -60,7 +59,4 @@ export class LoginFormComponent {
   changeFormFunc() {
     this.changeForm.emit();
   }
-
-  userError: boolean = false;
-  passwordError: boolean = false;
 }

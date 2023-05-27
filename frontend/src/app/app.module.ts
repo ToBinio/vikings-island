@@ -7,9 +7,10 @@ import {LoginPageComponent} from './login/login-page/login-page.component';
 import {AppRoutingModule} from './app-routing.module';
 import {MatTooltipModule} from "@angular/material/tooltip";
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {FormsModule} from "@angular/forms";
-import { GameMenuComponent } from './game-menu/game-menu.component';
 import { GameComponent } from './game/game.component';
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {GameMenuComponent} from './game-menu/game-menu.component';
+import { AlertSystemComponent } from './alert-system/alert-system.component';
 
 @NgModule({
   declarations: [
@@ -18,6 +19,8 @@ import { GameComponent } from './game/game.component';
     RegisterFormComponent,
     LoginPageComponent,
     GameMenuComponent,
+    AlertSystemComponent
+    GameMenuComponent,
     GameComponent
   ],
   imports: [
@@ -25,7 +28,8 @@ import { GameComponent } from './game/game.component';
     AppRoutingModule,
     MatTooltipModule,
     BrowserAnimationsModule,
-    FormsModule
+    FormsModule,
+    ReactiveFormsModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
