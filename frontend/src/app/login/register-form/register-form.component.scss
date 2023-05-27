@@ -48,6 +48,13 @@ body {
         background: none;
         outline: none;
         color: black !important;
+
+        &:focus ~ label,
+        &.has-value ~ label,
+        &:valid {
+          top: -15px;
+          color: #2691d9;
+        }
       }
 
       label {
@@ -59,13 +66,6 @@ body {
         font-size: 16px;
         pointer-events: none;
         transition: .5s;
-
-        &:focus ~ label,
-        &.has-value ~ label,
-        &:valid {
-          top: -15px;
-          color: #2691d9;
-        }
       }
 
       span::before {
