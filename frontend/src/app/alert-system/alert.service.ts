@@ -1,35 +1,36 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AlertService {
 
-  constructor() { }
-
-  animation: boolean = false;
-  errorMessages: string[] = []
-
-  error(errorMessages: string[]) {
-    this.errorMessages = errorMessages;
-
-    for (let errorMessage of errorMessages) {
-      this.showMessage(errorMessage, 3000);
-    }
+  constructor() {
   }
 
-  showMessage(message: string, duration: number) {
+  errorMessages: Alert[] = []
+
+  error(errorMessage: string) {
+
+    let alert: Alert = {text: errorMessage, is_animating: false};
+
+    this.errorMessages.push(alert);
+
+    this.showMessage(alert, 3000);
+  }
+
+  showMessage(alert: Alert, duration: number) {
     setTimeout(() => {
-      this.animation = true;
+      alert.is_animating = true;
 
       setTimeout(() => {
-        this.hideMessage();
+        this.errorMessages.splice(0, 1);
       }, 1500);
     }, duration);
   }
+}
 
-  hideMessage() {
-    this.errorMessages.splice(0, 1);
-    this.animation = false;
-  }
+export interface Alert {
+  text: string,
+  is_animating: boolean
 }

@@ -1,5 +1,5 @@
 <div class="outer">
-  <div class="alert" [class.hide]="alertService.animation" *ngFor="let message of alertService.errorMessages">
-    {{message}}
+  <div class="alert" *ngFor="let message of alertService.errorMessages" [class.hide]="message.is_animating">
+    {{message.text}}
   </div>
 </div>

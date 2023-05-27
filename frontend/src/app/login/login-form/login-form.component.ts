@@ -37,17 +37,17 @@ export class LoginFormComponent {
           switch (err.status) {
             case 404: {
               console.error("user not found");
-              this.error("Dieser Benutzer existiert nicht!")
+              this.alertSystemService.error("Dieser Benutzer existiert nicht!")
               break;
             }
             case 409: {
               console.error("wrong password");
-              this.error("Das Passwort ist falsch!")
+              this.alertSystemService.error("Das Passwort ist falsch!")
               break;
             }
             default: {
               console.error("something went wrong");
-              this.error("error")
+              this.alertSystemService.error("error")
             }
           }
         }
@@ -59,9 +59,4 @@ export class LoginFormComponent {
   changeFormFunc() {
     this.changeForm.emit();
   }
-
-  error(msg: string) {
-    this.alertSystemService.error([msg]);
-  }
-
 }
