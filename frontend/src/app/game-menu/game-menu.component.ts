@@ -26,6 +26,7 @@ export class GameMenuComponent implements OnInit {
       next: res => {
         console.log("ok");
         this.gameMenu = res;
+        this.displayGames = this.gameMenu;
       },
       error: err => {
         switch (err.status) {
@@ -43,6 +44,10 @@ export class GameMenuComponent implements OnInit {
   }
 
   gameMenu: NewGames = [];
+  ownGameMenu: NewGames = [];
+
+  displayGames: NewGames = []
+
   tickSpeed: number = 0;
   gameName: string = "";
 
@@ -97,5 +102,16 @@ export class GameMenuComponent implements OnInit {
 
   admin() {
     this.router.navigateByUrl("/admin").then();
+  }
+
+  switchOn: boolean = false;
+
+  toggleSwitch() {
+    if (this.switchOn) {
+      this.displayGames = this.gameMenu
+    } else {
+      this.displayGames = this.ownGameMenu;
+    }
+    this.switchOn = !this.switchOn
   }
 }

@@ -11,8 +11,15 @@
     <button (click)="changeCreateActive()" class="btn">Neues Spiel</button>
   </div>
 
+  <div class="switch-container" class="btnCenter">
+    <p>Zeige nur eigene Spiele an</p>
+    <div class="switch" [class.on]="switchOn" (click)="toggleSwitch()">
+      <div class="slider"></div>
+    </div>
+  </div>
+
   <div class="btnCenter">
-    <button (click)="join(game.id)" *ngFor="let game of gameMenu" id="game">
+    <button (click)="join(game.id)" *ngFor="let game of displayGames" id="game">
       <h2>{{game.name}}</h2>
       <div>Spieler: {{game.players}}</div>
       <div>TickSpeed: {{game.tick}}</div>

@@ -167,6 +167,18 @@ button[type="submit"], .btn {
   top: 0;
   right: 0;
   margin: 10px;
+
+  button {
+    width: 80px;
+    height: 30px;
+  }
+}
+
+#toggleBtn {
+  position: absolute;
+  top: 40px;
+  right: 0;
+  margin: 10px;
 }
 
 .btn {
@@ -200,6 +212,38 @@ button[type="submit"], .btn {
   &:hover:not(:disabled) {
     transform: scale(1.03);
   }
+}
+
+.switch-container {
+  display: inline-block;
+}
+
+.switch {
+  width: 60px;
+  height: 30px;
+  background-color: #ccc;
+  border-radius: 15px;
+  position: relative;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.switch.on {
+  background-color: #4caf50;
+}
+
+.slider {
+  width: 26px;
+  height: 26px;
+  background-color: white;
+  border-radius: 50%;
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  transition: transform 0.3s;
+}
+.switch.on .slider {
+  transform: translateX(30px);
 }
 
 .signup_link {
