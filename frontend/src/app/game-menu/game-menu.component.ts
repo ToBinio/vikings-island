@@ -25,7 +25,7 @@ export class GameMenuComponent implements OnInit {
     this.httpClient.get<NewGames>(environment.apiUrl + "/new_game", {headers: headers}).subscribe({
       next: res => {
         console.log("ok");
-        this.games = res;
+        this.gameMenu = res;
       },
       error: err => {
         switch (err.status) {
@@ -42,7 +42,7 @@ export class GameMenuComponent implements OnInit {
     })
   }
 
-  games: NewGames = [];
+  gameMenu: NewGames = [];
   tickSpeed: number = 0;
   gameName: string = "";
 
@@ -93,5 +93,9 @@ export class GameMenuComponent implements OnInit {
     console.log(id)
     console.log(this.cookieService.get("token"))
     this.router.navigateByUrl("/waitList").then();
+  }
+
+  admin() {
+    this.router.navigateByUrl("/admin").then();
   }
 }
