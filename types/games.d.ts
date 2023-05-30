@@ -1,13 +1,13 @@
-export interface GameInfo {
+export interface NewGame {
     id: number,
-    timestamp: number,
+    tick: number,
     players: number[],
     name: string
 }
 
-export type GameInfoResponse = GameInfo[]
+export type newGames = NewGame[]
 
-export interface GameCreateRequest {
+export interface CreateNewGame {
     timeStamp: number,
     name: string
 }

@@ -1,4 +1,4 @@
-import {GameCreateRequest, GameInfo} from "../../../types/games";
+import {CreateNewGame, NewGame} from "../../../types/games";
 
 export class NewGameStore {
 
@@ -14,22 +14,22 @@ export class NewGameStore {
 
     private constructor() {
     }
-    
-    games: GameInfo[] = []
+
+    games: NewGame[] = []
 
     idCount = 0;
 
-    getAllGames(): GameInfo[] {
+    getAllGames(): NewGame[] {
         return this.games;
     }
 
-    createGame(gameCreateRequest: GameCreateRequest): number {
+    createGame(gameCreateRequest: CreateNewGame): number {
 
-        let gameInfo: GameInfo = {
+        let gameInfo: NewGame = {
             id: ++this.idCount,
             players: [],
             name: gameCreateRequest.name,
-            timestamp: gameCreateRequest.timeStamp
+            tick: gameCreateRequest.timeStamp
         }
         this.games.push(gameInfo)
 
@@ -50,9 +50,18 @@ export class NewGameStore {
         return true;
     }
 
-    getGameById(gameId: number): GameInfo | undefined {
+    getGameById(gameId: number): NewGame | undefined {
         for (let game of this.games) {
             if (game.id == gameId)
+                return game
+        }
+
+        return undefined
+    }
+
+    getGameByName(name: string): NewGame | undefined {
+        for (let game of this.games) {
+            if (game.name == name)
                 return game
         }
 
