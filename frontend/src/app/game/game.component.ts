@@ -46,7 +46,7 @@ export class GameComponent implements OnInit {
   }
 
   startEvent() {
-    const source = new EventSource(environment.apiUrl + '/events');
+    const source = new EventSource(environment.apiUrl + '/event');
 
     console.log("listening?");
 

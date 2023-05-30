@@ -25,7 +25,7 @@ server.get("/", (req, res) => {
 //add routers
 server.use("/api/user/", getUserRouter())
 server.use("/api/new_game/", getGamesRouter())
-server.use("/api/events/", getEventRouter())
+server.use("/api/event/", getEventRouter())
 
 server.listen(PORT, () => {
     console.log(`Listening on port ${PORT}`);
