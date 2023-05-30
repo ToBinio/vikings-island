@@ -57,6 +57,10 @@ body {
   overflow: hidden;
 }
 
+.blur {
+  filter: blur(5px);
+}
+
 .center {
   position: absolute;
   top: 50%;
@@ -76,6 +80,7 @@ body {
   form {
     padding: 40px;
     box-sizing: border-box;
+    filter: none;
 
     .txt_field {
       position: relative;

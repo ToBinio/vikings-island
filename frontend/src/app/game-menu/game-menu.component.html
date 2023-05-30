@@ -1,64 +1,66 @@
-<div class="island">
-  <h1 class="glitch">VIKINGS ISLAND</h1>
-</div>
+<div [class.blur]="createActive">
+  <div class="island">
+    <h1 class="glitch">VIKINGS ISLAND</h1>
+  </div>
 
-<div class="btnCenter" id="adminBtn">
-  <button (click)="admin()">Admin Site</button>
-</div>
+  <div class="btnCenter" id="adminBtn">
+    <button (click)="admin()">Admin Site</button>
+  </div>
 
-<div class="btnCenter">
-  <button (click)="changeCreateActive()" class="btn">Neues Spiel</button>
-</div>
+  <div class="btnCenter">
+    <button (click)="changeCreateActive()" class="btn">Neues Spiel</button>
+  </div>
 
-<div class="btnCenter">
-  <button (click)="join(game.id)" *ngFor="let game of gameMenu" id="game">
-    <h2>{{game.name}}</h2>
-    <div>Spieler: {{game.players}}</div>
-    <div>TickSpeed: {{game.tick}}</div>
-  </button>
+  <div class="btnCenter">
+    <button (click)="join(game.id)" *ngFor="let game of gameMenu" id="game">
+      <h2>{{game.name}}</h2>
+      <div>Spieler: {{game.players}}</div>
+      <div>TickSpeed: {{game.tick}}</div>
+    </button>
+  </div>
 </div>
 
 <div *ngIf="createActive" class="center">
-  <form #createGame="ngForm" (ngSubmit)="create()">
-    <h1>Neues Spiel erstellen</h1>
+<form #createGame="ngForm" (ngSubmit)="create()">
+  <h1>Neues Spiel erstellen</h1>
 
-    <div>
-      <div class="flex">
-        <div class="txt_field">
-          <input type="text" name="gameName" id="gameName" [(ngModel)]="gameName" #gameName2="ngModel" required
-                 pattern="^[a-zA-Z0-9._]+$" [ngClass]="{'has-value': gameName != ''}">
-          <span></span>
-          <label>LobbyName:</label>
-        </div>
-        <div *ngIf="gameName2.hasError('required') && gameName2.touched">
+  <div>
+    <div class="flex">
+      <div class="txt_field">
+        <input type="text" name="gameName" id="gameName" [(ngModel)]="gameName" #gameName2="ngModel" required
+               pattern="^[a-zA-Z0-9._]+$" [ngClass]="{'has-value': gameName != ''}">
+        <span></span>
+        <label>LobbyName:</label>
+      </div>
+      <div *ngIf="gameName2.hasError('required') && gameName2.touched">
           <span class="error" matTooltip="Sie müssen einen Spielnamen angeben!"
                 matTooltipClass="custom-tooltip"
                 matTooltipPosition="below">&#9888;
           </span>
-        </div>
-        <div *ngIf="gameName2.hasError('pattern')">
+      </div>
+      <div *ngIf="gameName2.hasError('pattern')">
           <span class="error" matTooltip="Dieser Spielname ist nicht erlaubt!"
                 matTooltipClass="custom-tooltip"
                 matTooltipPosition="below">&#9888;
           </span>
-        </div>
       </div>
+    </div>
 
-      <div class="flex">
-        <div class="txt_field">
-          <input type="number" name="tickSpeed" id="tickSpeed" [(ngModel)]="tickSpeed" #ticks2="ngModel" required class="has-value">
-          <span></span>
-          <label>TickSpeed:</label>
-        </div>
-        <div *ngIf="ticks2.hasError('required') && ticks2.touched">
+    <div class="flex">
+      <div class="txt_field">
+        <input type="number" name="tickSpeed" id="tickSpeed" [(ngModel)]="tickSpeed" #ticks2="ngModel" required class="has-value">
+        <span></span>
+        <label>TickSpeed:</label>
+      </div>
+      <div *ngIf="ticks2.hasError('required') && ticks2.touched">
           <span class="error" matTooltip="Sie müssen ein Tickspeed angeben!"
                 matTooltipClass="custom-tooltip"
                 matTooltipPosition="below">&#9888;
           </span>
-        </div>
       </div>
     </div>
+  </div>
 
-    <button type="submit" [disabled]="createGame.invalid">Spiel erstellen</button>
-  </form>
+  <button type="submit" [disabled]="createGame.invalid">Spiel erstellen</button>
+</form>
 </div>
