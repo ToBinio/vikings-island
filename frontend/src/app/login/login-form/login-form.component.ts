@@ -5,6 +5,7 @@ import {hashPassword} from "../loginUtil";
 import {Router} from "@angular/router";
 import {environment} from "../../../environments/environment";
 import {AlertService} from "../../alert-system/alert.service";
+import {CookieService} from "ngx-cookie-service";
 
 @Component({
   selector: 'app-login-form',
@@ -12,7 +13,7 @@ import {AlertService} from "../../alert-system/alert.service";
   styleUrls: ['./login-form.component.scss']
 })
 export class LoginFormComponent {
-  constructor(private httpClient: HttpClient, private router: Router, private alertSystemService: AlertService) {
+  constructor(private httpClient: HttpClient, private router: Router, private alertSystemService: AlertService, private cookieService: CookieService) {
   }
 
   userName: string = "";
@@ -31,6 +32,7 @@ export class LoginFormComponent {
         next: res => {
           console.log("ok")
           this.token = res;
+          this.cookieService.set("token", this.token);
           this.router.navigateByUrl("/game").then();
         },
         error: err => {

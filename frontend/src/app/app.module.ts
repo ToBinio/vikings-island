@@ -19,9 +19,9 @@ import { AlertSystemComponent } from './alert-system/alert-system.component';
     RegisterFormComponent,
     LoginPageComponent,
     GameMenuComponent,
-    AlertSystemComponent
+    AlertSystemComponent,
     GameMenuComponent,
-    GameComponent
+    GameComponent,
   ],
   imports: [
     HttpClientModule,
