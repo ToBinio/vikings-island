@@ -5,12 +5,13 @@ import {GameMenuComponent} from "./game-menu/game-menu.component";
 import {GameComponent} from "./game/game.component";
 import {WaitlistComponent} from "./waitlist/waitlist.component";
 import {AdminPanelComponent} from "./admin-panel/admin-panel.component";
+import {AuthGuard} from "./auth/auth.guard";
 
 const routes: Routes = [
   {path: 'login', component: LoginPageComponent},
-  {path: 'games', component: GameMenuComponent},
-  {path: 'game', component: GameComponent},
-  {path: 'waitList', component: WaitlistComponent},
+  {path: 'games', component: GameMenuComponent, canActivate: [AuthGuard]},
+  {path: 'game', component: GameComponent, canActivate: [AuthGuard]},
+  {path: 'waitList', component: WaitlistComponent, canActivate: [AuthGuard]},
   {path: 'admin', component: AdminPanelComponent},
   {path: '', pathMatch: 'full', redirectTo: 'login'}
 ];
@@ -21,6 +22,5 @@ const routes: Routes = [
 })
 
 export class AppRoutingModule {
-
 
 }

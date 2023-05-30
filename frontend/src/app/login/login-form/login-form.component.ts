@@ -6,6 +6,7 @@ import {Router} from "@angular/router";
 import {environment} from "../../../environments/environment";
 import {AlertService} from "../../alert-system/alert.service";
 import {CookieService} from "ngx-cookie-service";
+import {AuthService} from "../../auth/auth.service";
 
 @Component({
   selector: 'app-login-form',
@@ -13,7 +14,7 @@ import {CookieService} from "ngx-cookie-service";
   styleUrls: ['./login-form.component.scss']
 })
 export class LoginFormComponent {
-  constructor(private httpClient: HttpClient, private router: Router, private alertSystemService: AlertService, private cookieService: CookieService) {
+  constructor(private httpClient: HttpClient, private router: Router, private alertSystemService: AlertService, private cookieService: CookieService, private auth: AuthService) {
   }
 
   userName: string = "";
@@ -33,6 +34,7 @@ export class LoginFormComponent {
           console.log("ok")
           this.token = res;
           this.cookieService.set("token", this.token);
+          this.auth.isLoggedIn = true;
           this.router.navigateByUrl("/games").then();
         },
         error: err => {
