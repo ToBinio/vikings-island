@@ -7,6 +7,7 @@ import {LoginPageComponent} from './login/login-page/login-page.component';
 import {AppRoutingModule} from './app-routing.module';
 import {MatTooltipModule} from "@angular/material/tooltip";
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import { GameComponent } from './game/game.component';
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {GameMenuComponent} from './game-menu/game-menu.component';
 import { AlertSystemComponent } from './alert-system/alert-system.component';
@@ -19,6 +20,8 @@ import { AlertSystemComponent } from './alert-system/alert-system.component';
     LoginPageComponent,
     GameMenuComponent,
     AlertSystemComponent
+    GameMenuComponent,
+    GameComponent
   ],
   imports: [
     HttpClientModule,
