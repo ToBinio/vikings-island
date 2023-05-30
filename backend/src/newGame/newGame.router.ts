@@ -1,7 +1,7 @@
 import {Router} from "express";
-import {GameCreateRequest, GameInfoResponse} from "../../../types/games";
+import {CreateNewGame, newGames} from "../../../types/games";
 import {TokenVerifyError, verifyToken} from "../util/token";
-import {GamesService} from "./games.service";
+import {NewGameCreationError, NewGameService} from "./newGame.service";
 
 export function getGamesRouter(): Router {
     let router = Router();
@@ -21,7 +21,7 @@ export function getGamesRouter(): Router {
             }
         }
 
-        res.status(200).send(GamesService.get().getAllGames() as GameInfoResponse);
+        res.status(200).send(NewGameService.get().getAllGames() as newGames);
     })
 
     router.post("/", (req, res) => {
@@ -39,11 +39,20 @@ export function getGamesRouter(): Router {
             }
         }
 
-        let gameCreateRequest: GameCreateRequest = req.body;
+        let gameCreateRequest: CreateNewGame = req.body;
 
-        let newGameId = GamesService.get().createGame(gameCreateRequest, token);
+        let newGame = NewGameService.get().createGame(gameCreateRequest, token);
 
-        res.status(200).json(newGameId);
+        if (newGame.ok == undefined) {
+            switch (newGame.err!) {
+                case NewGameCreationError.gameNameAlreadyTaken: {
+                    res.sendStatus(406)
+                    break;
+                }
+            }
+        }
+
+        res.status(200).json(newGame.ok!);
     })
 
     return router;
