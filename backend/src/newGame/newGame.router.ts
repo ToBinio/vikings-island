@@ -8,17 +8,10 @@ export function getGamesRouter(): Router {
 
     router.get("/", (req, res) => {
 
-        let token = verifyToken(req.headers.authorization);
+        let token = handleRequest(req.headers.authorization, res);
 
-        switch (token) {
-            case TokenVerifyError.MISSING: {
-                res.sendStatus(401)
-                return;
-            }
-            case TokenVerifyError.INVALID: {
-                res.sendStatus(403);
-                return;
-            }
+        if (token == undefined) {
+            return
         }
 
         res.status(200).send(NewGameService.get().getAllGames() as NewGames);
@@ -26,17 +19,10 @@ export function getGamesRouter(): Router {
 
     router.post("/", (req, res) => {
 
-        let token = verifyToken(req.headers.authorization);
+        let token = handleRequest(req.headers.authorization, res);
 
-        switch (token) {
-            case TokenVerifyError.MISSING: {
-                res.sendStatus(401)
-                return;
-            }
-            case TokenVerifyError.INVALID: {
-                res.sendStatus(403)
-                return;
-            }
+        if (token == undefined) {
+            return
         }
 
         let gameCreateRequest: CreateNewGame = req.body;
