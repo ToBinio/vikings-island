@@ -1,16 +1,15 @@
 import {GameCreateRequest, GameInfo} from "../../../types/games";
-import {GamesService} from "./games.service";
 
-export class GamesStore {
+export class NewGameStore {
 
-    static instance: GamesStore | undefined;
+    static instance: NewGameStore | undefined;
 
-    static get(): GamesStore {
-        if (GamesStore.instance == undefined) {
-            GamesStore.instance = new GamesStore();
+    static get(): NewGameStore {
+        if (NewGameStore.instance == undefined) {
+            NewGameStore.instance = new NewGameStore();
         }
 
-        return GamesStore.instance;
+        return NewGameStore.instance;
     }
 
     private constructor() {
