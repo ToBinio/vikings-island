@@ -2,6 +2,7 @@ import {CreateNewGame, NewGame} from "../../../types/games";
 import {NewGameStore} from "./newGameStore";
 import {TokenData} from "../util/token";
 import {Result} from "../../../types/util";
+import {EventService} from "../event/event.service";
 
 export class NewGameService {
 
@@ -31,6 +32,7 @@ export class NewGameService {
         let gameId = NewGameStore.get().createGame(gameCreateRequest);
 
         NewGameStore.get().addPLayerToGame(gameId, token.id);
+        EventService.get().updateLobby(gameId)
 
         return {ok: gameId};
     }
