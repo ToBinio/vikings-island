@@ -1,1 +1,51 @@
-<h1>WEITERLEITUNG</h1>
+<button (click)="join(game.id)" *ngFor="let game of games">
+  <span>{{game.id}}</span>
+  <span>{{game.name}}</span>
+  <span>{{game.players}}</span>
+  <span>{{game.tick}}</span>
+</button>
+
+<div class="center">
+  <form #createGame="ngForm" (ngSubmit)="create()">
+    <h1>Neues Spiel erstellen</h1>
+
+    <div>
+      <div class="flex">
+        <div class="txt_field">
+          <input type="text" name="gameName" id="gameName" [(ngModel)]="gameName" #gameName2="ngModel" required
+                 pattern="^[a-zA-Z0-9._]+$" [ngClass]="{'has-value': gameName != ''}">
+          <span></span>
+          <label>gameName:</label>
+        </div>
+        <div *ngIf="gameName2.hasError('required') && gameName2.touched">
+          <span class="error" matTooltip="Sie müssen einen Spielnamen angeben!"
+                matTooltipClass="custom-tooltip"
+                matTooltipPosition="below">&#9888;
+          </span>
+        </div>
+        <div *ngIf="gameName2.hasError('pattern')">
+          <span class="error" matTooltip="Dieser Spielname ist nicht erlaubt!"
+                matTooltipClass="custom-tooltip"
+                matTooltipPosition="below">&#9888;
+          </span>
+        </div>
+      </div>
+
+      <div class="flex">
+        <div class="txt_field">
+          <input type="number" name="tickSpeed" id="tickSpeed" [(ngModel)]="tickSpeed" #ticks2="ngModel" required class="hasValue">
+          <span></span>
+          <label>TickSpeed:</label>
+        </div>
+        <div *ngIf="ticks2.hasError('required') && ticks2.touched">
+          <span class="error" matTooltip="Sie müssen ein Tickspeed angeben!"
+                matTooltipClass="custom-tooltip"
+                matTooltipPosition="below">&#9888;
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <button type="submit" [disabled]="createGame.invalid">Spiel erstellen</button>
+  </form>
+</div>

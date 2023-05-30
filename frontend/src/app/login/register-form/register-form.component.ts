@@ -44,7 +44,7 @@ export class RegisterFormComponent {
           next: res => {
             console.log("ok")
             this.token = res;
-            this.router.navigateByUrl("/game").then();
+            this.router.navigateByUrl("/games").then();
           },
           error: err => {
             switch (err.status) {

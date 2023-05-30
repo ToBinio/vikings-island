@@ -11,6 +11,7 @@ import { GameComponent } from './game/game.component';
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {GameMenuComponent} from './game-menu/game-menu.component';
 import { AlertSystemComponent } from './alert-system/alert-system.component';
+import { WaitlistComponent } from './waitlist/waitlist.component';
 
 @NgModule({
   declarations: [
@@ -22,6 +23,7 @@ import { AlertSystemComponent } from './alert-system/alert-system.component';
     AlertSystemComponent,
     GameMenuComponent,
     GameComponent,
+    WaitlistComponent,
   ],
   imports: [
     HttpClientModule,

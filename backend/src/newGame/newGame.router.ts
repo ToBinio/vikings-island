@@ -1,5 +1,5 @@
 import {Router} from "express";
-import {CreateNewGame, newGames} from "../../../types/games";
+import {CreateNewGame, NewGames} from "../../../types/games";
 import {TokenVerifyError, verifyToken} from "../util/token";
 import {NewGameCreationError, NewGameService} from "./newGame.service";
 
@@ -21,7 +21,7 @@ export function getGamesRouter(): Router {
             }
         }
 
-        res.status(200).send(NewGameService.get().getAllGames() as newGames);
+        res.status(200).send(NewGameService.get().getAllGames() as NewGames);
     })
 
     router.post("/", (req, res) => {

@@ -33,7 +33,7 @@ export class LoginFormComponent {
           console.log("ok")
           this.token = res;
           this.cookieService.set("token", this.token);
-          this.router.navigateByUrl("/game").then();
+          this.router.navigateByUrl("/games").then();
         },
         error: err => {
           switch (err.status) {
