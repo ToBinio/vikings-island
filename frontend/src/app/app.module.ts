@@ -18,8 +18,7 @@ import { AlertSystemComponent } from './alert-system/alert-system.component';
     LoginFormComponent,
     RegisterFormComponent,
     LoginPageComponent,
-    GameMenuComponent,
-    AlertSystemComponent
+    AlertSystemComponent,
     GameMenuComponent,
     GameComponent
   ],
