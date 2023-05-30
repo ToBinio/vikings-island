@@ -29,14 +29,9 @@ export class GameMenuComponent implements OnInit {
       },
       error: err => {
         switch (err.status) {
-          case 401: {
-            console.error("missing jwt token")
-            this.alertService.error("missing jwt token")
-            break
-          }
           case 403: {
-            console.error("invalid jwt token")
-            this.alertService.error("invalid jwt token")
+            console.error(err)
+            this.alertService.error(err)
             break
           }
           default: {
@@ -53,6 +48,12 @@ export class GameMenuComponent implements OnInit {
 
   id: number = 0;
 
+  createActive: boolean = false;
+
+  changeCreateActive() {
+    this.createActive = !this.createActive
+  }
+
   create() {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
@@ -67,22 +68,17 @@ export class GameMenuComponent implements OnInit {
         console.log("ok");
         this.id = res
         this.router.navigateByUrl("/waitList").then();
+        this.changeCreateActive()
       },
       error: err => {
         switch (err.status) {
-          case 401: {
-            console.error("missing jwt token")
-            this.alertService.error("missing jwt token")
-            break
-          }
           case 403: {
-            console.error("invalid jwt token")
-            this.alertService.error("invalid jwt token")
+            console.error(err)
+            this.alertService.error(err)
             break
           }
-          case 409: {
-            console.error("name already taken")
-            this.alertService.error("name already taken")
+          case 406: {
+            this.alertService.error(err)
             break
           }
           default: {

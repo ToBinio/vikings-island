@@ -1,11 +1,18 @@
-<button (click)="join(game.id)" *ngFor="let game of games">
-  <span>{{game.id}}</span>
-  <span>{{game.name}}</span>
-  <span>{{game.players}}</span>
-  <span>{{game.tick}}</span>
-</button>
-
 <div class="center">
+  <button (click)="changeCreateActive()" class="btn">Neues Spiel</button>
+</div>
+
+<div class="centerGames">
+  <button (click)="join(game.id)" *ngFor="let game of games">
+    <span>{{game.id}}</span>
+    <span>{{game.name}}</span>
+    <span>{{game.players}}</span>
+    <span>{{game.tick}}</span>
+  </button>
+
+</div>
+
+<div *ngIf="createActive" class="center">
   <form #createGame="ngForm" (ngSubmit)="create()">
     <h1>Neues Spiel erstellen</h1>
 

@@ -1,6 +1,6 @@
 import {Router} from "express";
 import {CreateNewGame, NewGames} from "../../../types/games";
-import {TokenVerifyError, verifyToken} from "../util/token";
+import {handleRequest, TokenVerifyError, verifyToken} from "../util/token";
 import {NewGameCreationError, NewGameService} from "./newGame.service";
 
 export function getGamesRouter(): Router {
