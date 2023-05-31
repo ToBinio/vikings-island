@@ -52,7 +52,7 @@ export class NewGameStore {
         return true;
     }
 
-    removePLayerToGame(gameId: number, playerId: number): Result<LeaveGameCreationError, undefined> {
+    removePLayerFromGame(gameId: number, playerId: number): Result<LeaveGameCreationError, undefined> {
         const gameInfo = this.getGameById(gameId);
 
         if (gameInfo == undefined)
@@ -84,5 +84,14 @@ export class NewGameStore {
         }
 
         return undefined
+    }
+
+    removeGame(gameId: number) {
+        for (let i = 0; i < this.games.length; i++) {
+            if (this.games[i].id == gameId) {
+                this.games.splice(i, 1)
+                return
+            }
+        }
     }
 }

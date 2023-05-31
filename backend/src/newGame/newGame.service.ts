@@ -51,14 +51,20 @@ export class NewGameService {
 
     leaveGame(gameId: number, token: TokenData): Result<LeaveGameCreationError, undefined> {
 
-        if (NewGameStore.get().getGameById(gameId) == undefined) {
+        const game = NewGameStore.get().getGameById(gameId);
+
+        if (game == undefined) {
             return {err: LeaveGameCreationError.gameNotFound}
         }
 
-        const result = NewGameStore.get().removePLayerToGame(gameId, token.id);
+        const result = NewGameStore.get().removePLayerFromGame(gameId, token.id);
 
         if (result.err != undefined) {
             return result;
+        }
+
+        if (game.players.length <= 0) {
+            NewGameStore.get().removeGame(gameId);
         }
 
         EventService.get().updateWaitList(gameId)
