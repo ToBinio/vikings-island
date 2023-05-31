@@ -36,9 +36,9 @@ export function getGamesRouter(): Router {
                     break;
                 }
             }
+        } else {
+            res.status(200).json(newGame.ok!);
         }
-
-        res.status(200).json(newGame.ok!);
     })
 
     router.post("/join", (req, res) => {
@@ -64,9 +64,9 @@ export function getGamesRouter(): Router {
                     break;
                 }
             }
+        } else {
+            res.sendStatus(200);
         }
-
-        res.sendStatus(200);
     })
 
     return router;
