@@ -113,4 +113,8 @@ export class GameMenuComponent implements OnInit {
     }
     this.switchOn = !this.switchOn
   }
+
+  close() {
+    this.createActive = false;
+  }
 }
