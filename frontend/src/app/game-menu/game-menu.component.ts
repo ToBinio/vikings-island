@@ -18,7 +18,6 @@ export class GameMenuComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
     //needed to cache the result
     this.adminAuth.tryUpdateCache();
 
@@ -41,6 +40,7 @@ export class GameMenuComponent implements OnInit {
             break
           }
           default: {
+            this.alertService.error(err)
             console.error("something went wrong")
           }
         }
@@ -50,7 +50,7 @@ export class GameMenuComponent implements OnInit {
 
   gameMenu: NewGames = [];
   ownGameMenu: NewGames = [];
-  displayGames: NewGames = []
+  displayGames: NewGames = [];
 
   tickSpeed: number = 0;
   gameName: string = "";
@@ -77,8 +77,7 @@ export class GameMenuComponent implements OnInit {
       next: res => {
         console.log("ok");
         this.id = res
-        this.router.navigateByUrl("/waitList").then();
-        this.changeCreateActive()
+        this.changeCreateActive();
       },
       error: err => {
         switch (err.status) {
@@ -92,6 +91,7 @@ export class GameMenuComponent implements OnInit {
             break
           }
           default: {
+            this.alertService.error(err)
             console.error("something went wrong")
           }
         }
@@ -100,9 +100,30 @@ export class GameMenuComponent implements OnInit {
   }
 
   join(id: number) {
-    console.log(id)
-    console.log(this.cookieService.get("token"))
-    this.router.navigateByUrl("/waitList").then();
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${this.cookieService.get("token")}`
+    })
+
+    this.httpClient.post(environment.apiUrl + "/new_game/join", id, {headers: headers}).subscribe({
+      next: res => {
+        console.log("ok");
+        this.router.navigateByUrl("/waitList").then();
+      },
+      error: err => {
+        switch (err.status) {
+          case 406: {
+            this.alertService.error(err)
+            console.error(err);
+            break
+          }
+          default: {
+            this.alertService.error(err)
+            console.error("something went wrong")
+          }
+        }
+      }
+    })
   }
 
   admin() {
