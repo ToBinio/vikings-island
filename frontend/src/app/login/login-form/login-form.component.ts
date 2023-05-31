@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Output} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
-import {UserLoginRequest, UserLoginResponse} from "../../../../../types/user";
+import {UserLoginRequest} from "../../../../../types/user";
 import {hashPassword} from "../loginUtil";
 import {Router} from "@angular/router";
 import {environment} from "../../../environments/environment";
@@ -24,17 +24,19 @@ export class LoginFormComponent {
   async login() {
     let passwordHash = await hashPassword(this.password);
 
-    this.httpClient.post<UserLoginResponse>(environment.apiUrl + "/user/login", {
+    this.httpClient.post<string>(environment.apiUrl + "/user/login", {
       userName: this.userName,
       password: passwordHash
     } as UserLoginRequest, {responseType: "text" as 'json'})
       .subscribe({
         next: res => {
           console.log("ok")
-          this.loginService.token = res.token;
-          console.log(res.token)
-          this.loginService.id = res.id;
+
+          this.loginService.token = JSON.parse(res).token;
+          this.loginService.id = JSON.parse(res).id;
+
           this.cookieService.set("token", this.loginService.token);
+          this.cookieService.set("id", String(this.loginService.id))
           this.router.navigateByUrl("/games").then();
         },
         error: err => {
