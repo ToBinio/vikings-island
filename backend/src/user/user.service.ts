@@ -1,6 +1,6 @@
 import {UserLoginRequest} from "../../../types/user";
 import {generateToken} from "../util/token";
-import {UserStore} from "./user.store";
+import {UserData, UserStore} from "./user.store";
 
 export class UserService {
 
@@ -37,6 +37,10 @@ export class UserService {
         if (user.password != loginRequest.password) return UserLoginError.wrongPassword;
 
         return generateToken({name: user.name, id: user.id});
+    }
+
+    async getUser(userId: number): Promise<UserData | undefined> {
+        return UserStore.get().getUserByID(userId)
     }
 
     isUserNameValid(userName: string): boolean {

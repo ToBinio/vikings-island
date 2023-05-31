@@ -1,6 +1,7 @@
 import {Router} from "express";
 import {UserLoginError, UserRegisterError, UserService} from "./user.service";
 import {UserLoginRequest} from "../../../types/user";
+import {handleRequest} from "../util/token";
 
 export function getUserRouter(): Router {
     let router = Router();
@@ -34,6 +35,25 @@ export function getUserRouter(): Router {
         }
 
         res.end();
+    })
+
+    router.post("/:id", async (req, res) => {
+
+        let token = handleRequest(req.headers.authorization, res);
+
+        if (token == undefined) {
+            return
+        }
+
+        let id = Number.parseInt(req.params.id);
+
+        let user = await UserService.get().getUser(id);
+
+        if (user == undefined) {
+            res.status(406).send("user not found");
+        } else {
+            res.status(200).send(user);
+        }
     })
 
     return router;
