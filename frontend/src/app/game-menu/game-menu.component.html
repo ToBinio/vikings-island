@@ -3,7 +3,7 @@
     <img src="assets/img/vikingsisland.png">
   </div>
 
-  <div class="btnCenter" id="adminBtn">
+  <div class="btnCenter" id="adminBtn" *ngIf="adminAuth.isAuth">
     <button (click)="admin()">Admin Site</button>
   </div>
 

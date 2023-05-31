@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {ActivatedRouteSnapshot, CanActivate, RouterStateSnapshot} from '@angular/router';
+import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot} from '@angular/router';
 import {Observable} from 'rxjs';
 import {AdminAuthService} from "./admin-auth.service";
 
@@ -8,13 +8,40 @@ import {AdminAuthService} from "./admin-auth.service";
 })
 export class AdminAuthGuard implements CanActivate {
 
-  constructor(private adminAuthService: AdminAuthService) {
+  constructor(private adminAuthService: AdminAuthService, private router: Router) {
   };
 
   canActivate(
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): boolean | Observable<boolean> {
-    console.log('CanActivate called for isAdmin');
-    return this.adminAuthService.isAuthenticated();
+
+    if (this.adminAuthService.isAuth == undefined) {
+      return new Observable((subscriber) => {
+        this.adminAuthService.isAuthenticated().subscribe({
+          next: res => {
+            subscriber.next(res);
+
+            console.log("ans: " + res);
+
+            if (!res) {
+              this.router.navigate(['/']);
+            }
+          },
+          error: res => {
+            subscriber.next(false)
+            this.router.navigate(['/']);
+          }
+        })
+      })
+    }
+
+    console.log("chached: " + this.adminAuthService.isAuth);
+
+    if (this.adminAuthService.isAuth) {
+      return true
+    } else {
+      this.router.navigate(['/']);
+      return false
+    }
   }
 }

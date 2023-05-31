@@ -7,6 +7,7 @@ import {environment} from "../../../environments/environment";
 import {LoginService} from "../login.service";
 import {AlertService} from "../../alert-system/alert.service";
 import {CookieService} from "ngx-cookie-service";
+import {AdminAuthService} from "../../auth/adminAuth/admin-auth.service";
 
 @Component({
   selector: 'app-register-form',
@@ -15,7 +16,7 @@ import {CookieService} from "ngx-cookie-service";
 })
 export class RegisterFormComponent {
 
-  constructor(private httpClient: HttpClient, private router: Router, private alertSystemService: AlertService, private loginService: LoginService, private cookieService: CookieService) {
+  constructor(private httpClient: HttpClient, private router: Router, private alertSystemService: AlertService, private loginService: LoginService, private cookieService: CookieService, private adminAuthService: AdminAuthService) {
   }
 
   userName: string = "";
@@ -49,6 +50,9 @@ export class RegisterFormComponent {
 
             this.cookieService.set("token", this.loginService.token);
             this.cookieService.set("id", String(this.loginService.id))
+
+            //needed to cache the result
+            this.adminAuthService.updateCache();
 
             this.router.navigateByUrl("/games").then();
           },

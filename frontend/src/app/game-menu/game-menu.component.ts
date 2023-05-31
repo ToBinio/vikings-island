@@ -18,6 +18,10 @@ export class GameMenuComponent implements OnInit {
   }
 
   ngOnInit(): void {
+
+    //needed to cache the result
+    this.adminAuth.tryUpdateCache();
+
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${this.cookieService.get("token")}`
