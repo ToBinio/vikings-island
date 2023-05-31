@@ -1,4 +1,4 @@
-import {UserLoginRequest} from "../../../types/user";
+import {UserLoginRequest, UserLoginResponse} from "../../../types/user";
 import {generateToken} from "../util/token";
 import {PublicUserData, UserStore} from "./user.store";
 
@@ -17,7 +17,7 @@ export class UserService {
     private constructor() {
     }
 
-    async register(loginRequest: UserLoginRequest): Promise<string | UserRegisterError> {
+    async register(loginRequest: UserLoginRequest): Promise<UserLoginResponse | UserRegisterError> {
         if (!this.isUserNameValid(loginRequest.userName)) return UserRegisterError.userNameNotAllowed
 
         if ((await UserStore.get().getUserByName(loginRequest.userName)) != undefined)
@@ -25,10 +25,10 @@ export class UserService {
 
         let user = await UserStore.get().addUser(loginRequest.userName, loginRequest.password);
 
-        return generateToken({name: user.name, id: user.id});
+        return {token: generateToken({name: user.name, id: user.id}), id: user.id};
     }
 
-    async login(loginRequest: UserLoginRequest): Promise<string | UserLoginError> {
+    async login(loginRequest: UserLoginRequest): Promise<UserLoginResponse | UserLoginError> {
         let user = await UserStore.get().getUserByName(loginRequest.userName);
 
         if (user == undefined)
@@ -36,7 +36,7 @@ export class UserService {
 
         if (user.password != loginRequest.password) return UserLoginError.wrongPassword;
 
-        return generateToken({name: user.name, id: user.id});
+        return {token: generateToken({name: user.name, id: user.id}), id: user.id};
     }
 
     async getUser(userId: number): Promise<PublicUserData | undefined> {
