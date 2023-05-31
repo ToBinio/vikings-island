@@ -44,6 +44,7 @@ export class NewGameService {
         }
 
         NewGameStore.get().addPLayerToGame(gameId, token.id);
+        EventService.get().updateWaitList(gameId)
 
         return {ok: undefined};
     }
