@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Output} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
-import {UserLoginRequest} from "../../../../../types/user";
+import {UserLoginRequest, UserLoginResponse} from "../../../../../types/user";
 import {hashPassword} from "../loginUtil";
 import {Router} from "@angular/router";
 import {environment} from "../../../environments/environment";
@@ -14,7 +14,7 @@ import {AlertService} from "../../alert-system/alert.service";
 })
 export class RegisterFormComponent {
 
-  constructor(private httpClient: HttpClient, private router: Router, private alertSystemService: AlertService) {
+  constructor(private httpClient: HttpClient, private router: Router, private alertSystemService: AlertService, private loginService: LoginService) {
   }
 
   userName: string = "";
@@ -36,14 +36,15 @@ export class RegisterFormComponent {
 
     let passwordHash = await hashPassword(this.password);
 
-    this.httpClient.post<string>(environment.apiUrl + "/user/register", {
+    this.httpClient.post<UserLoginResponse>(environment.apiUrl + "/user/register", {
       userName: this.userName,
       password: passwordHash
     } as UserLoginRequest, {responseType: "text" as 'json'})
       .subscribe({
           next: res => {
             console.log("ok")
-            this.token = res;
+            this.loginService.token = res.token;
+            this.loginService.id = res.id;
             this.router.navigateByUrl("/games").then();
           },
           error: err => {
