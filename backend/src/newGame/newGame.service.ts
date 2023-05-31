@@ -36,8 +36,24 @@ export class NewGameService {
 
         return {ok: gameId};
     }
+
+    joinGame(gameId: number, token: TokenData): Result<JoinGameCreationError, undefined> {
+
+        if (NewGameStore.get().getGameById(gameId) == undefined) {
+            return {err: JoinGameCreationError.gameNotFound}
+        }
+
+        NewGameStore.get().addPLayerToGame(gameId, token.id);
+
+        return {ok: undefined};
+    }
 }
 
 export enum NewGameCreationError {
     gameNameAlreadyTaken,
+}
+
+export enum JoinGameCreationError {
+    gameNotFound,
+    gameFull,
 }
