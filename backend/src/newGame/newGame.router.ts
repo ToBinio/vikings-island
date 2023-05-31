@@ -27,6 +27,11 @@ export function getGamesRouter(): Router {
 
         let id = Number.parseInt(req.params.id);
 
+        if (isNaN(id)) {
+            res.status(406).send("user not found").end();
+            return
+        }
+
         const game = NewGameService.get().getGame(id);
 
         if (game == undefined) {
