@@ -1,10 +1,5 @@
-import {CreateNewGame, NewGame} from "../../../types/games";
 import {EventStore, LoginEventData} from "./event.store";
-import {TokenData} from "../util/token";
-import {Result} from "../../../types/util";
-import {Response} from "express-serve-static-core";
 import {NewGameStore} from "../newGame/newGameStore";
-import {getSystemErrorMap} from "util";
 
 export class EventService {
 
@@ -32,7 +27,9 @@ export class EventService {
         let data = JSON.stringify(game.players);
 
         for (let player of game.players) {
-            let loginEventData = EventStore.get().getLoginEventData(player, gameId)!;
+            let loginEventData = EventStore.get().getLoginEventData(player, gameId);
+
+            if (loginEventData == undefined) continue
 
             loginEventData.res.write(`data: ${data}\n\n`);
         }
