@@ -17,7 +17,7 @@ export class EventStore {
 
     loginEvents = new Map<string, LoginEventData>;
 
-    addLobbyEvent(data: LoginEventData): string {
+    addWaitListEvent(data: LoginEventData): string {
         let uuid = uuidv4();
 
         this.loginEvents.set(uuid, data);
@@ -25,7 +25,7 @@ export class EventStore {
         return uuid
     }
 
-    removeLobbyEvent(uuid: string) {
+    removeWaitListEvent(uuid: string) {
         this.loginEvents.delete(uuid);
     }
 

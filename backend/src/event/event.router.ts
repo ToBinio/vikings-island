@@ -36,7 +36,7 @@ export function getEventRouter(): Router {
     });
 
     //todo handle errors
-    router.get('/lobby/:game', async (req, res) => {
+    router.get('/wait_list/:game', async (req, res) => {
 
         let token = handleRequest(req.headers.authorization, res);
 
@@ -56,10 +56,10 @@ export function getEventRouter(): Router {
 
         res.write('retry: 1000\n\n');
 
-        let uuid = EventService.get().addLobbyEvent({res: res, token: token, game: gameId});
+        let uuid = EventService.get().addWaitListEvent({res: res, token: token, game: gameId});
 
         req.on("close", () => {
-            EventService.get().removeLobbyEvent(uuid);
+            EventService.get().removeWaitListEvent(uuid);
         })
     });
 

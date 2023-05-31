@@ -2,7 +2,6 @@ import {CreateNewGame, NewGame} from "../../../types/games";
 import {EventStore, LoginEventData} from "./event.store";
 import {TokenData} from "../util/token";
 import {Result} from "../../../types/util";
-import {v4 as uuidv4} from 'uuid';
 import {Response} from "express-serve-static-core";
 import {NewGameStore} from "../newGame/newGameStore";
 import {getSystemErrorMap} from "util";
@@ -19,15 +18,15 @@ export class EventService {
         return EventService.instance;
     }
 
-    addLobbyEvent(data: LoginEventData): string {
-        return EventStore.get().addLobbyEvent(data)
+    addWaitListEvent(data: LoginEventData): string {
+        return EventStore.get().addWaitListEvent(data)
     }
 
-    removeLobbyEvent(uuid: string) {
-        EventStore.get().removeLobbyEvent(uuid);
+    removeWaitListEvent(uuid: string) {
+        EventStore.get().removeWaitListEvent(uuid);
     }
 
-    updateLobby(gameId: number) {
+    updateWaitList(gameId: number) {
         let game = NewGameStore.get().getGameById(gameId)!;
 
         let data = JSON.stringify(game.players);
