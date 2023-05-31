@@ -48,6 +48,10 @@ export class NewGameService {
 
         return {ok: undefined};
     }
+
+    getGame(gameId: number): NewGame | undefined {
+        return NewGameStore.get().getGameById(gameId);
+    }
 }
 
 export enum NewGameCreationError {

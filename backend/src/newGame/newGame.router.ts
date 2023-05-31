@@ -17,6 +17,25 @@ export function getGamesRouter(): Router {
         res.status(200).json(NewGameService.get().getAllGames() as newGames);
     })
 
+    router.get("/:id", (req, res) => {
+
+        let token = handleRequest(req.headers.authorization, res);
+
+        if (token == undefined) {
+            return
+        }
+
+        let id = Number.parseInt(req.params.id);
+
+        const game = NewGameService.get().getGame(id);
+
+        if (game == undefined) {
+            res.status(406).send("game not found");
+        } else {
+            res.status(200).send(game);
+        }
+    })
+
     router.post("/", (req, res) => {
 
         let token = handleRequest(req.headers.authorization, res);
