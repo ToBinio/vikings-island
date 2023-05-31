@@ -68,3 +68,9 @@ export interface UserData {
     password: string,
     is_admin: boolean
 }
+
+export interface PublicUserData {
+    id: number
+    name: string,
+    is_admin: boolean
+}

@@ -1,6 +1,6 @@
 import {UserLoginRequest} from "../../../types/user";
 import {generateToken} from "../util/token";
-import {UserData, UserStore} from "./user.store";
+import {PublicUserData, UserStore} from "./user.store";
 
 export class UserService {
 
@@ -39,8 +39,12 @@ export class UserService {
         return generateToken({name: user.name, id: user.id});
     }
 
-    async getUser(userId: number): Promise<UserData | undefined> {
-        return UserStore.get().getUserByID(userId)
+    async getUser(userId: number): Promise<PublicUserData | undefined> {
+        const user = await UserStore.get().getUserByID(userId);
+
+        if (user == undefined) return undefined
+
+        return {id: user.id, is_admin: user.is_admin, name: user.name}
     }
 
     isUserNameValid(userName: string): boolean {
