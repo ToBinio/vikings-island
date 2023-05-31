@@ -37,7 +37,7 @@ export function getUserRouter(): Router {
         res.end();
     })
 
-    router.post("/:id", async (req, res) => {
+    router.get("/:id", async (req, res) => {
 
         let token = handleRequest(req.headers.authorization, res);
 
