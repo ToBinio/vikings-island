@@ -7,31 +7,31 @@ export function getUserRouter(): Router {
     let router = Router();
 
     router.post("/register", async (req, res) => {
-        let token = await UserService.get().register(req.body as UserLoginRequest);
+        let data = await UserService.get().register(req.body as UserLoginRequest);
 
-        if (token == UserRegisterError.userNameAlreadyTaken) {
+        if (data == UserRegisterError.userNameAlreadyTaken) {
             res.status(403)
 
-        } else if (token == UserRegisterError.userNameNotAllowed) {
+        } else if (data == UserRegisterError.userNameNotAllowed) {
             res.status(406)
         } else {
             res.status(200);
-            res.send(token)
+            res.json(data)
         }
 
         res.end();
     })
 
     router.post("/login", async (req, res) => {
-        let token = await UserService.get().login(req.body as UserLoginRequest);
+        let data = await UserService.get().login(req.body as UserLoginRequest);
 
-        if (token == UserLoginError.userNameNotFound) {
+        if (data == UserLoginError.userNameNotFound) {
             res.status(404);
-        } else if (token == UserLoginError.wrongPassword) {
+        } else if (data == UserLoginError.wrongPassword) {
             res.status(409);
         } else {
             res.status(200);
-            res.send(token)
+            res.json(data)
         }
 
         res.end();
@@ -52,7 +52,7 @@ export function getUserRouter(): Router {
         if (user == undefined) {
             res.status(406).send("user not found");
         } else {
-            res.status(200).send(user);
+            res.status(200).json(user);
         }
 
         res.end();
