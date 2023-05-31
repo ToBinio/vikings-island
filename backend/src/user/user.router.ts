@@ -54,6 +54,8 @@ export function getUserRouter(): Router {
         } else {
             res.status(200).json(user);
         }
+
+        res.end();
     })
 
     return router;

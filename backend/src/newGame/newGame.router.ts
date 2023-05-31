@@ -14,7 +14,7 @@ export function getGamesRouter(): Router {
             return
         }
 
-        res.status(200).json(NewGameService.get().getAllGames() as newGames);
+        res.status(200).json(NewGameService.get().getAllGames() as newGames).end();
     })
 
     router.get("/:id", (req, res) => {
@@ -34,6 +34,8 @@ export function getGamesRouter(): Router {
         } else {
             res.status(200).send(game);
         }
+
+        res.end();
     })
 
     router.post("/", (req, res) => {
@@ -58,6 +60,8 @@ export function getGamesRouter(): Router {
         } else {
             res.status(200).json(newGame.ok!);
         }
+
+        res.end();
     })
 
     router.post("/join", (req, res) => {
@@ -86,6 +90,8 @@ export function getGamesRouter(): Router {
         } else {
             res.sendStatus(200);
         }
+
+        res.end();
     })
 
     return router;
