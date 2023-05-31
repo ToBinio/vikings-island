@@ -7,6 +7,7 @@ import {environment} from "../../../environments/environment";
 import {AlertService} from "../../alert-system/alert.service";
 import {CookieService} from "ngx-cookie-service";
 import {AuthService} from "../../auth/loginAuth/auth.service";
+import {LoginService} from "../login.service";
 
 @Component({
   selector: 'app-login-form',
@@ -14,13 +15,11 @@ import {AuthService} from "../../auth/loginAuth/auth.service";
   styleUrls: ['./login-form.component.scss']
 })
 export class LoginFormComponent {
-  constructor(private httpClient: HttpClient, private router: Router, private alertSystemService: AlertService, private cookieService: CookieService, private auth: AuthService) {
+  constructor(private httpClient: HttpClient, private router: Router, private alertSystemService: AlertService, private cookieService: CookieService, private auth: AuthService, private loginService: LoginService) {
   }
 
   userName: string = "";
   password: string = "";
-
-  token: string = "";
 
   async login() {
     let passwordHash = await hashPassword(this.password);
@@ -32,8 +31,8 @@ export class LoginFormComponent {
       .subscribe({
         next: res => {
           console.log("ok")
-          this.token = res;
-          this.cookieService.set("token", this.token);
+          this.loginService.token = res;
+          this.cookieService.set("token", this.loginService.token);
           this.auth.isLoggedIn = true;
           this.router.navigateByUrl("/games").then();
         },
