@@ -6,7 +6,9 @@ export interface UserTable {
     id: Generated<number>,
 
     user_name: string,
-    password: string
+    password: string,
+
+    is_admin: boolean
 }
 
 interface Database {

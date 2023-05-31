@@ -25,16 +25,16 @@ export class UserStore {
         })
     }
 
-    async addUser(name: string, hash: string): Promise<User> {
+    async addUser(name: string, hash: string): Promise<UserData> {
         let account = await db.insertInto('users')
-            .values({user_name: name, password: hash})
+            .values({user_name: name, password: hash, is_admin: false})
             .returningAll()
             .executeTakeFirstOrThrow();
 
-        return {id: account.id, name: account.user_name, password: account.password}
+        return {id: account.id, name: account.user_name, password: account.password, is_admin: account.is_admin}
     }
 
-    async getUserByID(id: number): Promise<User | undefined> {
+    async getUserByID(id: number): Promise<UserData | undefined> {
 
         let account = await db.selectFrom('users')
             .where('id', '=', id)
@@ -44,10 +44,10 @@ export class UserStore {
         if (account == undefined)
             return undefined
 
-        return {id: account.id, name: account.user_name, password: account.password}
+        return {id: account.id, name: account.user_name, password: account.password, is_admin: account.is_admin}
     }
 
-    async getUserByName(name: string): Promise<User | undefined> {
+    async getUserByName(name: string): Promise<UserData | undefined> {
         let account = await db.selectFrom('users')
             .where('user_name', '=', name)
             .selectAll()
@@ -56,14 +56,21 @@ export class UserStore {
         if (account == undefined)
             return undefined
 
-        return {id: account.id, name: account.user_name, password: account.password}
+        return {id: account.id, name: account.user_name, password: account.password, is_admin: account.is_admin}
     }
 
 }
 
 
-interface User {
+export interface UserData {
     id: number
     name: string,
     password: string,
+    is_admin: boolean
+}
+
+export interface PublicUserData {
+    id: number
+    name: string,
+    is_admin: boolean
 }
