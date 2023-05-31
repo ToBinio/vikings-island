@@ -5,7 +5,7 @@ import {GameMenuComponent} from "./game-menu/game-menu.component";
 import {GameComponent} from "./game/game.component";
 import {WaitlistComponent} from "./waitlist/waitlist.component";
 import {AdminPanelComponent} from "./admin-panel/admin-panel.component";
-import {AuthGuard} from "./auth/auth.guard";
+import {AuthGuard} from "./auth/loginAuth/auth.guard";
 
 const routes: Routes = [
   {path: 'login', component: LoginPageComponent},

@@ -6,7 +6,7 @@ import {Router} from "@angular/router";
 import {environment} from "../../../environments/environment";
 import {AlertService} from "../../alert-system/alert.service";
 import {CookieService} from "ngx-cookie-service";
-import {AuthService} from "../../auth/auth.service";
+import {AuthService} from "../../auth/loginAuth/auth.service";
 
 @Component({
   selector: 'app-login-form',

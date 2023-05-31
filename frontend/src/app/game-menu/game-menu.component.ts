@@ -5,6 +5,7 @@ import {CookieService} from "ngx-cookie-service";
 import {AlertService} from "../alert-system/alert.service";
 import {Router} from "@angular/router";
 import {CreateNewGame, NewGames} from "../../../../types/games";
+import {AdminAuthService} from "../auth/adminAuth/admin-auth.service";
 
 @Component({
   selector: 'app-game-menu',
@@ -13,7 +14,7 @@ import {CreateNewGame, NewGames} from "../../../../types/games";
 })
 export class GameMenuComponent implements OnInit {
 
-  constructor(private httpClient: HttpClient, private cookieService: CookieService, private alertService: AlertService, private router: Router) {
+  constructor(private httpClient: HttpClient, private cookieService: CookieService, private alertService: AlertService, private router: Router, public adminAuth: AdminAuthService) {
   }
 
   ngOnInit(): void {
@@ -45,7 +46,6 @@ export class GameMenuComponent implements OnInit {
 
   gameMenu: NewGames = [];
   ownGameMenu: NewGames = [];
-
   displayGames: NewGames = []
 
   tickSpeed: number = 0;
@@ -54,6 +54,7 @@ export class GameMenuComponent implements OnInit {
   id: number = 0;
 
   createActive: boolean = false;
+  switchOn: boolean = false;
 
   changeCreateActive() {
     this.createActive = !this.createActive
@@ -103,8 +104,6 @@ export class GameMenuComponent implements OnInit {
   admin() {
     this.router.navigateByUrl("/admin").then();
   }
-
-  switchOn: boolean = false;
 
   toggleSwitch() {
     if (this.switchOn) {
