@@ -14,7 +14,7 @@ export function getGamesRouter(): Router {
             return
         }
 
-        res.status(200).send(NewGameService.get().getAllGames() as newGames);
+        res.status(200).json(NewGameService.get().getAllGames() as newGames);
     })
 
     router.post("/", (req, res) => {

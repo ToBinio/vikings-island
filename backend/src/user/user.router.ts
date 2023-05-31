@@ -16,7 +16,7 @@ export function getUserRouter(): Router {
             res.status(406)
         } else {
             res.status(200);
-            res.send(data)
+            res.json(data)
         }
 
         res.end();
@@ -31,7 +31,7 @@ export function getUserRouter(): Router {
             res.status(409);
         } else {
             res.status(200);
-            res.send(data)
+            res.json(data)
         }
 
         res.end();
@@ -52,7 +52,7 @@ export function getUserRouter(): Router {
         if (user == undefined) {
             res.status(406).send("user not found");
         } else {
-            res.status(200).send(user);
+            res.status(200).json(user);
         }
     })
 
