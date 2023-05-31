@@ -1,4 +1,5 @@
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {environment} from "../../environments/environment";
 
 @Component({
   selector: 'app-game',
@@ -40,6 +41,26 @@ export class GameComponent implements OnInit {
     window.addEventListener("resize", () => this.redraw());
 
     this.redraw();
+
+    this.startEvent();
+  }
+
+  startEvent() {
+    const source = new EventSource(environment.apiUrl + '/event');
+
+    console.log("listening?");
+
+    source.addEventListener('open', message => {
+      console.log('Got', message);
+    });
+
+    source.addEventListener('message', message => {
+      console.log('Got', message);
+    });
+
+    setTimeout(() => {
+      source.close()
+    }, 10000)
   }
 
   render(ctx: CanvasRenderingContext2D) {
