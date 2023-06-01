@@ -3,6 +3,7 @@ import {NewGameStore} from "./newGameStore";
 import {TokenData} from "../util/token";
 import {Result} from "../../../types/util";
 import {EventService} from "../event/event.service";
+import {GameService} from "../game/game.service";
 
 export class NewGameService {
 
@@ -32,19 +33,30 @@ export class NewGameService {
         let gameId = NewGameStore.get().createGame(gameCreateRequest);
 
         NewGameStore.get().addPLayerToGame(gameId, token.id);
-        EventService.get().updateWaitList(gameId)
+        EventService.get().updateWaitList(gameId, false)
 
         return {ok: gameId};
     }
 
-    joinGame(gameId: number, token: TokenData): Result<JoinGameCreationError, undefined> {
+    async joinGame(gameId: number, token: TokenData): Promise<Result<JoinGameCreationError, undefined>> {
 
         if (NewGameStore.get().getGameById(gameId) == undefined) {
             return {err: JoinGameCreationError.gameNotFound}
         }
 
         NewGameStore.get().addPLayerToGame(gameId, token.id);
-        EventService.get().updateWaitList(gameId)
+
+        let newGame = NewGameStore.get().getGameById(gameId)!;
+
+        if (newGame.players.length >= 4) {
+
+            await GameService.get().createGame(newGame);
+            EventService.get().updateWaitList(gameId, true)
+
+        } else {
+            EventService.get().updateWaitList(gameId, false)
+        }
+
 
         return {ok: undefined};
     }

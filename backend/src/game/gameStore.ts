@@ -28,14 +28,16 @@ export class GameStore {
             .execute()
     }
 
-    async getGameByID(gameId: number): Promise<GameData> {
-        //todo handle invalid id
+    async getGameByID(gameId: number): Promise<GameData | undefined> {
         let game = await db.selectFrom('games')
             .innerJoin("players", "players.game_id", "games.id")
             .innerJoin("users", "users.id", "players.user_id")
             .where("games.id", "=", gameId)
             .selectAll()
             .execute()
+
+        if (game.length == 0)
+            return undefined
 
         let gameData: GameData = {
             id: game[0]!.id,

@@ -69,7 +69,7 @@ export function getNewGamesRouter(): Router {
         res.end();
     })
 
-    router.post("/join", (req, res) => {
+    router.post("/join", async (req, res) => {
 
         let token = handleRequest(req.headers.authorization, res);
 
@@ -79,7 +79,7 @@ export function getNewGamesRouter(): Router {
 
         let gameId: number = req.body;
 
-        let newGame = NewGameService.get().joinGame(gameId, token);
+        let newGame = await NewGameService.get().joinGame(gameId, token);
 
         if (newGame.ok == undefined) {
             switch (newGame.err!) {
