@@ -1,8 +1,5 @@
-import {CreateNewGame, NewGame} from "../../../types/games";
+import {NewGame} from "../../../types/games";
 import {GameStore} from "./gameStore";
-import {TokenData} from "../util/token";
-import {Result} from "../../../types/util";
-import {EventService} from "../event/event.service";
 
 export class GameService {
 
@@ -14,5 +11,9 @@ export class GameService {
         }
 
         return GameService.instance;
+    }
+
+    async createGame(newGame: NewGame) {
+        return GameStore.get().createGame(newGame);
     }
 }
