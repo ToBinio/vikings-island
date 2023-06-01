@@ -37,7 +37,7 @@ export function getEventRouter(): Router {
     //todo handle errors
     router.get('/wait_list/:game', async (req, res) => {
 
-        let token = handleRequest(req.headers.authorization, res);
+        let token = handleRequest(req.query.token as string, res);
 
         if (token == undefined) {
             return
