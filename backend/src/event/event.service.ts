@@ -1,11 +1,10 @@
 import {CreateNewGame, NewGame} from "../../../types/games";
-import {EventStore, WaitListListenerData} from "./event.store";
+import {EventStore, LoginEventData} from "./event.store";
 import {TokenData} from "../util/token";
 import {Result} from "../../../types/util";
 import {Response} from "express-serve-static-core";
 import {NewGameStore} from "../newGame/newGameStore";
 import {getSystemErrorMap} from "util";
-import {WaitListEvent} from "../../../types/waitList";
 
 export class EventService {
 
@@ -33,8 +32,10 @@ export class EventService {
         let data: WaitListEvent = {players: game.players, hasStarted: hasStarted};
         let dataString = JSON.stringify(data);
 
-        for (let user of game.players) {
-            let loginEventData = EventStore.get().getWaitListListenerData(user, newGameId)!;
+        for (let player of game.players) {
+            let loginEventData = EventStore.get().getWaitListListenerData(player, gameId);
+
+            if (loginEventData == undefined) continue
 
             loginEventData.res.write(`data: ${dataString}\n\n`);
         }
