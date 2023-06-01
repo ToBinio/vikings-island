@@ -2,8 +2,9 @@ import cors from "cors";
 import * as dotenv from "dotenv";
 import express from "express";
 import {getUserRouter} from "./user/user.router";
-import {getGamesRouter} from "./newGame/newGame.router";
+import {getNewGamesRouter} from "./newGame/newGame.router";
 import {getEventRouter} from "./event/event.router";
+import {getGamesRouter} from "./game/game.router";
 
 dotenv.config();
 const PORT: number = parseInt(process.env.PORT as string, 10);
@@ -24,7 +25,8 @@ server.get("/", (req, res) => {
 
 //add routers
 server.use("/api/user/", getUserRouter())
-server.use("/api/new_game/", getGamesRouter())
+server.use("/api/new_game/", getNewGamesRouter())
+server.use("/api/game/", getGamesRouter())
 server.use("/api/event/", getEventRouter())
 
 server.listen(PORT, () => {

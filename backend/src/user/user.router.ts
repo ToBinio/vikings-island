@@ -47,6 +47,11 @@ export function getUserRouter(): Router {
 
         let id = Number.parseInt(req.params.id);
 
+        if (isNaN(id)) {
+            res.status(406).send("user not found").end();
+            return
+        }
+
         let user = await UserService.get().getUser(id);
 
         if (user == undefined) {
@@ -54,6 +59,8 @@ export function getUserRouter(): Router {
         } else {
             res.status(200).json(user);
         }
+
+        res.end();
     })
 
     return router;

@@ -1,10 +1,6 @@
-import {CreateNewGame, NewGame} from "../../../types/games";
-import {EventStore, LoginEventData} from "./event.store";
-import {TokenData} from "../util/token";
-import {Result} from "../../../types/util";
-import {Response} from "express-serve-static-core";
+import {EventStore, WaitListListenerData} from "./event.store";
 import {NewGameStore} from "../newGame/newGameStore";
-import {getSystemErrorMap} from "util";
+import {WaitListEvent} from "../../../types/waitList";
 
 export class EventService {
 
@@ -18,7 +14,7 @@ export class EventService {
         return EventService.instance;
     }
 
-    addWaitListEvent(data: LoginEventData): string {
+    addWaitListEvent(data: WaitListListenerData): string {
         return EventStore.get().addWaitListEvent(data)
     }
 
@@ -26,15 +22,18 @@ export class EventService {
         EventStore.get().removeWaitListEvent(uuid);
     }
 
-    updateWaitList(gameId: number) {
-        let game = NewGameStore.get().getGameById(gameId)!;
+    updateWaitList(newGameId: number, hasStarted: boolean) {
+        let game = NewGameStore.get().getGameById(newGameId)!;
 
-        let data = JSON.stringify(game.players);
+        let data: WaitListEvent = {players: game.players, hasStarted: hasStarted};
+        let dataString = JSON.stringify(data);
 
         for (let player of game.players) {
-            let loginEventData = EventStore.get().getLoginEventData(player, gameId)!;
+            let loginEventData = EventStore.get().getWaitListListenerData(player, newGameId);
 
-            loginEventData.res.write(`data: ${data}\n\n`);
+            if (loginEventData == undefined) continue
+
+            loginEventData.res.write(`data: ${dataString}\n\n`);
         }
     }
 }

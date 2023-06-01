@@ -3,7 +3,7 @@ POST localhost:3000/api/user/login
 Content-Type: application/json
 
 {
-  "name": "huff",
+  "userName": "hufff",
   "password": "123"
 }
 
@@ -12,6 +12,6 @@ POST localhost:3000/api/user/register
 Content-Type: application/json
 
 {
-  "name": "huff",
+  "userName": "hufff",
   "password": "123"
 }
