@@ -7,6 +7,7 @@ import {AdminPanelComponent} from "./admin-panel/admin-panel.component";
 import {AuthGuard} from "./auth/loginAuth/auth.guard";
 import {AdminAuthGuard} from "./auth/adminAuth/admin-auth.guard";
 import {LogOutComponent} from "./log-out/log-out.component";
+import {WaitlistComponent} from "./waitlist/waitlist.component";
 
 const routes: Routes = [
   {path: 'login', component: LoginPageComponent},
@@ -14,6 +15,7 @@ const routes: Routes = [
   {path: 'game', component: GameComponent, canActivate: [AuthGuard]},
   {path: 'admin', component: AdminPanelComponent, canActivate: [AuthGuard, AdminAuthGuard]},
   {path: 'logout', component: LogOutComponent},
+  {path: 'waitlist', component: WaitlistComponent},
   {path: '', pathMatch: 'full', redirectTo: 'login'}
 ];
 

@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {environment} from "../../environments/environment";
 import {CookieService} from "ngx-cookie-service";
@@ -7,6 +7,7 @@ import {Router} from "@angular/router";
 import {CreateNewGame, NewGames} from "../../../../types/games";
 import {AdminAuthService} from "../auth/adminAuth/admin-auth.service";
 import {LogOutService} from "../log-out/log-out.service";
+import {MenuService} from "./menu.service";
 
 @Component({
   selector: 'app-game-menu',
@@ -76,41 +77,42 @@ export class GameMenuComponent implements OnInit {
   tickSpeed: number = 0;
   gameName: string = "";
 
-  id: number = 0;
-
   createActive: boolean = false;
   switchOn: boolean = false;
 
-  changeCreateActive() {
-    this.createActive = !this.createActive
-  }
+  source: EventSource | undefined;
 
-  listen(id: number) {
-    const source = new EventSource(environment.apiUrl + '/event/wait_list/' + id + "?token=" + this.cookieService.get("token"));
+  id: number = 0;
+
+  listen() {
+    this.source = new EventSource(environment.apiUrl + '/event/wait_list/' + this.id + "?token=" + this.cookieService.get("token"));
 
     console.log("listening?");
 
-    source.addEventListener('open', message => {
+    this.source.addEventListener('open', message => {
+      console.log("open")
       console.log('Got', message);
     });
 
-    source.addEventListener('message', message => {
+    this.source.addEventListener('message', message => {
+      console.log("message")
       console.log('Got', message);
     });
   }
 
-  unListen(source: EventSource, id: number) {
-    source.close()
+  unListen() {
+    this.source!.close()
 
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${this.cookieService.get("token")}`
     })
 
-    this.httpClient.post(environment.apiUrl + "/new_game/leave", id, {headers: headers}).subscribe({
+    this.httpClient.post(environment.apiUrl + "/new_game/leave/" + this.id, {}, {headers: headers}).subscribe({
       next: res => {
         console.log("ok");
         this.router.navigateByUrl("/games").then();
+        console.log("listen closed")
       },
       error: err => {
         switch (err.status) {
@@ -134,7 +136,7 @@ export class GameMenuComponent implements OnInit {
       'Authorization': `Bearer ${this.cookieService.get("token")}`
     })
 
-    this.listen(this.id);
+    this.listen();
 
     this.httpClient.post<number>(environment.apiUrl + "/new_game", {
       name: this.gameName,
@@ -144,6 +146,7 @@ export class GameMenuComponent implements OnInit {
         console.log("ok -> created");
         this.id = res
         this.changeCreateActive();
+        this.router.navigate(["/waitlist"]);
       },
       error: err => {
         switch (err.status) {
@@ -171,11 +174,13 @@ export class GameMenuComponent implements OnInit {
       'Authorization': `Bearer ${this.cookieService.get("token")}`
     })
 
-    this.listen(id);
+    this.id = id;
+    this.listen();
 
-    this.httpClient.post(environment.apiUrl + "/new_game/join", id, {headers: headers}).subscribe({
+    this.httpClient.post(environment.apiUrl + "/new_game/join/" + id, {}, {headers: headers}).subscribe({
       next: res => {
         console.log("ok -> joined");
+        this.router.navigate(["/waitlist"]);
       },
       error: err => {
         switch (err.status) {
@@ -193,10 +198,13 @@ export class GameMenuComponent implements OnInit {
     })
   }
 
+
+  changeCreateActive() {
+    this.createActive = !this.createActive
+  }
   admin() {
     this.router.navigateByUrl("/admin").then();
   }
-
   toggleSwitch() {
     if (this.switchOn) {
       this.displayGames = this.gameMenu
@@ -205,11 +213,9 @@ export class GameMenuComponent implements OnInit {
     }
     this.switchOn = !this.switchOn
   }
-
   close() {
     this.createActive = false;
   }
-
   logOut() {
     this.logOutService.logout()
   }
