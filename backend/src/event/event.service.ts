@@ -1,10 +1,6 @@
-import {CreateNewGame, NewGame} from "../../../types/games";
-import {EventStore, LoginEventData} from "./event.store";
-import {TokenData} from "../util/token";
-import {Result} from "../../../types/util";
-import {Response} from "express-serve-static-core";
+import {EventStore, WaitListListenerData} from "./event.store";
 import {NewGameStore} from "../newGame/newGameStore";
-import {getSystemErrorMap} from "util";
+import {WaitListEvent} from "../../../types/waitList";
 
 export class EventService {
 
@@ -33,7 +29,7 @@ export class EventService {
         let dataString = JSON.stringify(data);
 
         for (let player of game.players) {
-            let loginEventData = EventStore.get().getWaitListListenerData(player, gameId);
+            let loginEventData = EventStore.get().getWaitListListenerData(player, newGameId);
 
             if (loginEventData == undefined) continue
 
