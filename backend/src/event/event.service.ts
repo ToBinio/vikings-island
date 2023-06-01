@@ -1,5 +1,5 @@
 import {EventStore, WaitListListenerData} from "./event.store";
-import {NewGameStore} from "../newGame/newGameStore";
+import {NewGameStore} from "../newGame/newGame.store";
 import {WaitListEvent} from "../../../types/waitList";
 
 export class EventService {

@@ -1,5 +1,5 @@
 import {CreateNewGame, NewGame} from "../../../types/games";
-import {NewGameStore} from "./newGameStore";
+import {NewGameStore} from "./newGame.store";
 import {TokenData} from "../util/token";
 import {Result} from "../../../types/util";
 import {EventService} from "../event/event.service";
@@ -38,13 +38,13 @@ export class NewGameService {
         return {ok: gameId};
     }
 
-    async joinGame(gameId: number, token: TokenData): Promise<Result<JoinGameCreationError, undefined>> {
+    async joinGame(gameId: number, token: TokenData): Promise<Result<JoinNewGameError, undefined>> {
 
-        if (NewGameStore.get().getGameById(gameId) == undefined) {
-            return {err: JoinGameCreationError.gameNotFound}
-        }
+        if (NewGameStore.get().getGameById(gameId) == undefined)
+            return {err: JoinNewGameError.gameNotFound}
 
-        NewGameStore.get().addPLayerToGame(gameId, token.id);
+        if (!NewGameStore.get().addPLayerToGame(gameId, token.id))
+            return {err: JoinNewGameError.alreadyJoined}
 
         let newGame = NewGameStore.get().getGameById(gameId)!;
 
@@ -62,12 +62,12 @@ export class NewGameService {
         return {ok: undefined};
     }
 
-    leaveGame(gameId: number, token: TokenData): Result<LeaveGameCreationError, undefined> {
+    leaveGame(gameId: number, token: TokenData): Result<LeaveNewGameError, undefined> {
 
         const game = NewGameStore.get().getGameById(gameId);
 
         if (game == undefined) {
-            return {err: LeaveGameCreationError.gameNotFound}
+            return {err: LeaveNewGameError.gameNotFound}
         }
 
         const result = NewGameStore.get().removePLayerFromGame(gameId, token.id);
@@ -94,12 +94,13 @@ export enum NewGameCreationError {
     gameNameAlreadyTaken,
 }
 
-export enum JoinGameCreationError {
+export enum JoinNewGameError {
     gameNotFound,
     gameFull,
+    alreadyJoined,
 }
 
-export enum LeaveGameCreationError {
+export enum LeaveNewGameError {
     gameNotFound,
     neverJoined,
 }
