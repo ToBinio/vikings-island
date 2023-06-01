@@ -1,7 +1,7 @@
 import {Router} from "express";
 import {CreateNewGame, newGames} from "../../../types/games";
 import {handleRequest} from "../util/token";
-import {JoinGameCreationError, NewGameCreationError, NewGameService} from "./newGame.service";
+import {JoinGameCreationError, LeaveGameCreationError, NewGameCreationError, NewGameService} from "./newGame.service";
 
 export function getNewGamesRouter(): Router {
     let router = Router();
@@ -69,7 +69,7 @@ export function getNewGamesRouter(): Router {
         res.end();
     })
 
-    router.post("/join", async (req, res) => {
+    router.post("/join/:id", async (req, res) => {
 
         let token = handleRequest(req.headers.authorization, res);
 
@@ -77,9 +77,14 @@ export function getNewGamesRouter(): Router {
             return
         }
 
-        let gameId: number = req.body;
+        let id = Number.parseInt(req.params.id);
 
-        let newGame = await NewGameService.get().joinGame(gameId, token);
+        if (isNaN(id)) {
+            res.status(406).send("game not found").end();
+            return
+        }
+
+        let newGame = await NewGameService.get().joinGame(id, token);
 
         if (newGame.ok == undefined) {
             switch (newGame.err!) {
@@ -88,6 +93,41 @@ export function getNewGamesRouter(): Router {
                     break;
                 }
                 case JoinGameCreationError.gameNotFound: {
+                    res.status(406).send("game not found")
+                    break;
+                }
+            }
+        } else {
+            res.sendStatus(200);
+        }
+
+        res.end();
+    })
+
+    router.post("/leave/:id", (req, res) => {
+
+        let token = handleRequest(req.headers.authorization, res);
+
+        if (token == undefined) {
+            return
+        }
+
+        let id = Number.parseInt(req.params.id);
+
+        if (isNaN(id)) {
+            res.status(406).send("game not found").end();
+            return
+        }
+
+        let game = NewGameService.get().leaveGame(id, token);
+
+        if (game.ok == undefined) {
+            switch (game.err!) {
+                case LeaveGameCreationError.neverJoined: {
+                    res.status(406).send("user never joined")
+                    break;
+                }
+                case LeaveGameCreationError.gameNotFound: {
                     res.status(406).send("game not found")
                     break;
                 }
