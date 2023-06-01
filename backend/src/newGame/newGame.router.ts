@@ -3,7 +3,7 @@ import {CreateNewGame, newGames} from "../../../types/games";
 import {handleRequest} from "../util/token";
 import {JoinGameCreationError, LeaveGameCreationError, NewGameCreationError, NewGameService} from "./newGame.service";
 
-export function getGamesRouter(): Router {
+export function getNewGamesRouter(): Router {
     let router = Router();
 
     router.get("/", (req, res) => {
@@ -69,7 +69,7 @@ export function getGamesRouter(): Router {
         res.end();
     })
 
-    router.post("/join", (req, res) => {
+    router.post("/join/:id", async (req, res) => {
 
         let token = handleRequest(req.headers.authorization, res);
 
@@ -77,9 +77,14 @@ export function getGamesRouter(): Router {
             return
         }
 
-        let gameId: number = req.body;
+        let id = Number.parseInt(req.params.id);
 
-        let newGame = NewGameService.get().joinGame(gameId, token);
+        if (isNaN(id)) {
+            res.status(406).send("game not found").end();
+            return
+        }
+
+        let newGame = await NewGameService.get().joinGame(id, token);
 
         if (newGame.ok == undefined) {
             switch (newGame.err!) {
@@ -99,7 +104,7 @@ export function getGamesRouter(): Router {
         res.end();
     })
 
-    router.post("/leave", (req, res) => {
+    router.post("/leave/:id", (req, res) => {
 
         let token = handleRequest(req.headers.authorization, res);
 
@@ -107,9 +112,14 @@ export function getGamesRouter(): Router {
             return
         }
 
-        let gameId: number = req.body;
+        let id = Number.parseInt(req.params.id);
 
-        let game = NewGameService.get().leaveGame(gameId, token);
+        if (isNaN(id)) {
+            res.status(406).send("game not found").end();
+            return
+        }
+
+        let game = NewGameService.get().leaveGame(id, token);
 
         if (game.ok == undefined) {
             switch (game.err!) {
