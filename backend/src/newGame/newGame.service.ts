@@ -51,7 +51,8 @@ export class NewGameService {
         if (newGame.players.length >= 4) {
 
             await GameService.get().createGame(newGame);
-            EventService.get().updateWaitList(gameId, true)
+            EventService.get().updateWaitList(gameId, true);
+            NewGameStore.get().removeGame(gameId);
 
         } else {
             EventService.get().updateWaitList(gameId, false)
@@ -79,7 +80,7 @@ export class NewGameService {
             NewGameStore.get().removeGame(gameId);
         }
 
-        EventService.get().updateWaitList(gameId,false)
+        EventService.get().updateWaitList(gameId, false)
 
         return {ok: undefined};
     }
