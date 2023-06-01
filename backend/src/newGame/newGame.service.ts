@@ -79,7 +79,7 @@ export class NewGameService {
             NewGameStore.get().removeGame(gameId);
         }
 
-        EventService.get().updateWaitList(gameId)
+        EventService.get().updateWaitList(gameId,false)
 
         return {ok: undefined};
     }
