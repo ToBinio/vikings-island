@@ -3,7 +3,7 @@ import {CreateNewGame, newGames} from "../../../types/games";
 import {handleRequest} from "../util/token";
 import {JoinGameCreationError, NewGameCreationError, NewGameService} from "./newGame.service";
 
-export function getGamesRouter(): Router {
+export function getNewGamesRouter(): Router {
     let router = Router();
 
     router.get("/", (req, res) => {
