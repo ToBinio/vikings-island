@@ -20,4 +20,8 @@ export class GameService {
     async createGame(newGame: NewGame) {
         return GameStore.get().createGame(newGame);
     }
+
+    async getGameByUser(userId: number) {
+        return GameStore.get().getAllGamesFromUser(userId);
+    }
 }

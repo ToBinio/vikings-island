@@ -6,6 +6,21 @@ import {GameService} from "./game.service";
 export function getGamesRouter(): Router {
     let router = Router();
 
+    router.get("/", async (req, res) => {
+
+        let token = handleRequest(req.headers.authorization, res);
+
+        if (token == undefined) {
+            return
+        }
+
+        let games = await GameService.get().getGameByUser(token.id);
+
+        res.status(200).json(games);
+
+        res.end();
+    })
+
     router.get("/:id", async (req, res) => {
 
         let token = handleRequest(req.headers.authorization, res);

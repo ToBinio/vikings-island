@@ -19,11 +19,11 @@ export class GameStore {
             .execute()
     }
 
-    async getAllGamesFromUser(user_id: number): Promise<Game[]> {
+    async getAllGamesFromUser(userId: number): Promise<Game[]> {
         return await db.selectFrom('games')
             .innerJoin("players", "players.game_id", "games.id")
             .innerJoin("users", "users.id", "players.user_id")
-            .where("users.id", "=", user_id)
+            .where("users.id", "=", userId)
             .select(["games.id", "games.tick", "games.name"])
             .execute()
     }
