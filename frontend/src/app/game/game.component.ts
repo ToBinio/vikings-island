@@ -1,5 +1,7 @@
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {environment} from "../../environments/environment";
+import {HttpHeaders} from "@angular/common/http";
+import {CookieService} from "ngx-cookie-service";
 
 @Component({
   selector: 'app-game',
@@ -43,6 +45,9 @@ export class GameComponent implements OnInit {
     this.redraw();
 
     this.startEvent();
+  }
+
+  constructor(private cookieService: CookieService) {
   }
 
   startEvent() {

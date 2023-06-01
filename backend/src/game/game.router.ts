@@ -1,6 +1,5 @@
 import {Router} from "express";
 import {handleRequest} from "../util/token";
-import {UserService} from "../user/user.service";
 import {GameService} from "./game.service";
 
 export function getGamesRouter(): Router {

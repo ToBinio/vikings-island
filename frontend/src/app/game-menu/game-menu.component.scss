@@ -167,7 +167,7 @@ button[type="submit"], .btn {
 #adminBtn {
   position: absolute;
   top: 0;
-  right: 0;
+  left: 0;
   margin: 10px;
 
   button {
@@ -186,6 +186,38 @@ button[type="submit"], .btn {
 .btn {
   width: 200px;
 }
+
+.logout-button {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 20px;
+  display: inline-block;
+  padding: 10px 20px;
+  border-radius: 5px;
+  background-color: #ff0000;
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: bold;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.logout-button:hover {
+  background-color: #cc0000;
+}
+
+.logout-button:active {
+  background-color: #990000;
+}
+
+/* Optional Icon Styling */
+.logout-button i {
+  margin-right: 5px;
+}
+
 
 #game {
   width: 150px;

@@ -6,6 +6,7 @@ import {AlertService} from "../alert-system/alert.service";
 import {Router} from "@angular/router";
 import {CreateNewGame, NewGames} from "../../../../types/games";
 import {AdminAuthService} from "../auth/adminAuth/admin-auth.service";
+import {LogOutService} from "../log-out/log-out.service";
 
 @Component({
   selector: 'app-game-menu',
@@ -14,7 +15,7 @@ import {AdminAuthService} from "../auth/adminAuth/admin-auth.service";
 })
 export class GameMenuComponent implements OnInit {
 
-  constructor(private httpClient: HttpClient, private cookieService: CookieService, private alertService: AlertService, private router: Router, public adminAuth: AdminAuthService) {
+  constructor(public logOutService: LogOutService, private httpClient: HttpClient, private cookieService: CookieService, private alertService: AlertService, private router: Router, public adminAuth: AdminAuthService) {
   }
 
   ngOnInit(): void {
@@ -45,7 +46,27 @@ export class GameMenuComponent implements OnInit {
           }
         }
       }
-    })
+    });
+
+    this.httpClient.get<NewGames>(environment.apiUrl + "/game", {headers: headers}).subscribe({
+      next: res => {
+        console.log("ok");
+        this.ownGameMenu = res;
+      },
+      error: err => {
+        switch (err.status) {
+          case 403: {
+            console.error(err)
+            this.alertService.error(err)
+            break
+          }
+          default: {
+            this.alertService.error(err)
+            console.error("something went wrong")
+          }
+        }
+      }
+    });
   }
 
   gameMenu: NewGames = [];
@@ -64,18 +85,63 @@ export class GameMenuComponent implements OnInit {
     this.createActive = !this.createActive
   }
 
+  listen(id: number) {
+    const source = new EventSource(environment.apiUrl + '/event/wait_list/' + id + "?token=" + this.cookieService.get("token"));
+
+    console.log("listening?");
+
+    source.addEventListener('open', message => {
+      console.log('Got', message);
+    });
+
+    source.addEventListener('message', message => {
+      console.log('Got', message);
+    });
+  }
+
+  unListen(source: EventSource, id: number) {
+    source.close()
+
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${this.cookieService.get("token")}`
+    })
+
+    this.httpClient.post(environment.apiUrl + "/new_game/leave", id, {headers: headers}).subscribe({
+      next: res => {
+        console.log("ok");
+        this.router.navigateByUrl("/games").then();
+      },
+      error: err => {
+        switch (err.status) {
+          case 406: {
+            this.alertService.error(err)
+            console.error(err);
+            break
+          }
+          default: {
+            this.alertService.error(err)
+            console.error("something went wrong")
+          }
+        }
+      }
+    })
+  }
+
   create() {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${this.cookieService.get("token")}`
     })
 
+    this.listen(this.id);
+
     this.httpClient.post<number>(environment.apiUrl + "/new_game", {
       name: this.gameName,
       timeStamp: this.tickSpeed
     } as CreateNewGame, {headers: headers}).subscribe({
       next: res => {
-        console.log("ok");
+        console.log("ok -> created");
         this.id = res
         this.changeCreateActive();
       },
@@ -105,10 +171,11 @@ export class GameMenuComponent implements OnInit {
       'Authorization': `Bearer ${this.cookieService.get("token")}`
     })
 
+    this.listen(id);
+
     this.httpClient.post(environment.apiUrl + "/new_game/join", id, {headers: headers}).subscribe({
       next: res => {
-        console.log("ok");
-        this.router.navigateByUrl("/waitList").then();
+        console.log("ok -> joined");
       },
       error: err => {
         switch (err.status) {
@@ -141,5 +208,9 @@ export class GameMenuComponent implements OnInit {
 
   close() {
     this.createActive = false;
+  }
+
+  logOut() {
+    this.logOutService.logout()
   }
 }

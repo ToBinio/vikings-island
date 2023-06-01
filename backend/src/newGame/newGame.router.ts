@@ -14,7 +14,7 @@ export function getNewGamesRouter(): Router {
             return
         }
 
-        res.status(200).json(NewGameService.get().getAllGames() as newGames).end();
+        res.status(200).json(NewGameService.get().getAllGames() as NewGames).end();
     })
 
     router.get("/:id", (req, res) => {

@@ -12,6 +12,7 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {GameMenuComponent} from './game-menu/game-menu.component';
 import { AlertSystemComponent } from './alert-system/alert-system.component';
 import { AdminPanelComponent } from './admin-panel/admin-panel.component';
+import { LogOutComponent } from './log-out/log-out.component';
 
 @NgModule({
   declarations: [
@@ -24,6 +25,7 @@ import { AdminPanelComponent } from './admin-panel/admin-panel.component';
     GameMenuComponent,
     GameComponent,
     AdminPanelComponent,
+    LogOutComponent,
   ],
   imports: [
     HttpClientModule,

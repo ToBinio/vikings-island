@@ -3,6 +3,10 @@
     <img src="assets/img/vikingsisland.png">
   </div>
 
+  <div>
+    <button class="logout-button" (click)="logOut()">Abmelden</button>
+  </div>
+
   <div class="btnCenter" id="adminBtn" *ngIf="adminAuth.isAuth">
     <button (click)="admin()">Admin Site</button>
   </div>
@@ -12,7 +16,12 @@
   </div>
 
   <div class="btnCenter eye">
-    <span [class.active]="switchOn" (click)="toggleSwitch()">👁</span>
+    <span *ngIf="!switchOn" (click)="toggleSwitch()" matTooltip="Es werden alle Spiele angezeigt!"
+          matTooltipClass="custom-tooltip"
+          matTooltipPosition="below">👁</span>
+    <span *ngIf="switchOn" class="active" (click)="toggleSwitch()" matTooltip="Es werden nur eigene Spiele angezeigt!"
+          matTooltipClass="custom-tooltip"
+          matTooltipPosition="below">👁</span>
   </div>
 
   <div class="btnCenter">

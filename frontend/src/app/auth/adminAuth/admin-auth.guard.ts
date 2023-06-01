@@ -24,12 +24,12 @@ export class AdminAuthGuard implements CanActivate {
             console.log("ans: " + res);
 
             if (!res) {
-              this.router.navigate(['/']);
+              this.router.navigate(['/games']);
             }
           },
           error: res => {
             subscriber.next(false)
-            this.router.navigate(['/']);
+            this.router.navigate(['/login']);
           }
         })
       })
@@ -40,7 +40,7 @@ export class AdminAuthGuard implements CanActivate {
     if (this.adminAuthService.isAuth) {
       return true
     } else {
-      this.router.navigate(['/']);
+      this.router.navigate(['/login']);
       return false
     }
   }

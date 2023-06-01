@@ -9,7 +9,6 @@ export function getEventRouter(): Router {
 
     //todo delete -temp testing
     router.get('/', async (req, res) => {
-
         console.log('Got /events');
 
         res.set({
