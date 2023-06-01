@@ -1,5 +1,5 @@
 import {NewGame} from "../../../types/games";
-import {GameStore} from "./gameStore";
+import {GameStore} from "./game.store";
 
 export class GameService {
 
