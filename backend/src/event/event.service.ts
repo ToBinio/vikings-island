@@ -36,7 +36,6 @@ export class EventService {
         for (let user of game.players) {
             let loginEventData = EventStore.get().getWaitListListenerData(user, newGameId)!;
 
-
             loginEventData.res.write(`data: ${dataString}\n\n`);
         }
     }

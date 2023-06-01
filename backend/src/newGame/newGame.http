@@ -1,19 +1,19 @@
-// example token eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MCwiaWF0IjoxNjc5NDg1MTQwfQ.EtQbLM1NU4HXo6jo1ywQ5LgWuSbz5f6uklCy_WBebJ4
+// example token eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiaHVmZmYiLCJpZCI6OSwiaWF0IjoxNjg1NjM0OTM5fQ.PZ7VFbmwDjkOE3Oqo0KudNs86_h3OYmjYrRjeZfqSR8
 
 ### Get all Games
 GET localhost:3000/api/new_game/
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MCwiaWF0IjoxNjc5NDg1MTQwfQ.EtQbLM1NU4HXo6jo1ywQ5LgWuSbz5f6uklCy_WBebJ4
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiaHVmZmYiLCJpZCI6OSwiaWF0IjoxNjg1NjM0OTM5fQ.PZ7VFbmwDjkOE3Oqo0KudNs86_h3OYmjYrRjeZfqSR8
 
 ### Get all Games - no Auth
 GET localhost:3000/api/new_game/
 
 ### Get all Games - invalid Auth
 GET localhost:3000/api/new_game/
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MCwiaWF0IjoxNjc5NDg1MTQwfQ.EtQbLM1asdasd6jo1ywQ5LgWuSbz5f6uklCy_WBebJ4
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiaHVmZmYiLCJpZCI6OSwiaWF0IjoxNjg1NjM0OTM5fQ.PZ7VFbmwDjkOE3Oqo0KudNs86_h3OYmjYrRjeZfqSR8
 
 ### Create game Game
 POST localhost:3000/api/new_game/
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MCwiaWF0IjoxNjc5NDg1ODk2fQ.S3bk-9etTNsWnCNh9aUPlzv-xnRUYdidtMMYGq86pKU
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiaHVmZmYiLCJpZCI6OSwiaWF0IjoxNjg1NjM0OTM5fQ.PZ7VFbmwDjkOE3Oqo0KudNs86_h3OYmjYrRjeZfqSR8
 Content-Type: application/json
 
 {
@@ -32,7 +32,7 @@ Content-Type: application/json
 
 ### Create game Game - invalid Auth
 GET localhost:3000/api/new_game/
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MCwiaWF0IjoxNjc5NDg1MTQwfQ.EtQbLM1asdasd6jo1ywQ5LgWuSbz5f6uklCy_WBebJ4
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiaHVmZmYiLCJpZCI6OSwiaWF0IjoxNjg1NjM0OTM5fQ.PZ7VFbmwDjkOE3Oqo0KudNs86_h3OYmjYrRjeZfqSR8
 Content-Type: application/json
 
 {
