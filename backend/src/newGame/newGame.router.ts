@@ -1,7 +1,7 @@
 import {Router} from "express";
 import {CreateNewGame, NewGames} from "../../../types/games";
 import {handleRequest} from "../util/token";
-import {JoinGameCreationError, LeaveGameCreationError, NewGameCreationError, NewGameService} from "./newGame.service";
+import {JoinNewGameError, LeaveNewGameError, NewGameCreationError, NewGameService} from "./newGame.service";
 
 export function getNewGamesRouter(): Router {
     let router = Router();
@@ -88,12 +88,16 @@ export function getNewGamesRouter(): Router {
 
         if (newGame.ok == undefined) {
             switch (newGame.err!) {
-                case JoinGameCreationError.gameFull: {
+                case JoinNewGameError.gameFull: {
                     res.status(406).send("game already full")
                     break;
                 }
-                case JoinGameCreationError.gameNotFound: {
+                case JoinNewGameError.gameNotFound: {
                     res.status(406).send("game not found")
+                    break;
+                }
+                case JoinNewGameError.alreadyJoined: {
+                    res.status(406).send("already joined")
                     break;
                 }
             }
@@ -123,11 +127,11 @@ export function getNewGamesRouter(): Router {
 
         if (game.ok == undefined) {
             switch (game.err!) {
-                case LeaveGameCreationError.neverJoined: {
+                case LeaveNewGameError.neverJoined: {
                     res.status(406).send("user never joined")
                     break;
                 }
-                case LeaveGameCreationError.gameNotFound: {
+                case LeaveNewGameError.gameNotFound: {
                     res.status(406).send("game not found")
                     break;
                 }
