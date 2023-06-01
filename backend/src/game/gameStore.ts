@@ -40,9 +40,9 @@ export class GameStore {
             return undefined
 
         let gameData: GameData = {
-            id: game[0]!.id,
+            id: game[0]!.game_id,
             name: game[0]!.name,
-            tick: game[0]!.id,
+            tick: game[0]!.tick,
             players: []
         };
 
