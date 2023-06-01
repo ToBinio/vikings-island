@@ -39,3 +39,8 @@ Content-Type: application/json
   "timestamp": 5,
   "name": "huff"
 }
+
+### Join Game
+POST localhost:3000/api/new_game/join/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiaHVmZmYiLCJpZCI6OSwiaWF0IjoxNjg1NjM0OTM5fQ.PZ7VFbmwDjkOE3Oqo0KudNs86_h3OYmjYrRjeZfqSR8
+Content-Type: application/json
