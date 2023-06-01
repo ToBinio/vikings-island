@@ -15,22 +15,22 @@ export class EventStore {
         return EventStore.instance;
     }
 
-    loginEvents = new Map<string, LoginEventData>;
+    waitListListeners = new Map<string, WaitListListenerData>;
 
-    addWaitListEvent(data: LoginEventData): string {
+    addWaitListEvent(data: WaitListListenerData): string {
         let uuid = uuidv4();
 
-        this.loginEvents.set(uuid, data);
+        this.waitListListeners.set(uuid, data);
 
         return uuid
     }
 
     removeWaitListEvent(uuid: string) {
-        this.loginEvents.delete(uuid);
+        this.waitListListeners.delete(uuid);
     }
 
-    getLoginEventData(userId: number, gameId: number): LoginEventData | undefined {
-        for (let value of this.loginEvents.values()) {
+    getWaitListListenerData(userId: number, gameId: number): WaitListListenerData | undefined {
+        for (let value of this.waitListListeners.values()) {
             if (value.game == gameId && value.token.id == userId) {
                 return value
             }
@@ -40,7 +40,7 @@ export class EventStore {
     }
 }
 
-export interface LoginEventData {
+export interface WaitListListenerData {
     res: Response<any, Record<string, any>, number>,
     token: TokenData,
     game: number

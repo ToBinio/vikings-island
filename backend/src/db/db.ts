@@ -11,8 +11,27 @@ export interface UserTable {
     is_admin: boolean
 }
 
+export interface GameTable {
+    id: Generated<number>,
+
+    name: string
+    tick: number
+}
+
+export interface PlayerTable {
+    id: Generated<number>,
+
+    user_id: number,
+    game_id: number,
+
+    gold: number,
+    color: string,
+}
+
 interface Database {
     users: UserTable
+    games: GameTable
+    players: PlayerTable
 }
 
 export const db = new Kysely<Database>({
