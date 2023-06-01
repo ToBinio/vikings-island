@@ -1,4 +1,6 @@
 import {CreateNewGame, NewGame} from "../../../types/games";
+import {Result} from "../../../types/util";
+import {LeaveGameCreationError} from "./newGame.service";
 
 export class NewGameStore {
 
@@ -50,6 +52,22 @@ export class NewGameStore {
         return true;
     }
 
+    removePLayerFromGame(gameId: number, playerId: number): Result<LeaveGameCreationError, undefined> {
+        const gameInfo = this.getGameById(gameId);
+
+        if (gameInfo == undefined)
+            return {err: LeaveGameCreationError.gameNotFound}
+
+
+        const gameIndex = gameInfo.players.indexOf(playerId);
+        if (gameIndex == -1)
+            return {err: LeaveGameCreationError.neverJoined}
+
+        gameInfo.players.splice(gameIndex, 1);
+
+        return {ok: undefined};
+    }
+
     getGameById(gameId: number): NewGame | undefined {
         for (let game of this.games) {
             if (game.id == gameId)
@@ -66,5 +84,14 @@ export class NewGameStore {
         }
 
         return undefined
+    }
+
+    removeGame(gameId: number) {
+        for (let i = 0; i < this.games.length; i++) {
+            if (this.games[i].id == gameId) {
+                this.games.splice(i, 1)
+                return
+            }
+        }
     }
 }

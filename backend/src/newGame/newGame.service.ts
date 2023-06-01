@@ -49,6 +49,29 @@ export class NewGameService {
         return {ok: undefined};
     }
 
+    leaveGame(gameId: number, token: TokenData): Result<LeaveGameCreationError, undefined> {
+
+        const game = NewGameStore.get().getGameById(gameId);
+
+        if (game == undefined) {
+            return {err: LeaveGameCreationError.gameNotFound}
+        }
+
+        const result = NewGameStore.get().removePLayerFromGame(gameId, token.id);
+
+        if (result.err != undefined) {
+            return result;
+        }
+
+        if (game.players.length <= 0) {
+            NewGameStore.get().removeGame(gameId);
+        }
+
+        EventService.get().updateWaitList(gameId)
+
+        return {ok: undefined};
+    }
+
     getGame(gameId: number): NewGame | undefined {
         return NewGameStore.get().getGameById(gameId);
     }
@@ -61,4 +84,9 @@ export enum NewGameCreationError {
 export enum JoinGameCreationError {
     gameNotFound,
     gameFull,
+}
+
+export enum LeaveGameCreationError {
+    gameNotFound,
+    neverJoined,
 }

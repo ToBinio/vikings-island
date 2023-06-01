@@ -1,7 +1,7 @@
 import {Router} from "express";
 import {CreateNewGame, newGames} from "../../../types/games";
 import {handleRequest} from "../util/token";
-import {JoinGameCreationError, NewGameCreationError, NewGameService} from "./newGame.service";
+import {JoinGameCreationError, LeaveGameCreationError, NewGameCreationError, NewGameService} from "./newGame.service";
 
 export function getGamesRouter(): Router {
     let router = Router();
@@ -88,6 +88,36 @@ export function getGamesRouter(): Router {
                     break;
                 }
                 case JoinGameCreationError.gameNotFound: {
+                    res.status(406).send("game not found")
+                    break;
+                }
+            }
+        } else {
+            res.sendStatus(200);
+        }
+
+        res.end();
+    })
+
+    router.post("/leave", (req, res) => {
+
+        let token = handleRequest(req.headers.authorization, res);
+
+        if (token == undefined) {
+            return
+        }
+
+        let gameId: number = req.body;
+
+        let game = NewGameService.get().leaveGame(gameId, token);
+
+        if (game.ok == undefined) {
+            switch (game.err!) {
+                case LeaveGameCreationError.neverJoined: {
+                    res.status(406).send("user never joined")
+                    break;
+                }
+                case LeaveGameCreationError.gameNotFound: {
                     res.status(406).send("game not found")
                     break;
                 }
