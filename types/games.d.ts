@@ -19,6 +19,7 @@ export interface GameData {
 
     players: {
         userId: number,
+        playerId: number,
         gold: number,
         color: string
     }[]
