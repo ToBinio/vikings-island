@@ -24,10 +24,10 @@ export class EventService {
         EventStore.get().removeWaitListEvent(uuid);
     }
 
-    updateWaitList(newGameId: number, hasStarted: boolean) {
+    updateWaitList(newGameId: number, gameId: number) {
         let game = NewGameStore.get().getGameById(newGameId)!;
 
-        let data: WaitListEvent = {players: game.players, hasStarted: hasStarted};
+        let data: WaitListEvent = {players: game.players, gameId: gameId};
         let dataString = JSON.stringify(data);
 
         for (let player of game.players) {

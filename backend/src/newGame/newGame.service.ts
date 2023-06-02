@@ -33,7 +33,7 @@ export class NewGameService {
         let gameId = NewGameStore.get().createGame(gameCreateRequest);
 
         NewGameStore.get().addPLayerToGame(gameId, token.id);
-        EventService.get().updateWaitList(gameId, false)
+        EventService.get().updateWaitList(gameId, -1)
 
         return {ok: gameId};
     }
@@ -50,12 +50,12 @@ export class NewGameService {
 
         if (newGame.players.length >= 4) {
 
-            await GameService.get().createGame(newGame);
-            EventService.get().updateWaitList(gameId, true);
+            let gameId = await GameService.get().createGame(newGame);
+            EventService.get().updateWaitList(gameId, gameId);
             NewGameStore.get().removeGame(gameId);
 
         } else {
-            EventService.get().updateWaitList(gameId, false)
+            EventService.get().updateWaitList(gameId, -1)
         }
 
 
@@ -80,7 +80,7 @@ export class NewGameService {
             NewGameStore.get().removeGame(gameId);
         }
 
-        EventService.get().updateWaitList(gameId, false)
+        EventService.get().updateWaitList(gameId, -1)
 
         return {ok: undefined};
     }
