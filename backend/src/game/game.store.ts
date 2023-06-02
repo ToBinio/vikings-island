@@ -53,6 +53,13 @@ export class GameStore {
         return gameData;
     }
 
+    async getSimpleGameByID(gameId: number): Promise<Game | undefined> {
+        return db.selectFrom('games')
+            .where("games.id", "=", gameId)
+            .selectAll()
+            .executeTakeFirst()
+    }
+
     async createGame(newGame: NewGame) {
         let gameResult = await db.insertInto("games")
             .values({name: newGame.name, tick: newGame.tick})

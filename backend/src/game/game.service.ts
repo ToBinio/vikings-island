@@ -17,6 +17,10 @@ export class GameService {
         return GameStore.get().getGameByID(gameId)
     }
 
+    async getSimpleGameById(gameId: number) {
+        return GameStore.get().getSimpleGameByID(gameId)
+    }
+
     async createGame(newGame: NewGame) {
         return GameStore.get().createGame(newGame);
     }
