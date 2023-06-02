@@ -7,76 +7,96 @@
     <button class="logout-button" (click)="logOut()">Abmelden</button>
   </div>
 
-  <div class="btnCenter" id="adminBtn" *ngIf="adminAuth.isAuth">
-    <button (click)="admin()">Admin Site</button>
+  <div *ngIf="adminAuth.isAuth">
+    <button id="adminBtn" (click)="admin()">Admin Site</button>
   </div>
 
   <div class="btnCenter">
-    <button (click)="changeCreateActive()" class="btn">Neues Spiel</button>
-  </div>
-
-  <div class="btnCenter eye">
-    <span *ngIf="!switchOn" (click)="toggleSwitch()" matTooltip="Es werden alle Spiele angezeigt!"
+    <div class="btn">
+      <div (click)="changeCreateActive()" id="newGame">Neues Spiel</div>
+      <div class="eye">
+        <span *ngIf="!switchOn" (click)="toggleSwitch()" matTooltip="Es werden alle Spiele angezeigt!"
           matTooltipClass="custom-tooltip"
           matTooltipPosition="below">👁</span>
-    <span *ngIf="switchOn" class="active" (click)="toggleSwitch()" matTooltip="Es werden nur eigene Spiele angezeigt!"
-          matTooltipClass="custom-tooltip"
-          matTooltipPosition="below">👁</span>
+        <span *ngIf="switchOn" class="active" (click)="toggleSwitch()"
+              matTooltip="Es werden nur eigene Spiele angezeigt!"
+              matTooltipClass="custom-tooltip"
+              matTooltipPosition="below">👁</span>
+      </div>
+    </div>
   </div>
 
   <div class="btnCenter">
-    <button (click)="join(game.id)" *ngFor="let game of displayGames" id="game">
-      <h2>{{game.name}}</h2>
-      <div>Spieler: {{game.players}}</div>
-      <div>TickSpeed: {{game.tick}}</div>
-    </button>
+    <div *ngIf="gameMenuActive">
+      <button (click)="menuService.joinNewGame(game.id)" *ngFor="let game of gameMenu" class="game">
+        <div>
+          <h2>{{game.name}}</h2>
+        </div>
+        <div>
+          <div>Spieler: {{game.players}}</div>
+          <div>TickSpeed: {{game.tick}}</div>
+        </div>
+      </button>
+    </div>
+    <div *ngIf="!gameMenuActive">
+      <button (click)="menuService.joinRunningGame(game.id)" *ngFor="let game of ownGameMenu" class="game">
+        <div>
+          <h2>{{game.name}}</h2>
+        </div>
+        <div>
+          <div>Spieler: {{game.players}}</div>
+          <div>TickSpeed: {{game.tick}}</div>
+        </div>
+      </button>
+    </div>
   </div>
 </div>
 
 <div *ngIf="createActive" class="center">
-<form #createGame="ngForm" (ngSubmit)="create()">
-  <div id="head">
-    <span (click)="close()">X</span>
-    <h1>Neues Spiel erstellen</h1>
-  </div>
+  <form #createGame="ngForm" (ngSubmit)="create()">
+    <div id="head">
+      <span (click)="close()">X</span>
+      <h1>Neues Spiel erstellen</h1>
+    </div>
 
-  <div>
-    <div class="flex">
-      <div class="txt_field">
-        <input type="text" name="gameName" id="gameName" [(ngModel)]="gameName" #gameName2="ngModel" required
-               pattern="^[a-zA-Z0-9._]+$" [ngClass]="{'has-value': gameName != ''}">
-        <span></span>
-        <label>LobbyName:</label>
-      </div>
-      <div *ngIf="gameName2.hasError('required') && gameName2.touched">
+    <div>
+      <div class="flex">
+        <div class="txt_field">
+          <input type="text" name="gameName" id="gameName" [(ngModel)]="gameName" #gameName2="ngModel" required
+                 pattern="^[a-zA-Z0-9._]+$" [ngClass]="{'has-value': gameName != ''}">
+          <span></span>
+          <label>LobbyName:</label>
+        </div>
+        <div *ngIf="gameName2.hasError('required') && gameName2.touched">
           <span class="error" matTooltip="Sie müssen einen Spielnamen angeben!"
                 matTooltipClass="custom-tooltip"
                 matTooltipPosition="below">&#9888;
           </span>
-      </div>
-      <div *ngIf="gameName2.hasError('pattern')">
+        </div>
+        <div *ngIf="gameName2.hasError('pattern')">
           <span class="error" matTooltip="Dieser Spielname ist nicht erlaubt!"
                 matTooltipClass="custom-tooltip"
                 matTooltipPosition="below">&#9888;
           </span>
+        </div>
       </div>
-    </div>
 
-    <div class="flex">
-      <div class="txt_field">
-        <input type="number" name="tickSpeed" id="tickSpeed" [(ngModel)]="tickSpeed" #ticks2="ngModel" required class="has-value">
-        <span></span>
-        <label>TickSpeed:</label>
-      </div>
-      <div *ngIf="ticks2.hasError('required') && ticks2.touched">
+      <div class="flex">
+        <div class="txt_field">
+          <input type="number" name="tickSpeed" id="tickSpeed" [(ngModel)]="tickSpeed" #ticks2="ngModel" required
+                 class="has-value">
+          <span></span>
+          <label>TickSpeed:</label>
+        </div>
+        <div *ngIf="ticks2.hasError('required') && ticks2.touched">
           <span class="error" matTooltip="Sie müssen ein Tickspeed angeben!"
                 matTooltipClass="custom-tooltip"
                 matTooltipPosition="below">&#9888;
           </span>
+        </div>
       </div>
     </div>
-  </div>
 
-  <button type="submit" [disabled]="createGame.invalid">Spiel erstellen</button>
-</form>
+    <button type="submit" [disabled]="createGame.invalid">Spiel erstellen</button>
+  </form>
 </div>

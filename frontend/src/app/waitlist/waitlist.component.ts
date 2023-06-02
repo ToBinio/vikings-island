@@ -1,20 +1,31 @@
-import { Component, OnInit } from '@angular/core';
-import {MenuService} from "../game-menu/menu.service";
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Router} from "@angular/router";
+import {MenuService} from "../game-menu/menu.service";
 
 @Component({
   selector: 'app-waitlist',
   templateUrl: './waitlist.component.html',
   styleUrls: ['./waitlist.component.scss']
 })
-export class WaitlistComponent implements OnInit {
+export class WaitlistComponent implements OnInit, OnDestroy {
 
-  constructor(private router: Router) { }
+  constructor(private router: Router, private menuService: MenuService) { }
 
   ngOnInit(): void {
   }
 
+  ngOnDestroy() {
+    if (!this.clicked) {
+      this.unlisten();
+    }
+  }
+
+  clicked: boolean = false;
+
   unlisten() {
+    this.clicked = true;
+    this.menuService.unListen();
+    this.menuService.leaveNewGame();
     this.router.navigate(["/games"]);
   }
 

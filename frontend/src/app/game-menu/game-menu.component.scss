@@ -40,7 +40,7 @@ body {
   width: 400px;
   background: white;
   border-radius: 10px;
-  border: 2px solid gray;
+  border: 2px solid #d3d3d3;
 
   h1 {
     text-align: center;
@@ -100,7 +100,7 @@ body {
   }
 }
 
-button[type="submit"], .btn {
+button[type="submit"] {
   width: 100%;
   height: 50px;
   border: none;
@@ -125,6 +125,28 @@ button[type="submit"], .btn {
   }
 }
 
+.btn {
+  width: 200px;
+  height: 50px;
+  border: none;
+  background: #2691d9;
+  border-radius: 25px;
+  font-size: 18px;
+  color: #e9f4fb;
+  font-weight: 700;
+  cursor: pointer;
+  outline: none;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+
+  div:hover {
+    transform: scale(103%);
+    transition: 0.5s;
+  }
+}
+
 .btnCenter {
   display: flex;
   justify-content: center;
@@ -141,7 +163,8 @@ button[type="submit"], .btn {
 
   span {
     font-size: 40px;
-    color: green;
+    font-weight: normal!important;
+    color: #21ea21;
   }
 
   .active {
@@ -160,19 +183,9 @@ button[type="submit"], .btn {
   }
 
   span:hover {
-   scale: 1.5;
-  }
-}
-
-#adminBtn {
-  position: absolute;
-  top: 0;
-  left: 0;
-  margin: 10px;
-
-  button {
-    width: 80px;
-    height: 30px;
+    transform: scale(120%);
+    transition: 0.5s;
+    cursor: pointer;
   }
 }
 
@@ -183,19 +196,13 @@ button[type="submit"], .btn {
   margin: 10px;
 }
 
-.btn {
-  width: 200px;
-}
-
-.logout-button {
+.logout-button,  #adminBtn {
   position: absolute;
   top: 0;
-  right: 0;
-  margin: 20px;
+  margin: 10px;
   display: inline-block;
   padding: 10px 20px;
   border-radius: 5px;
-  background-color: #ff0000;
   color: #ffffff;
   font-size: 16px;
   font-weight: bold;
@@ -205,22 +212,26 @@ button[type="submit"], .btn {
   transition: background-color 0.3s ease;
 }
 
+.logout-button {
+  right: 0;
+  background-color: red;
+}
+
 .logout-button:hover {
   background-color: #cc0000;
 }
 
-.logout-button:active {
-  background-color: #990000;
+#adminBtn {
+  left: 0;
+  background-color: darkcyan;
 }
 
-/* Optional Icon Styling */
-.logout-button i {
-  margin-right: 5px;
+#adminBtn:hover {
+  background-color: #006f6f;
 }
 
-
-#game {
-  width: 150px;
+.game {
+  width: 300px;
   border: none;
   border-radius: 5px;
   font-size: 18px;
@@ -229,9 +240,19 @@ button[type="submit"], .btn {
   cursor: pointer;
   outline: none;
   transition: 0.5s;
-  background: #5db2e8;
   padding: 5px;
   margin-top: 30px;
+  background-color: #89caf3;
+
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+
+  div {
+    display: flex;
+    flex-direction: column;
+  }
 
   h2 {
     margin: 3px;
@@ -239,11 +260,7 @@ button[type="submit"], .btn {
     font-weight: bold;
   }
 
-  &:disabled {
-    background: #928e8e;
-  }
-
-  &:hover:not(:disabled) {
+  &:hover {
     transform: scale(1.03);
   }
 }
@@ -276,6 +293,7 @@ button[type="submit"], .btn {
   left: 2px;
   transition: transform 0.3s;
 }
+
 .switch.on .slider {
   transform: translateX(30px);
 }
