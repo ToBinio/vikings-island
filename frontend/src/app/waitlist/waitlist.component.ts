@@ -9,7 +9,7 @@ import {MenuService} from "../game-menu/menu.service";
 })
 export class WaitlistComponent implements OnInit, OnDestroy {
 
-  constructor(private router: Router, private menuService: MenuService) { }
+  constructor(private router: Router, public menuService: MenuService) { }
 
   ngOnInit(): void {
   }

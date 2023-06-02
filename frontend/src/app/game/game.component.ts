@@ -1,14 +1,33 @@
-import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {environment} from "../../environments/environment";
 import {HttpHeaders} from "@angular/common/http";
 import {CookieService} from "ngx-cookie-service";
+import {Router} from "@angular/router";
+import {MenuService} from "../game-menu/menu.service";
 
 @Component({
   selector: 'app-game',
   templateUrl: './game.component.html',
   styleUrls: ['./game.component.scss']
 })
-export class GameComponent implements OnInit {
+export class GameComponent implements OnInit, OnDestroy {
+
+  constructor(private router: Router, public menuService: MenuService) { }
+
+  ngOnDestroy() {
+    if (!this.clicked) {
+      this.unlisten();
+    }
+  }
+
+  clicked: boolean = false;
+
+  unlisten() {
+    this.clicked = true;
+    this.menuService.unListen();
+    this.menuService.leaveNewGame();
+    this.router.navigate(["/games"]);
+  }
 
   @ViewChild('gameCanvas', {static: true})
   canvas!: ElementRef<HTMLCanvasElement>;
@@ -45,9 +64,6 @@ export class GameComponent implements OnInit {
     this.redraw();
 
     this.startEvent();
-  }
-
-  constructor(private cookieService: CookieService) {
   }
 
   startEvent() {

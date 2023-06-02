@@ -8,6 +8,7 @@ import {CreateNewGame, NewGames} from "../../../../types/games";
 import {AdminAuthService} from "../auth/adminAuth/admin-auth.service";
 import {LogOutService} from "../log-out/log-out.service";
 import {MenuService} from "./menu.service";
+import {LoginService} from "../login/login.service";
 
 @Component({
   selector: 'app-game-menu',
@@ -16,7 +17,7 @@ import {MenuService} from "./menu.service";
 })
 export class GameMenuComponent implements OnInit {
 
-  constructor(public menuService: MenuService, public logOutService: LogOutService, private httpClient: HttpClient, private cookieService: CookieService, private alertService: AlertService, private router: Router, public adminAuth: AdminAuthService) {
+  constructor(public menuService: MenuService, public logOutService: LogOutService, private httpClient: HttpClient, public cookieService: CookieService, private alertService: AlertService, private router: Router, public adminAuth: AdminAuthService) {
   }
 
   ngOnInit(): void {
@@ -78,43 +79,6 @@ export class GameMenuComponent implements OnInit {
 
   createActive: boolean = false;
   switchOn: boolean = false;
-
-  getUserName(id: number): string {
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${this.cookieService.get("token")}`
-    })
-
-    this.httpClient.get<{
-      id: number,
-      name: string,
-      is_admin: boolean
-    }>(environment.apiUrl + "/user/" + id, {headers: headers}).subscribe({
-      next: res => {
-        console.log("got user");
-        console.log(res.name)
-        return res.name;
-      },
-      error: err => {
-        switch (err.status) {
-          case 403: {
-            console.error(err)
-            this.alertService.error(err)
-            break
-          }
-          case 406: {
-            this.alertService.error(err)
-            break
-          }
-          default: {
-            this.alertService.error(err)
-            console.error("something went wrong")
-          }
-        }
-      }
-    })
-    return "";
-  }
 
   create() {
     const headers = new HttpHeaders({

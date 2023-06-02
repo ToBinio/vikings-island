@@ -19,6 +19,8 @@ export class MenuService {
   source: EventSource | undefined;
   gameID: number | undefined;
 
+  waitListPlayers: number[] = [];
+
   listen() {
     this.source = new EventSource(environment.apiUrl + '/event/wait_list/' + this.gameID + "?token=" + this.cookieService.get("token"));
 
@@ -36,7 +38,7 @@ export class MenuService {
         this.joinRunningGame(waitListEvent.gameId);
         this.router.navigate(["/game"]);
       } else {
-        console.log(waitListEvent.players)
+        this.waitListPlayers = waitListEvent.players
       }
     });
   }
