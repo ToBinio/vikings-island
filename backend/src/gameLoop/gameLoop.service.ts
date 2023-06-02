@@ -16,7 +16,16 @@ export class GameLoopService {
     games: GameLoopElement[] = []
 
     public async startGame(gameId: number) {
+
+        for (let game of this.games) {
+            if (game.gameId == gameId) {
+                return
+            }
+        }
+
         const game = await GameService.get().getSimpleGameById(gameId);
+
+        if (game == undefined) return
 
         console.log("starting Game: " + game!.id + " - " + game!.name);
 
