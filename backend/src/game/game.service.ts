@@ -1,4 +1,4 @@
-import {NewGame} from "../../../types/games";
+import {GameData, NewGame} from "../../../types/games";
 import {GameStore} from "./game.store";
 import {GameLoopService} from "../gameLoop/gameLoop.service";
 
@@ -16,6 +16,10 @@ export class GameService {
 
     async getGameById(gameId: number) {
         return GameStore.get().getGameByID(gameId)
+    }
+
+    async setGameById(game: GameData) {
+        return GameStore.get().setGameByID(game)
     }
 
     async getSimpleGameById(gameId: number) {

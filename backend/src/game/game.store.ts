@@ -34,6 +34,7 @@ export class GameStore {
             .innerJoin("users", "users.id", "players.user_id")
             .where("games.id", "=", gameId)
             .selectAll()
+            .select("players.id as player_id")
             .execute()
 
         if (game.length == 0)
@@ -47,10 +48,29 @@ export class GameStore {
         };
 
         for (let gameElement of game) {
-            gameData.players.push({color: gameElement.color, gold: gameElement.gold, userId: gameElement.user_id})
+            gameData.players.push({
+                color: gameElement.color,
+                gold: gameElement.gold,
+                userId: gameElement.user_id,
+                playerId: gameElement.player_id
+            })
         }
 
         return gameData;
+    }
+
+    async setGameByID(game: GameData) {
+
+        let promises = []
+
+        for (let player of game.players) {
+            promises.push(db.updateTable("players")
+                .set({gold: player.gold})
+                .where("players.id", "=", player.playerId)
+                .execute())
+        }
+
+        await Promise.all(promises)
     }
 
     async getSimpleGameByID(gameId: number): Promise<Game | undefined> {
