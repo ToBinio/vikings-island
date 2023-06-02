@@ -1,5 +1,6 @@
 import {NewGame} from "../../../types/games";
 import {GameStore} from "./game.store";
+import {GameLoopService} from "../gameLoop/gameLoop.service";
 
 export class GameService {
 
@@ -22,7 +23,19 @@ export class GameService {
     }
 
     async createGame(newGame: NewGame) {
-        return GameStore.get().createGame(newGame);
+        let gameId = await GameStore.get().createGame(newGame);
+
+        await GameLoopService.get().startGame(gameId);
+
+        return gameId
+    }
+
+    async startGames() {
+        const games = await GameStore.get().getAllGames();
+
+        for (let game of games) {
+            GameLoopService.get().startGame(game.id).then();
+        }
     }
 
     async getGameByUser(userId: number) {

@@ -68,7 +68,6 @@ export class GameStore {
 
         let gameId = gameResult!.id;
 
-
         let colors = ["#ff0000", "#00ff00", "#0000ff", "#ffff00"];
 
         for (let i = 0; i < newGame.players.length; i++) {
@@ -76,5 +75,7 @@ export class GameStore {
                 .values({game_id: gameId, color: colors[i], gold: 0, user_id: newGame.players[i]})
                 .execute()
         }
+
+        return gameId
     }
 }

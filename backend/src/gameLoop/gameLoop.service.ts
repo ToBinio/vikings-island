@@ -18,8 +18,10 @@ export class GameLoopService {
     public async startGame(gameId: number) {
         const game = await GameService.get().getSimpleGameById(gameId);
 
+        console.log("starting Game: " + game!.id + " - " + game!.name);
+
         let interval = setInterval(() => {
-            console.log("run :)");
+            console.log("update Game: " + game!.id + " - " + game!.name);
             EventService.get().updateGame(gameId);
         }, game!.tick * 1000)
 

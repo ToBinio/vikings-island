@@ -5,6 +5,7 @@ import {getUserRouter} from "./user/user.router";
 import {getNewGamesRouter} from "./newGame/newGame.router";
 import {getEventRouter} from "./event/event.router";
 import {getGamesRouter} from "./game/game.router";
+import {GameService} from "./game/game.service";
 
 dotenv.config();
 const PORT: number = parseInt(process.env.PORT as string, 10);
@@ -28,6 +29,9 @@ server.use("/api/user/", getUserRouter())
 server.use("/api/new_game/", getNewGamesRouter())
 server.use("/api/game/", getGamesRouter())
 server.use("/api/event/", getEventRouter())
+
+//start games
+GameService.get().startGames().then();
 
 server.listen(PORT, () => {
     console.log(`Listening on port ${PORT}`);
