@@ -139,10 +139,13 @@ export class GameStore {
         let gameId = gameResult!.id;
 
         let colors = ["#ff0000", "#00ff00", "#0000ff", "#ffff00"];
-        let positions = [{x: GameStore.gameSize / 2, y: 1}, {
-            x: GameStore.gameSize / 2,
+        let positions = [{x: Math.floor(GameStore.gameSize / 2), y: 1}, {
+            x: Math.floor(GameStore.gameSize / 2),
             y: GameStore.gameSize - 2
-        }, {x: 1, y: Math.floor(GameStore.gameSize / 2)}, {x: GameStore.gameSize - 2, y: Math.floor(GameStore.gameSize / 2)}];
+        }, {x: 1, y: Math.floor(GameStore.gameSize / 2)}, {
+            x: GameStore.gameSize - 2,
+            y: Math.floor(GameStore.gameSize / 2)
+        }];
 
         for (let i = 0; i < newGame.players.length; i++) {
             let player_id = await db.insertInto("players")
