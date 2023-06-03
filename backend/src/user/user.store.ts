@@ -59,6 +59,13 @@ export class UserStore {
         return {id: account.id, name: account.user_name, password: account.password, is_admin: account.is_admin}
     }
 
+    async updateUserPassword(userId: number, password: string){
+        await db.updateTable("users")
+            .set({password: password})
+            .where("users.id", "=", userId)
+            .execute()
+    }
+
 }
 
 
