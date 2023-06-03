@@ -39,6 +39,8 @@ export class GameService {
     }
 
     async deleteGame(gameId: number) {
+        GameLoopService.get().stopGame(gameId);
+
         await GameStore.get().deleteGame(gameId);
     }
 

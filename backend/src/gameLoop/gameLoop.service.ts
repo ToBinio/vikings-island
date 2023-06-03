@@ -33,13 +33,18 @@ export class GameLoopService {
         let interval = setInterval(async () => {
             console.log("update Game: " + game!.id + " - " + game!.name);
 
-            let currentGame = (await GameService.get().getGameById(gameId))!;
+            let currentGame = (await GameService.get().getGameById(gameId));
+
+            if (currentGame == undefined) {
+                this.stopGame(gameId);
+                return
+            }
 
             for (let island of currentGame.islands) {
-                if(island.playerId == undefined) continue
+                if (island.playerId == undefined) continue
 
                 for (let player of currentGame.players) {
-                    if(player.playerId != island.playerId) continue
+                    if (player.playerId != island.playerId) continue
 
                     player.gold += island.goldPerTick;
                 }
@@ -50,6 +55,14 @@ export class GameLoopService {
         }, game!.tick * 1000)
 
         this.games.push({gameId: gameId, interval: interval});
+    }
+
+    public stopGame(gameId: number) {
+        for (let game of this.games) {
+            if (game.gameId == gameId) {
+                clearInterval(game.interval)
+            }
+        }
     }
 
 }
