@@ -123,10 +123,10 @@ export class GameStore {
             .executeTakeFirst()
     }
 
-    async getAllSimpleGames(): Promise<Game | undefined> {
+    async getAllSimpleGames(): Promise<Game[] | undefined> {
         return db.selectFrom('games')
             .selectAll()
-            .executeTakeFirst()
+            .execute()
     }
 
     //todo no islands on same spot!
