@@ -5,6 +5,8 @@ export class GameStore {
 
     static instance: GameStore | undefined;
 
+    static readonly gameSize = 17;
+
     static get(): GameStore {
         if (GameStore.instance == undefined) {
             GameStore.instance = new GameStore();
@@ -119,6 +121,7 @@ export class GameStore {
             .executeTakeFirst()
     }
 
+    //todo no islands on same spot!
     async createGame(newGame: NewGame) {
         let gameResult = await db.insertInto("games")
             .values({name: newGame.name, tick: newGame.tick})
@@ -128,6 +131,10 @@ export class GameStore {
         let gameId = gameResult!.id;
 
         let colors = ["#ff0000", "#00ff00", "#0000ff", "#ffff00"];
+        let positions = [{x: GameStore.gameSize / 2, y: 1}, {
+            x: GameStore.gameSize / 2,
+            y: GameStore.gameSize - 2
+        }, {x: 1, y: GameStore.gameSize / 2}, {x: GameStore.gameSize - 2, y: GameStore.gameSize / 2}];
 
         for (let i = 0; i < newGame.players.length; i++) {
             let player_id = await db.insertInto("players")
@@ -136,7 +143,32 @@ export class GameStore {
                 .executeTakeFirst()
 
             await db.insertInto("ships")
-                .values({game_id: gameId, player_id: player_id!.id, x: getRandomInt(16), y: getRandomInt(16)})
+                .values({
+                    game_id: gameId,
+                    player_id: player_id!.id,
+                    x: getRandomInt(GameStore.gameSize),
+                    y: getRandomInt(GameStore.gameSize)
+                })
+                .execute()
+
+            await db.insertInto("islands")
+                .values({
+                    game_id: gameId,
+                    player_id: player_id!.id,
+                    x: positions[i].x,
+                    y: positions[i].y
+                })
+                .execute()
+        }
+
+        for (let i = 0; i < 10; i++) {
+            await db.insertInto("islands")
+                .values({
+                    game_id: gameId,
+                    player_id: undefined,
+                    x: getRandomInt(GameStore.gameSize),
+                    y: getRandomInt(GameStore.gameSize)
+                })
                 .execute()
         }
 
