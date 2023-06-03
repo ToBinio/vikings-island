@@ -29,30 +29,53 @@ export class GameStore {
     }
 
     async getGameByID(gameId: number): Promise<GameData | undefined> {
-        let game = await db.selectFrom('games')
-            .innerJoin("players", "players.game_id", "games.id")
-            .innerJoin("users", "users.id", "players.user_id")
+
+        let gameInfo = await db.selectFrom('games')
             .where("games.id", "=", gameId)
             .selectAll()
-            .select("players.id as player_id")
-            .execute()
+            .executeTakeFirst()
 
-        if (game.length == 0)
+        if (gameInfo == undefined)
             return undefined
 
         let gameData: GameData = {
-            id: game[0]!.game_id,
-            name: game[0]!.name,
-            tick: game[0]!.tick,
-            players: []
+            id: gameInfo.id,
+            name: gameInfo.name,
+            tick: gameInfo.tick,
+            players: [],
+            ships: []
         };
 
-        for (let gameElement of game) {
+        let playerInfo = await db.selectFrom('games')
+            .innerJoin("players", "players.game_id", "games.id")
+            .innerJoin("users", "users.id", "players.user_id")
+            .where("games.id", "=", gameId)
+            .select(["players.id as player_id", "color", "gold", "user_id"])
+            .execute()
+
+        for (let player of playerInfo) {
             gameData.players.push({
-                color: gameElement.color,
-                gold: gameElement.gold,
-                userId: gameElement.user_id,
-                playerId: gameElement.player_id
+                color: player.color,
+                gold: player.gold,
+                userId: player.user_id,
+                playerId: player.player_id
+            })
+        }
+
+        let shipInfo = await db.selectFrom('games')
+            .innerJoin("ships", "ships.game_id", "games.id")
+            .where("games.id", "=", gameId)
+            .select(["ships.id as ship_id", "player_id", "x", "y", "goal_x", "goal_y"])
+            .execute()
+
+        for (let ship of shipInfo) {
+            gameData.ships.push({
+                id: ship.ship_id,
+                playerId: ship.player_id,
+                x: ship.x,
+                y: ship.y,
+                goal_x: ship.goal_x,
+                goal_y: ship.goal_y,
             })
         }
 
@@ -91,8 +114,13 @@ export class GameStore {
         let colors = ["#ff0000", "#00ff00", "#0000ff", "#ffff00"];
 
         for (let i = 0; i < newGame.players.length; i++) {
-            await db.insertInto("players")
+            let player_id = await db.insertInto("players")
                 .values({game_id: gameId, color: colors[i], gold: 0, user_id: newGame.players[i]})
+                .returning("players.id")
+                .executeTakeFirst()
+
+            await db.insertInto("ships")
+                .values({game_id: gameId, player_id: player_id!.id, x: getRandomInt(16), y: getRandomInt(16)})
                 .execute()
         }
 
@@ -104,4 +132,8 @@ export class GameStore {
             .where("games.id", "=", gameId)
             .execute()
     }
+}
+
+function getRandomInt(max: number) {
+    return Math.floor(Math.random() * max);
 }

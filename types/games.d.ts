@@ -23,6 +23,17 @@ export interface GameData {
         gold: number,
         color: string
     }[]
+
+    ships: {
+        id: number
+        playerId: number
+
+        x: number,
+        y: number,
+
+        goal_x: number | undefined,
+        goal_y: number | undefined
+    }[]
 }
 
 export interface Game {

@@ -65,7 +65,6 @@ export class NewGameService {
             EventService.get().updateWaitList(newGameId, -1)
         }
 
-
         return {ok: undefined};
     }
 

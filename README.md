@@ -50,3 +50,19 @@ name varchar(255) not null,
 tick integer      not null
 );
 ```
+
+#### Ship
+
+``` sql
+create table ships
+(
+id      serial primary key,
+user_id integer not null references users,
+game_id integer not null references games on delete cascade,
+
+    x       integer not null,
+    y       integer not null,
+    goal_x  integer,
+    goal_y  integer
+);
+```
