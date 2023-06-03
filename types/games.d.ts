@@ -18,7 +18,7 @@ export interface GameData {
     tick: number
 
     players: {
-        userId: number,
+        userId: number | undefined,
         playerId: number,
         gold: number,
         color: string
