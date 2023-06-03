@@ -31,7 +31,6 @@ export class RegisterFormComponent {
 
   async register() {
     if (!this.checkPasswordCorrectness(this.password, this.passwordCheck)) {
-      console.log("the passwords are different");
       this.alertSystemService.error("Die Passwörter müssen gleich sein!")
       return;
     }
@@ -59,17 +58,14 @@ export class RegisterFormComponent {
           error: err => {
             switch (err.status) {
               case 403: {
-                console.error("user already in database");
                 this.alertSystemService.error("Dieser Benutzer existiert bereits!")
                 break;
               }
               case 406: {
-                console.error("userName not allowed");
                 this.alertSystemService.error("Dieser Benutzername ist nicht erlaubt! Verwenden Sie: ^[a-zA-Z0-9._]+$")
                 break;
               }
               default: {
-                console.error("something went wrong");
                 this.alertSystemService.error("error")
               }
             }

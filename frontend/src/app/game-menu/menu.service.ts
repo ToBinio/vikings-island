@@ -65,12 +65,11 @@ export class MenuService {
       error: err => {
         switch (err.status) {
           case 406: {
-            this.alertService.error(err)
-            console.error(err);
+            this.alertService.httpError(err)
             break
           }
           default: {
-            this.alertService.error(err)
+            this.alertService.httpError(err)
             console.error("something went wrong")
           }
         }
@@ -96,12 +95,12 @@ export class MenuService {
       error: err => {
         switch (err.status) {
           case 406: {
-            this.alertService.error(err)
+            this.alertService.httpError(err)
             console.error(err);
             break
           }
           default: {
-            this.alertService.error(err)
+            this.alertService.httpError(err)
             console.error("something went wrong")
           }
         }
@@ -127,12 +126,12 @@ export class MenuService {
       error: err => {
         switch (err.status) {
           case 406: {
-            this.alertService.error(err)
+            this.alertService.httpError(err)
             console.error(err);
             break
           }
           default: {
-            this.alertService.error(err)
+            this.alertService.httpError(err)
             console.error("something went wrong")
           }
         }

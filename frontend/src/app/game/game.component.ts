@@ -76,13 +76,15 @@ export class GameComponent implements OnInit {
       error: err => {
         switch (err.status) {
           case 403: {
-            console.error(err)
-            this.alertService.error(err)
+            this.alertService.httpError(err)
+            break
+          }
+          case 406: {
+            this.alertService.httpError(err)
             break
           }
           default: {
-            this.alertService.error(err)
-            console.error("something went wrong")
+            this.alertService.httpError(err)
           }
         }
         this.router.navigate(["/login"])
