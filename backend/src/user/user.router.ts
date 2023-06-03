@@ -64,6 +64,18 @@ export function getUserRouter(): Router {
         res.end();
     })
 
+    router.get("/", async (req, res) => {
+
+        let token = handleRequest(req.headers.authorization, res);
+
+        if (token == undefined) {
+            return
+        }
+
+        let user = await UserService.get().getAllUsers();
+
+        res.status(200).json(user).end();
+    })
 
     router.post("/password/:id", async (req, res) => {
 

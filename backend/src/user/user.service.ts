@@ -39,7 +39,7 @@ export class UserService {
         return {token: generateToken({name: user.name, id: user.id}), id: user.id};
     }
 
-    async changePassword(userId: number, newPassword: string){
+    async changePassword(userId: number, newPassword: string) {
         await UserStore.get().updateUserPassword(userId, newPassword);
     }
 
@@ -49,6 +49,14 @@ export class UserService {
         if (user == undefined) return undefined
 
         return {id: user.id, is_admin: user.is_admin, name: user.name}
+    }
+
+    async getAllUsers(): Promise<PublicUserData[]> {
+        const users = await UserStore.get().getAllUsers();
+
+        return users.map(user => {
+            return {id: user.id, is_admin: user.is_admin, name: user.name}
+        })
     }
 
     isUserNameValid(userName: string): boolean {
