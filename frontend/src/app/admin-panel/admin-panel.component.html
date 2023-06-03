@@ -11,6 +11,7 @@
     </div>
     <div *ngFor="let user of users">
       <button (click)="deleteUser(user.id)">X</button>
+      <button (click)="swapPasswordActive()">Change</button>
       <div>ID: {{user.id}}</div>
       <div>NAME: {{user.name}}</div>
     </div>

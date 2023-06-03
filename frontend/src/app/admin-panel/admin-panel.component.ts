@@ -47,7 +47,9 @@ export class AdminPanelComponent implements OnInit {
   }
 
   games: NewGames = [];
-  users: Users = []
+  users: Users = [];
+
+  changePasswordActive: boolean = false;
 
   deleteGame(gameID: number) {
     const headers = new HttpHeaders({
@@ -135,4 +137,7 @@ export class AdminPanelComponent implements OnInit {
     });
   }
 
+  swapPasswordActive() {
+    this.changePasswordActive = !this.changePasswordActive;
+  }
 }
