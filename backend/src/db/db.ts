@@ -39,11 +39,21 @@ export interface ShipTable {
     goal_y: Generated<number>
 }
 
+export interface IslandTable {
+    id: Generated<number>,
+    player_id: number | undefined,
+    game_id: number,
+
+    x: number,
+    y: number,
+}
+
 interface Database {
     users: UserTable
     games: GameTable
     players: PlayerTable
     ships: ShipTable
+    islands: IslandTable
 }
 
 export const db = new Kysely<Database>({
