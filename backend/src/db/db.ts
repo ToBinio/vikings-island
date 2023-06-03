@@ -46,6 +46,8 @@ export interface IslandTable {
 
     x: number,
     y: number,
+
+    gold_per_tick: number
 }
 
 interface Database {

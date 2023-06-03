@@ -41,6 +41,8 @@ export interface GameData {
 
         x: number,
         y: number,
+
+        goldPerTick: number
     }[]
 }
 
