@@ -1,6 +1,6 @@
 import {Router} from "express";
 import {clearInterval} from "timers";
-import {handleRequest} from "../util/token";
+import {verifyRequest} from "../util/token";
 import {EventService} from "./event.service";
 
 export function getEventRouter(): Router {
@@ -38,7 +38,7 @@ export function getEventRouter(): Router {
 
         console.log(req.query.token)
 
-        let token = handleRequest("Baear " + req.query.token as string, res);
+        let token = await verifyRequest("Baear " + req.query.token as string, res,false);
 
         if (token == undefined) {
             return
@@ -65,7 +65,7 @@ export function getEventRouter(): Router {
 
     //todo handle errors
     router.get('/game/:game', async (req, res) => {
-        let token = handleRequest("Baear " + req.query.token as string, res);
+        let token = await verifyRequest("Baear " + req.query.token as string, res,false);
 
         if (token == undefined) {
             return

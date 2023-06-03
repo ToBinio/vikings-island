@@ -1,5 +1,5 @@
 import {Router} from "express";
-import {handleRequest} from "../util/token";
+import {verifyRequest} from "../util/token";
 import {GameService} from "./game.service";
 import {UserService} from "../user/user.service";
 
@@ -8,7 +8,7 @@ export function getGamesRouter(): Router {
 
     router.get("/", async (req, res) => {
 
-        let token = handleRequest(req.headers.authorization, res);
+        let token = await verifyRequest(req.headers.authorization, res,false);
 
         if (token == undefined) {
             return
@@ -23,7 +23,7 @@ export function getGamesRouter(): Router {
 
     router.get("/all", async (req, res) => {
 
-        let token = handleRequest(req.headers.authorization, res);
+        let token = await verifyRequest(req.headers.authorization, res,false);
 
         if (token == undefined) {
             return
@@ -38,7 +38,7 @@ export function getGamesRouter(): Router {
 
     router.get("/:id", async (req, res) => {
 
-        let token = handleRequest(req.headers.authorization, res);
+        let token = await verifyRequest(req.headers.authorization, res,false);
 
         if (token == undefined) {
             return
@@ -64,16 +64,9 @@ export function getGamesRouter(): Router {
 
     router.delete("/:id", async (req, res) => {
 
-        let token = handleRequest(req.headers.authorization, res);
+        let token = await verifyRequest(req.headers.authorization, res,true);
 
         if (token == undefined) {
-            return
-        }
-
-        let user = await UserService.get().getUser(token.id);
-
-        if (user == undefined || !user.is_admin) {
-            res.status(403).send("no admin").end();
             return
         }
 
