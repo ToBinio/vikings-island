@@ -47,6 +47,12 @@ export class UserStore {
         return {id: account.id, name: account.user_name, password: account.password, is_admin: account.is_admin}
     }
 
+    async getAllUsers(): Promise<UserData[]> {
+        return await db.selectFrom('users')
+            .select(["user_name as name", "password", "id", "is_admin"])
+            .execute();
+    }
+
     async getUserByName(name: string): Promise<UserData | undefined> {
         let account = await db.selectFrom('users')
             .where('user_name', '=', name)
@@ -59,13 +65,18 @@ export class UserStore {
         return {id: account.id, name: account.user_name, password: account.password, is_admin: account.is_admin}
     }
 
-    async updateUserPassword(userId: number, password: string){
+    async updateUserPassword(userId: number, password: string) {
         await db.updateTable("users")
             .set({password: password})
             .where("users.id", "=", userId)
             .execute()
     }
 
+    async deleteUser(userId: number) {
+        await db.deleteFrom("users")
+            .where("users.id","=",userId)
+            .execute()
+    }
 }
 
 

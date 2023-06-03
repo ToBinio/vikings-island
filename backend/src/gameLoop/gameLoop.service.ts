@@ -35,8 +35,14 @@ export class GameLoopService {
 
             let currentGame = (await GameService.get().getGameById(gameId))!;
 
-            for (let player of currentGame.players) {
-                player.gold += player.playerId;
+            for (let island of currentGame.islands) {
+                if(island.playerId == undefined) continue
+
+                for (let player of currentGame.players) {
+                    if(player.playerId != island.playerId) continue
+
+                    player.gold += island.goldPerTick;
+                }
             }
 
             await GameService.get().setGameById(currentGame);

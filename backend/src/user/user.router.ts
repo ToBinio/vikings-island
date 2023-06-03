@@ -1,7 +1,7 @@
 import {Router} from "express";
 import {UserLoginError, UserRegisterError, UserService} from "./user.service";
 import {UserLoginRequest} from "../../../types/user";
-import {handleRequest} from "../util/token";
+import {verifyRequest} from "../util/token";
 import {UserStore} from "./user.store";
 
 export function getUserRouter(): Router {
@@ -40,7 +40,7 @@ export function getUserRouter(): Router {
 
     router.get("/:id", async (req, res) => {
 
-        let token = handleRequest(req.headers.authorization, res);
+        let token = await verifyRequest(req.headers.authorization, res, false);
 
         if (token == undefined) {
             return
@@ -64,21 +64,49 @@ export function getUserRouter(): Router {
         res.end();
     })
 
+    router.delete("/:id", async (req, res) => {
+
+        let token = await verifyRequest(req.headers.authorization, res, true);
+
+        if (token == undefined) {
+            return
+        }
+
+
+        let id = Number.parseInt(req.params.id);
+
+        if (isNaN(id)) {
+            res.status(406).send("user not found").end();
+            return
+        }
+
+        await UserService.get().deleteUser(id);
+
+        res.sendStatus(200).end();
+    })
+
+    router.get("/", async (req, res) => {
+
+        let token = await verifyRequest(req.headers.authorization, res, false);
+
+        if (token == undefined) {
+            return
+        }
+
+        let user = await UserService.get().getAllUsers();
+
+        res.status(200).json(user).end();
+    })
 
     router.post("/password/:id", async (req, res) => {
 
-        let token = handleRequest(req.headers.authorization, res);
+        let token = await verifyRequest(req.headers.authorization, res, true);
 
         if (token == undefined) {
             return
         }
 
         let user = await UserService.get().getUser(token.id);
-
-        if (user == undefined || !user.is_admin) {
-            res.status(403).send("no admin").end();
-            return
-        }
 
         let id = Number.parseInt(req.params.id);
 

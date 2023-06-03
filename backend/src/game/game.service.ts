@@ -26,6 +26,10 @@ export class GameService {
         return GameStore.get().getSimpleGameByID(gameId)
     }
 
+    async getAllSimpleGames() {
+        return GameStore.get().getAllSimpleGames()
+    }
+
     async createGame(newGame: NewGame) {
         let gameId = await GameStore.get().createGame(newGame);
 
