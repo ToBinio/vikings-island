@@ -39,6 +39,10 @@ export class UserService {
         return {token: generateToken({name: user.name, id: user.id}), id: user.id};
     }
 
+    async changePassword(userId: number, newPassword: string){
+        await UserStore.get().updateUserPassword(userId, newPassword);
+    }
+
     async getUser(userId: number): Promise<PublicUserData | undefined> {
         const user = await UserStore.get().getUserByID(userId);
 
