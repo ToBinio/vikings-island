@@ -1,6 +1,7 @@
 import {Response} from "express-serve-static-core";
 import {sign, verify} from "jsonwebtoken";
 import {JWT_TOKEN} from "../index";
+import {UserService} from "../user/user.service";
 
 export function generateToken(token: TokenData): string {
     return sign(token, JWT_TOKEN);
@@ -26,7 +27,7 @@ export function verifyToken(authorizationHeader: string | undefined): TokenData 
     return token;
 }
 
-export function handleRequest(authorizationHeader: string | undefined, res: Response<any, Record<string, any>, number>): TokenData | undefined {
+export async function verifyRequest(authorizationHeader: string | undefined, res: Response<any, Record<string, any>, number>, requersAdmin: boolean): Promise<TokenData | undefined> {
     let token = verifyToken(authorizationHeader);
 
     switch (token) {
@@ -37,6 +38,15 @@ export function handleRequest(authorizationHeader: string | undefined, res: Resp
         case TokenVerifyError.INVALID: {
             res.status(403).send("invalid JWT token")
             return undefined;
+        }
+    }
+
+    if (requersAdmin) {
+        let tokenUser = await UserService.get().getUser(token.id);
+
+        if (tokenUser == undefined || !tokenUser.is_admin) {
+            res.status(403).send("missing admin permissions").end();
+            return undefined
         }
     }
 

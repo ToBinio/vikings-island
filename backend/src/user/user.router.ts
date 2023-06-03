@@ -1,7 +1,7 @@
 import {Router} from "express";
 import {UserLoginError, UserRegisterError, UserService} from "./user.service";
 import {UserLoginRequest} from "../../../types/user";
-import {handleRequest} from "../util/token";
+import {verifyRequest} from "../util/token";
 import {UserStore} from "./user.store";
 
 export function getUserRouter(): Router {
@@ -40,7 +40,7 @@ export function getUserRouter(): Router {
 
     router.get("/:id", async (req, res) => {
 
-        let token = handleRequest(req.headers.authorization, res);
+        let token = await verifyRequest(req.headers.authorization, res, false);
 
         if (token == undefined) {
             return
@@ -66,18 +66,12 @@ export function getUserRouter(): Router {
 
     router.delete("/:id", async (req, res) => {
 
-        let token = handleRequest(req.headers.authorization, res);
+        let token = await verifyRequest(req.headers.authorization, res, true);
 
         if (token == undefined) {
             return
         }
 
-        let tokenUser = await UserService.get().getUser(token.id);
-
-        if (tokenUser == undefined || !tokenUser.is_admin) {
-            res.status(403).send("no admin").end();
-            return
-        }
 
         let id = Number.parseInt(req.params.id);
 
@@ -93,7 +87,7 @@ export function getUserRouter(): Router {
 
     router.get("/", async (req, res) => {
 
-        let token = handleRequest(req.headers.authorization, res);
+        let token = await verifyRequest(req.headers.authorization, res, false);
 
         if (token == undefined) {
             return
@@ -106,18 +100,13 @@ export function getUserRouter(): Router {
 
     router.post("/password/:id", async (req, res) => {
 
-        let token = handleRequest(req.headers.authorization, res);
+        let token = await verifyRequest(req.headers.authorization, res, true);
 
         if (token == undefined) {
             return
         }
 
         let user = await UserService.get().getUser(token.id);
-
-        if (user == undefined || !user.is_admin) {
-            res.status(403).send("no admin").end();
-            return
-        }
 
         let id = Number.parseInt(req.params.id);
 

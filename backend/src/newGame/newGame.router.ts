@@ -1,14 +1,14 @@
 import {Router} from "express";
 import {CreateNewGame, NewGames} from "../../../types/games";
-import {handleRequest} from "../util/token";
+import {verifyRequest} from "../util/token";
 import {JoinNewGameError, LeaveNewGameError, NewGameCreationError, NewGameService} from "./newGame.service";
 
 export function getNewGamesRouter(): Router {
     let router = Router();
 
-    router.get("/", (req, res) => {
+    router.get("/", async (req, res) => {
 
-        let token = handleRequest(req.headers.authorization, res);
+        let token = await verifyRequest(req.headers.authorization, res, false);
 
         if (token == undefined) {
             return
@@ -17,9 +17,9 @@ export function getNewGamesRouter(): Router {
         res.status(200).json(NewGameService.get().getAllGames() as NewGames).end();
     })
 
-    router.get("/:id", (req, res) => {
+    router.get("/:id", async (req, res) => {
 
-        let token = handleRequest(req.headers.authorization, res);
+        let token = await verifyRequest(req.headers.authorization, res, false);
 
         if (token == undefined) {
             return
@@ -43,9 +43,9 @@ export function getNewGamesRouter(): Router {
         res.end();
     })
 
-    router.post("/", (req, res) => {
+    router.post("/", async (req, res) => {
 
-        let token = handleRequest(req.headers.authorization, res);
+        let token = await verifyRequest(req.headers.authorization, res, false);
 
         if (token == undefined) {
             return
@@ -75,7 +75,7 @@ export function getNewGamesRouter(): Router {
 
     router.post("/join/:id", async (req, res) => {
 
-        let token = handleRequest(req.headers.authorization, res);
+        let token = await verifyRequest(req.headers.authorization, res, false);
 
         if (token == undefined) {
             return
@@ -112,9 +112,9 @@ export function getNewGamesRouter(): Router {
         res.end();
     })
 
-    router.post("/leave/:id", (req, res) => {
+    router.post("/leave/:id", async (req, res) => {
 
-        let token = handleRequest(req.headers.authorization, res);
+        let token = await verifyRequest(req.headers.authorization, res, false);
 
         if (token == undefined) {
             return
