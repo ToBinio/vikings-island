@@ -46,5 +46,38 @@ export function getGamesRouter(): Router {
         res.end();
     })
 
+    router.delete("/:id", async (req, res) => {
+
+        let token = handleRequest(req.headers.authorization, res);
+
+        if (token == undefined) {
+            return
+        }
+
+        let user = await UserService.get().getUser(token.id);
+
+        if (user == undefined || !user.is_admin) {
+            res.status(403).send("no admin").end();
+            return
+        }
+
+        let id = Number.parseInt(req.params.id);
+
+        if (isNaN(id)) {
+            res.status(406).send("game not found").end();
+            return
+        }
+
+        let game = await GameService.get().deleteGame(id);
+
+        if (game == undefined) {
+            res.status(406).send("game not found");
+        } else {
+            res.status(200).json(game);
+        }
+
+        res.end();
+    })
+
     return router;
 }

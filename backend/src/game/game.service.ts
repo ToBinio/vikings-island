@@ -34,6 +34,10 @@ export class GameService {
         return gameId
     }
 
+    async deleteGame(gameId: number) {
+        await GameStore.get().deleteGame(gameId);
+    }
+
     async startGames() {
         const games = await GameStore.get().getAllGames();
 
