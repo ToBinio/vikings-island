@@ -123,6 +123,12 @@ export class GameStore {
             .executeTakeFirst()
     }
 
+    async getAllSimpleGames(): Promise<Game | undefined> {
+        return db.selectFrom('games')
+            .selectAll()
+            .executeTakeFirst()
+    }
+
     //todo no islands on same spot!
     async createGame(newGame: NewGame) {
         let gameResult = await db.insertInto("games")
