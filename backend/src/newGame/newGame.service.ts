@@ -38,24 +38,27 @@ export class NewGameService {
         return {ok: gameId};
     }
 
-    async joinGame(gameId: number, token: TokenData): Promise<Result<JoinNewGameError, undefined>> {
+    async joinGame(newGameId: number, token: TokenData): Promise<Result<JoinNewGameError, undefined>> {
 
-        if (NewGameStore.get().getGameById(gameId) == undefined)
+        if (NewGameStore.get().getGameById(newGameId) == undefined)
             return {err: JoinNewGameError.gameNotFound}
 
-        if (!NewGameStore.get().addPLayerToGame(gameId, token.id))
+        if (!NewGameStore.get().addPLayerToGame(newGameId, token.id))
             return {err: JoinNewGameError.alreadyJoined}
 
-        let newGame = NewGameStore.get().getGameById(gameId)!;
+        let newGame = NewGameStore.get().getGameById(newGameId)!;
 
         if (newGame.players.length >= 4) {
 
             let gameId = await GameService.get().createGame(newGame);
-            EventService.get().updateWaitList(gameId, gameId);
-            NewGameStore.get().removeGame(gameId);
+
+            console.log("created Game " + gameId);
+
+            EventService.get().updateWaitList(newGameId, gameId);
+            NewGameStore.get().removeGame(newGameId);
 
         } else {
-            EventService.get().updateWaitList(gameId, -1)
+            EventService.get().updateWaitList(newGameId, -1)
         }
 
 
