@@ -30,6 +30,10 @@ export class NewGameService {
             return {err: NewGameCreationError.gameNameAlreadyTaken};
         }
 
+        if (gameCreateRequest.timeStamp < 1) {
+            return {err: NewGameCreationError.gameTickToShort};
+        }
+
         let gameId = NewGameStore.get().createGame(gameCreateRequest);
 
         NewGameStore.get().addPLayerToGame(gameId, token.id);
@@ -92,6 +96,7 @@ export class NewGameService {
 
 export enum NewGameCreationError {
     gameNameAlreadyTaken,
+    gameTickToShort
 }
 
 export enum JoinNewGameError {
