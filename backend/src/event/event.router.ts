@@ -65,8 +65,7 @@ export function getEventRouter(): Router {
 
     //todo handle errors
     router.get('/game/:game', async (req, res) => {
-
-        let token = handleRequest(req.query.token as string, res);
+        let token = handleRequest("Baear " + req.query.token as string, res);
 
         if (token == undefined) {
             return

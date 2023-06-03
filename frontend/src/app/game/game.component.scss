@@ -4,3 +4,28 @@ main {
   width: 100vw;
   height: 100vh;
 }
+
+.logout-button,  #adminBtn {
+  position: absolute;
+  top: 0;
+  margin: 10px;
+  display: inline-block;
+  padding: 10px 20px;
+  border-radius: 5px;
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: bold;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.logout-button {
+  right: 0;
+  background-color: red;
+}
+
+.logout-button:hover {
+  background-color: #cc0000;
+}

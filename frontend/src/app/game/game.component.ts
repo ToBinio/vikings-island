@@ -10,24 +10,9 @@ import {MenuService} from "../game-menu/menu.service";
   templateUrl: './game.component.html',
   styleUrls: ['./game.component.scss']
 })
-export class GameComponent implements OnInit, OnDestroy {
+export class GameComponent implements OnInit {
 
-  constructor(private router: Router, public menuService: MenuService) { }
-
-  ngOnDestroy() {
-    if (!this.clicked) {
-      this.unlisten();
-    }
-  }
-
-  clicked: boolean = false;
-
-  unlisten() {
-    this.clicked = true;
-    this.menuService.unListen();
-    this.menuService.leaveNewGame();
-    this.router.navigate(["/games"]);
-  }
+  constructor(private router: Router, public menuService: MenuService, private cookieService: CookieService) { }
 
   @ViewChild('gameCanvas', {static: true})
   canvas!: ElementRef<HTMLCanvasElement>;
@@ -66,22 +51,25 @@ export class GameComponent implements OnInit, OnDestroy {
     this.startEvent();
   }
 
+  source: EventSource | undefined;
+  leave() {
+    this.source?.close();
+    this.router.navigate(["/games"]);
+  }
+
   startEvent() {
-    const source = new EventSource(environment.apiUrl + '/event');
+    let list = this.router.url.split("/");
+    this.source = new EventSource(environment.apiUrl + '/event/game/' + list[list.length-1] + "?token=" + this.cookieService.get("token"));
 
     console.log("listening?");
 
-    source.addEventListener('open', message => {
+    this.source.addEventListener('open', message => {
       console.log('Got', message);
     });
 
-    source.addEventListener('message', message => {
+    this.source.addEventListener('message', message => {
       console.log('Got', message);
     });
-
-    setTimeout(() => {
-      source.close()
-    }, 10000)
   }
 
   render(ctx: CanvasRenderingContext2D) {

@@ -4,11 +4,10 @@ import {environment} from "../../environments/environment";
 import {CookieService} from "ngx-cookie-service";
 import {AlertService} from "../alert-system/alert.service";
 import {Router} from "@angular/router";
-import {CreateNewGame, NewGames} from "../../../../types/games";
 import {AdminAuthService} from "../auth/adminAuth/admin-auth.service";
 import {LogOutService} from "../log-out/log-out.service";
 import {MenuService} from "./menu.service";
-import {LoginService} from "../login/login.service";
+import {CreateNewGame, Game, NewGames} from "../../../../types/games";
 
 @Component({
   selector: 'app-game-menu',
@@ -49,7 +48,7 @@ export class GameMenuComponent implements OnInit {
       }
     });
 
-    this.httpClient.get<NewGames>(environment.apiUrl + "/game", {headers: headers}).subscribe({
+    this.httpClient.get<Game[]>(environment.apiUrl + "/game", {headers: headers}).subscribe({
       next: res => {
         console.log("ok");
         this.ownGameMenu = res;
@@ -71,7 +70,7 @@ export class GameMenuComponent implements OnInit {
   }
 
   gameMenu: NewGames = [];
-  ownGameMenu: NewGames = [];
+  ownGameMenu: Game[] = [];
   gameMenuActive: boolean = true;
 
   tickSpeed: number = 0;
@@ -93,7 +92,7 @@ export class GameMenuComponent implements OnInit {
       next: res => {
         console.log("ok -> created");
         this.menuService.gameID = res;
-        this.menuService.listen();
+        this.menuService.listenWaitlist().then();
         this.changeCreateActive();
         this.router.navigate(["/waitlist"]);
       },

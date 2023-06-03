@@ -1,9 +1,9 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {LogOutService} from "../log-out/log-out.service";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {CookieService} from "ngx-cookie-service";
 import {AlertService} from "../alert-system/alert.service";
-import {Router} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {AdminAuthService} from "../auth/adminAuth/admin-auth.service";
 import {environment} from "../../environments/environment";
 import {WaitListEvent} from "../../../../types/waitList";
@@ -13,39 +13,42 @@ import {WaitListEvent} from "../../../../types/waitList";
 })
 export class MenuService {
 
-  constructor(public logOutService: LogOutService, private httpClient: HttpClient, private cookieService: CookieService, private alertService: AlertService, private router: Router, public adminAuth: AdminAuthService) {
+  constructor(private route: ActivatedRoute, public logOutService: LogOutService, private httpClient: HttpClient, private cookieService: CookieService, private alertService: AlertService, private router: Router, public adminAuth: AdminAuthService) {
   }
 
-  source: EventSource | undefined;
+  waitListSource: EventSource | undefined;
   gameID: number | undefined;
 
   waitListPlayers: number[] = [];
 
-  listen() {
-    this.source = new EventSource(environment.apiUrl + '/event/wait_list/' + this.gameID + "?token=" + this.cookieService.get("token"));
+  listenWaitlist(): Promise<void> {
+    return new Promise<void>((resolve) => {
+      this.waitListSource = new EventSource(environment.apiUrl + '/event/wait_list/' + this.gameID + "?token=" + this.cookieService.get("token"));
 
-    console.log("listening?");
+      console.log("listening?");
 
-    this.source.addEventListener('open', message => {
-      console.log('Got', message);
-    });
+      this.waitListSource.addEventListener('open', message => {
+        console.log('Got', message);
+        resolve();
+      });
 
-    this.source.addEventListener('message', message => {
-      console.log('Got', message);
-      let waitListEvent = JSON.parse(message.data) as WaitListEvent;
-
-      if (waitListEvent.gameId != -1) {
-        this.joinRunningGame(waitListEvent.gameId);
-        this.router.navigate(["/game"]);
-      } else {
+      this.waitListSource.addEventListener('message', message => {
+        console.log('Got', message);
+        let waitListEvent = JSON.parse(message.data) as WaitListEvent;
         this.waitListPlayers = waitListEvent.players
-      }
-    });
+
+        if (waitListEvent.gameId != -1) {
+          this.joinRunningGame(waitListEvent.gameId);
+          this.unListenWaitlist();
+          this.router.navigate(["/game/" + this.gameID]);
+        }
+      });
+    })
   }
 
-  unListen() {
-    console.log("unlisten")
-    this.source!.close()
+  unListenWaitlist() {
+    console.log("unlisten waitlist")
+    this.waitListSource!.close()
   }
 
   leaveNewGame() {
@@ -71,18 +74,19 @@ export class MenuService {
             console.error("something went wrong")
           }
         }
+        console.log("erororororo")
       }
     })
   }
 
-  joinNewGame(id: number) {
+  async joinNewGame(id: number) {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${this.cookieService.get("token")}`
     })
 
     this.gameID = id;
-    this.listen();
+    await this.listenWaitlist();
 
     this.httpClient.post(environment.apiUrl + "/new_game/join/" + id, {}, {headers: headers}).subscribe({
       next: res => {
@@ -101,7 +105,7 @@ export class MenuService {
             console.error("something went wrong")
           }
         }
-        this.unListen();
+        this.unListenWaitlist();
       }
     })
   }
@@ -113,12 +117,12 @@ export class MenuService {
     });
 
     this.gameID = id;
-    this.listen();
+    console.log(id)
 
     this.httpClient.get(environment.apiUrl + "/game/" + id, {headers: headers}).subscribe({
       next: res => {
         console.log("ok -> joined");
-        this.router.navigate(["/game"]);//todo
+        this.router.navigate(["/game/" + this.gameID]);
       },
       error: err => {
         switch (err.status) {
@@ -132,10 +136,9 @@ export class MenuService {
             console.error("something went wrong")
           }
         }
-        this.unListen();
+        this.unListenWaitlist();
       }
     })
   }
-
 
 }
