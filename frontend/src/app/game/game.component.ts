@@ -1,9 +1,10 @@
 import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {environment} from "../../environments/environment";
-import {HttpHeaders} from "@angular/common/http";
+import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {CookieService} from "ngx-cookie-service";
 import {Router} from "@angular/router";
 import {MenuService} from "../game-menu/menu.service";
+import {AlertService} from "../alert-system/alert.service";
 
 @Component({
   selector: 'app-game',
@@ -12,7 +13,8 @@ import {MenuService} from "../game-menu/menu.service";
 })
 export class GameComponent implements OnInit {
 
-  constructor(private router: Router, public menuService: MenuService, private cookieService: CookieService) { }
+  constructor(private router: Router, private cookieService: CookieService, private httpClient: HttpClient, private alertService: AlertService) {
+  }
 
   @ViewChild('gameCanvas', {static: true})
   canvas!: ElementRef<HTMLCanvasElement>;
@@ -48,18 +50,49 @@ export class GameComponent implements OnInit {
 
     this.redraw();
 
-    this.startEvent();
+    this.getFirstData();
   }
 
   source: EventSource | undefined;
+
   leave() {
     this.source?.close();
     this.router.navigate(["/games"]);
   }
 
+  getFirstData() {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${this.cookieService.get("token")}`
+    });
+
+    let list = this.router.url.split("/");
+
+    this.httpClient.get(environment.apiUrl + "/game/" + list[list.length - 1], {headers: headers}).subscribe({
+      next: res => {
+        console.log("GotGameData", res);
+        this.startEvent();
+      },
+      error: err => {
+        switch (err.status) {
+          case 403: {
+            console.error(err)
+            this.alertService.error(err)
+            break
+          }
+          default: {
+            this.alertService.error(err)
+            console.error("something went wrong")
+          }
+        }
+        this.router.navigate(["/login"])
+      }
+    })
+  }
+
   startEvent() {
     let list = this.router.url.split("/");
-    this.source = new EventSource(environment.apiUrl + '/event/game/' + list[list.length-1] + "?token=" + this.cookieService.get("token"));
+    this.source = new EventSource(environment.apiUrl + '/event/game/' + list[list.length - 1] + "?token=" + this.cookieService.get("token"));
 
     console.log("listening?");
 
