@@ -1,6 +1,7 @@
 import {Router} from "express";
 import {handleRequest} from "../util/token";
 import {GameService} from "./game.service";
+import {UserService} from "../user/user.service";
 
 export function getGamesRouter(): Router {
     let router = Router();
@@ -14,6 +15,21 @@ export function getGamesRouter(): Router {
         }
 
         let games = await GameService.get().getGameByUser(token.id);
+
+        res.status(200).json(games);
+
+        res.end();
+    })
+
+    router.get("/all", async (req, res) => {
+
+        let token = handleRequest(req.headers.authorization, res);
+
+        if (token == undefined) {
+            return
+        }
+
+        let games = await GameService.get().getAllSimpleGames();
 
         res.status(200).json(games);
 
@@ -68,15 +84,9 @@ export function getGamesRouter(): Router {
             return
         }
 
-        let game = await GameService.get().deleteGame(id);
+        await GameService.get().deleteGame(id);
 
-        if (game == undefined) {
-            res.status(406).send("game not found");
-        } else {
-            res.status(200).json(game);
-        }
-
-        res.end();
+        res.sendStatus(200).end();
     })
 
     return router;

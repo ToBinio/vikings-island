@@ -21,7 +21,7 @@ export interface GameTable {
 export interface PlayerTable {
     id: Generated<number>,
 
-    user_id: number,
+    user_id: number | undefined,
     game_id: number,
 
     gold: number,
