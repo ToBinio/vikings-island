@@ -64,6 +64,33 @@ export function getUserRouter(): Router {
         res.end();
     })
 
+    router.delete("/:id", async (req, res) => {
+
+        let token = handleRequest(req.headers.authorization, res);
+
+        if (token == undefined) {
+            return
+        }
+
+        let tokenUser = await UserService.get().getUser(token.id);
+
+        if (tokenUser == undefined || !tokenUser.is_admin) {
+            res.status(403).send("no admin").end();
+            return
+        }
+
+        let id = Number.parseInt(req.params.id);
+
+        if (isNaN(id)) {
+            res.status(406).send("user not found").end();
+            return
+        }
+
+        await UserService.get().deleteUser(id);
+
+        res.sendStatus(200).end();
+    })
+
     router.get("/", async (req, res) => {
 
         let token = handleRequest(req.headers.authorization, res);

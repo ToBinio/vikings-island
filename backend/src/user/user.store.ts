@@ -72,6 +72,11 @@ export class UserStore {
             .execute()
     }
 
+    async deleteUser(userId: number) {
+        await db.deleteFrom("users")
+            .where("users.id","=",userId)
+            .execute()
+    }
 }
 
 

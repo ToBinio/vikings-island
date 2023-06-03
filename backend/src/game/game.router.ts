@@ -84,15 +84,9 @@ export function getGamesRouter(): Router {
             return
         }
 
-        let game = await GameService.get().deleteGame(id);
+        await GameService.get().deleteGame(id);
 
-        if (game == undefined) {
-            res.status(406).send("game not found");
-        } else {
-            res.status(200).json(game);
-        }
-
-        res.end();
+        res.sendStatus(200).end();
     })
 
     return router;

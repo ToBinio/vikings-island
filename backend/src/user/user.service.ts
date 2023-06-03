@@ -51,6 +51,10 @@ export class UserService {
         return {id: user.id, is_admin: user.is_admin, name: user.name}
     }
 
+    async deleteUser(userId: number) {
+        await UserStore.get().deleteUser(userId);
+    }
+
     async getAllUsers(): Promise<PublicUserData[]> {
         const users = await UserStore.get().getAllUsers();
 
