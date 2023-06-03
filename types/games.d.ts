@@ -34,6 +34,14 @@ export interface GameData {
         goal_x: number | undefined,
         goal_y: number | undefined
     }[]
+
+    islands: {
+        id: number
+        playerId: number | undefined
+
+        x: number,
+        y: number,
+    }[]
 }
 
 export interface Game {

@@ -43,7 +43,8 @@ export class GameStore {
             name: gameInfo.name,
             tick: gameInfo.tick,
             players: [],
-            ships: []
+            ships: [],
+            islands: []
         };
 
         let playerInfo = await db.selectFrom('games')
@@ -76,6 +77,21 @@ export class GameStore {
                 y: ship.y,
                 goal_x: ship.goal_x,
                 goal_y: ship.goal_y,
+            })
+        }
+
+        let islandInfo = await db.selectFrom('games')
+            .innerJoin("islands", "islands.game_id", "games.id")
+            .where("games.id", "=", gameId)
+            .select(["islands.id as island_id", "player_id", "x", "y"])
+            .execute()
+
+        for (let island of islandInfo) {
+            gameData.islands.push({
+                id: island.island_id,
+                playerId: island.player_id,
+                x: island.x,
+                y: island.y,
             })
         }
 
