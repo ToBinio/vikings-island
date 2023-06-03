@@ -114,8 +114,13 @@ export class GameStore {
         let colors = ["#ff0000", "#00ff00", "#0000ff", "#ffff00"];
 
         for (let i = 0; i < newGame.players.length; i++) {
-            await db.insertInto("players")
+            let player_id = await db.insertInto("players")
                 .values({game_id: gameId, color: colors[i], gold: 0, user_id: newGame.players[i]})
+                .returning("players.id")
+                .executeTakeFirst()
+
+            await db.insertInto("ships")
+                .values({game_id: gameId, player_id: player_id!.id, x: getRandomInt(16), y: getRandomInt(16)})
                 .execute()
         }
 
@@ -127,4 +132,8 @@ export class GameStore {
             .where("games.id", "=", gameId)
             .execute()
     }
+}
+
+function getRandomInt(max: number) {
+    return Math.floor(Math.random() * max);
 }
