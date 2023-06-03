@@ -98,4 +98,10 @@ export class GameStore {
 
         return gameId
     }
+
+    async deleteGame(gameId: number) {
+        await db.deleteFrom("games")
+            .where("games.id", "=", gameId)
+            .execute()
+    }
 }
