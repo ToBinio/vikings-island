@@ -26,6 +26,7 @@ export class AdminPanelComponent implements OnInit {
     this.httpClient.get<Game[]>(environment.apiUrl + "/game/all", {headers: headers}).subscribe({
       next: res => {
         console.log("ok");
+        console.log(res)
         this.games = res;
       },
       error: err => {
