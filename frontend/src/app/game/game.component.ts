@@ -1,5 +1,9 @@
-import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {environment} from "../../environments/environment";
+import {HttpHeaders} from "@angular/common/http";
+import {CookieService} from "ngx-cookie-service";
+import {Router} from "@angular/router";
+import {MenuService} from "../game-menu/menu.service";
 
 @Component({
   selector: 'app-game',
@@ -7,6 +11,8 @@ import {environment} from "../../environments/environment";
   styleUrls: ['./game.component.scss']
 })
 export class GameComponent implements OnInit {
+
+  constructor(private router: Router, public menuService: MenuService, private cookieService: CookieService) { }
 
   @ViewChild('gameCanvas', {static: true})
   canvas!: ElementRef<HTMLCanvasElement>;
@@ -45,22 +51,25 @@ export class GameComponent implements OnInit {
     this.startEvent();
   }
 
+  source: EventSource | undefined;
+  leave() {
+    this.source?.close();
+    this.router.navigate(["/games"]);
+  }
+
   startEvent() {
-    const source = new EventSource(environment.apiUrl + '/event');
+    let list = this.router.url.split("/");
+    this.source = new EventSource(environment.apiUrl + '/event/game/' + list[list.length-1] + "?token=" + this.cookieService.get("token"));
 
     console.log("listening?");
 
-    source.addEventListener('open', message => {
+    this.source.addEventListener('open', message => {
       console.log('Got', message);
     });
 
-    source.addEventListener('message', message => {
+    this.source.addEventListener('message', message => {
       console.log('Got', message);
     });
-
-    setTimeout(() => {
-      source.close()
-    }, 10000)
   }
 
   render(ctx: CanvasRenderingContext2D) {

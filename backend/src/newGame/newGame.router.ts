@@ -1,5 +1,5 @@
 import {Router} from "express";
-import {CreateNewGame, newGames} from "../../../types/games";
+import {CreateNewGame, NewGames} from "../../../types/games";
 import {handleRequest} from "../util/token";
 import {JoinNewGameError, LeaveNewGameError, NewGameCreationError, NewGameService} from "./newGame.service";
 
@@ -14,7 +14,7 @@ export function getNewGamesRouter(): Router {
             return
         }
 
-        res.status(200).json(NewGameService.get().getAllGames() as newGames).end();
+        res.status(200).json(NewGameService.get().getAllGames() as NewGames).end();
     })
 
     router.get("/:id", (req, res) => {

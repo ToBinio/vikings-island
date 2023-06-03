@@ -6,6 +6,8 @@ import {Router} from "@angular/router";
 import {environment} from "../../../environments/environment";
 import {LoginService} from "../login.service";
 import {AlertService} from "../../alert-system/alert.service";
+import {CookieService} from "ngx-cookie-service";
+import {AdminAuthService} from "../../auth/adminAuth/admin-auth.service";
 
 @Component({
   selector: 'app-register-form',
@@ -14,7 +16,7 @@ import {AlertService} from "../../alert-system/alert.service";
 })
 export class RegisterFormComponent {
 
-  constructor(private httpClient: HttpClient, private router: Router, private alertSystemService: AlertService) {
+  constructor(private httpClient: HttpClient, private router: Router, private alertSystemService: AlertService, private loginService: LoginService, private cookieService: CookieService, private adminAuthService: AdminAuthService) {
   }
 
   userName: string = "";
@@ -43,8 +45,16 @@ export class RegisterFormComponent {
       .subscribe({
           next: res => {
             console.log("ok")
-            this.token = res;
-            this.router.navigateByUrl("/game").then();
+            this.loginService.token = JSON.parse(res).token;
+            this.loginService.id = JSON.parse(res).id;
+
+            this.cookieService.set("token", this.loginService.token);
+            this.cookieService.set("id", String(this.loginService.id))
+
+            //needed to cache the result
+            this.adminAuthService.updateCache();
+
+            this.router.navigateByUrl("/games").then();
           },
           error: err => {
             switch (err.status) {

@@ -12,3 +12,13 @@ h1 {
 
   margin: 80px auto;
 }
+
+.island {
+  display: flex;
+  justify-content: center;
+
+  img {
+    margin: 50px;
+    width: 800px;
+  }
+}

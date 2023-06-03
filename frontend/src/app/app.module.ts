@@ -11,6 +11,9 @@ import { GameComponent } from './game/game.component';
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {GameMenuComponent} from './game-menu/game-menu.component';
 import { AlertSystemComponent } from './alert-system/alert-system.component';
+import { AdminPanelComponent } from './admin-panel/admin-panel.component';
+import { LogOutComponent } from './log-out/log-out.component';
+import { WaitlistComponent } from './waitlist/waitlist.component';
 
 @NgModule({
   declarations: [
@@ -18,9 +21,13 @@ import { AlertSystemComponent } from './alert-system/alert-system.component';
     LoginFormComponent,
     RegisterFormComponent,
     LoginPageComponent,
+    GameMenuComponent,
     AlertSystemComponent,
     GameMenuComponent,
-    GameComponent
+    GameComponent,
+    AdminPanelComponent,
+    LogOutComponent,
+    WaitlistComponent,
   ],
   imports: [
     HttpClientModule,

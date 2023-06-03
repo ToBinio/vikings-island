@@ -7,6 +7,7 @@ export class LoginService {
 
   constructor() { }
 
-  errorMSG: string = "";
+  id: number = 0;
+  token: string = "";
 
 }

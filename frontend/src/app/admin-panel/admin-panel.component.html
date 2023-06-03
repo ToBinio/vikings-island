@@ -1,0 +1,8 @@
+<div>
+  <h1>ADMIN-PANEL</h1>
+  <div *ngFor="let game of gameMenu">
+    <button (click)="deleteGame(game.id)">DELETE</button>
+    <div>ID: {{game.id}}</div>
+    <div>NAME: {{game.name}}</div>
+  </div>
+</div>

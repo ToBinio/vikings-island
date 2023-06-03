@@ -25,7 +25,10 @@ export class EventService {
     }
 
     updateWaitList(newGameId: number, gameId: number) {
-        let game = NewGameStore.get().getGameById(newGameId)!;
+        let game = NewGameStore.get().getGameById(newGameId);
+
+        if (game == undefined)
+            return
 
         let data: WaitListEvent = {players: game.players, gameId: gameId};
         let dataString = JSON.stringify(data);

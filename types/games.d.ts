@@ -5,7 +5,7 @@ export interface NewGame {
     name: string
 }
 
-export type newGames = NewGame[]
+export type NewGames = NewGame[]
 
 export interface CreateNewGame {
     timeStamp: number,

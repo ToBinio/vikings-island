@@ -1,0 +1,15 @@
+<div>
+  <div class="island">
+    <img src="assets/img/vikingsisland.png">
+  </div>
+
+  <div class="center">
+    <div>Es wird auf {{4 - menuService.waitListPlayers.length}} Spieler gewartet!</div>
+
+    <div id="player" *ngFor="let player of menuService.waitListPlayers">
+      <div>{{player}}</div>
+    </div>
+  </div>
+
+  <button (click)="unlisten()" class="logout-button">Abbrechen</button>
+</div>

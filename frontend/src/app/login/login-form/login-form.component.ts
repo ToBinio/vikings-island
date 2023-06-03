@@ -5,6 +5,10 @@ import {hashPassword} from "../loginUtil";
 import {Router} from "@angular/router";
 import {environment} from "../../../environments/environment";
 import {AlertService} from "../../alert-system/alert.service";
+import {CookieService} from "ngx-cookie-service";
+import {AuthService} from "../../auth/loginAuth/auth.service";
+import {LoginService} from "../login.service";
+import {AdminAuthService} from "../../auth/adminAuth/admin-auth.service";
 
 @Component({
   selector: 'app-login-form',
@@ -12,13 +16,11 @@ import {AlertService} from "../../alert-system/alert.service";
   styleUrls: ['./login-form.component.scss']
 })
 export class LoginFormComponent {
-  constructor(private httpClient: HttpClient, private router: Router, private alertSystemService: AlertService) {
+  constructor(private httpClient: HttpClient, private router: Router, private alertSystemService: AlertService, private cookieService: CookieService, private auth: AuthService, private loginService: LoginService, private adminAuthService: AdminAuthService) {
   }
 
   userName: string = "";
   password: string = "";
-
-  token: string = "";
 
   async login() {
     let passwordHash = await hashPassword(this.password);
@@ -30,8 +32,17 @@ export class LoginFormComponent {
       .subscribe({
         next: res => {
           console.log("ok")
-          this.token = res;
-          this.router.navigateByUrl("/game").then();
+
+          this.loginService.token = JSON.parse(res).token;
+          this.loginService.id = JSON.parse(res).id;
+
+          this.cookieService.set("token", this.loginService.token);
+          this.cookieService.set("id", String(this.loginService.id))
+
+          this.router.navigateByUrl("/games").then();
+
+          //needed to cache the result
+          this.adminAuthService.updateCache();
         },
         error: err => {
           switch (err.status) {

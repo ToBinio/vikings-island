@@ -1,8 +1,27 @@
-main {
-  overflow-y: hidden;
+.island {
+  display: flex;
+  justify-content: center;
 
-  width: 100vw;
-  height: 100vh;
+  img {
+    margin: 50px;
+    width: 800px;
+  }
+}
+
+.center {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 10px;
+
+  div {
+    font-size: 20px;
+  }
+
+  #player {
+    margin-top: 20px;
+  }
 }
 
 .logout-button,  #adminBtn {
