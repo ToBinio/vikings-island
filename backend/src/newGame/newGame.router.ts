@@ -58,7 +58,11 @@ export function getNewGamesRouter(): Router {
         if (newGame.ok == undefined) {
             switch (newGame.err!) {
                 case NewGameCreationError.gameNameAlreadyTaken: {
-                    res.sendStatus(406)
+                    res.status(406).send("game name already Taken")
+                    break;
+                }
+                case NewGameCreationError.gameTickToShort: {
+                    res.status(406).send("game tick to short")
                     break;
                 }
             }
