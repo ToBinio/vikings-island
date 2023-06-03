@@ -47,17 +47,14 @@ export class LoginFormComponent {
         error: err => {
           switch (err.status) {
             case 404: {
-              console.error("user not found");
               this.alertSystemService.error("Dieser Benutzer existiert nicht!")
               break;
             }
             case 409: {
-              console.error("wrong password");
               this.alertSystemService.error("Das Passwort ist falsch!")
               break;
             }
             default: {
-              console.error("something went wrong");
               this.alertSystemService.error("error")
             }
           }

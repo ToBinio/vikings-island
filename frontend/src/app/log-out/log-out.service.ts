@@ -10,8 +10,9 @@ export class LogOutService {
   constructor(private router: Router, private cookies: CookieService) { }
 
   logout() {
-    this.router.navigate(["/login"]);
     this.cookies.deleteAll();
+    console.log("->" + this.cookies.get("token"))
+    this.router.navigate(["/login"]);
   }
 
 }

@@ -10,9 +10,12 @@ export class AlertService {
 
   errorMessages: Alert[] = []
 
-  error(errorMessage: string) {
+  httpError(error: {error: string}) {
+    this.error(error.error);
+  }
 
-    let alert: Alert = {text: errorMessage, is_animating: false};
+  error(error: string) {
+    let alert: Alert = {text: error, is_animating: false};
 
     this.errorMessages.push(alert);
 

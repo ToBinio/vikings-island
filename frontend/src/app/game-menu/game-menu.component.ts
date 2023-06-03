@@ -36,13 +36,11 @@ export class GameMenuComponent implements OnInit {
       error: err => {
         switch (err.status) {
           case 403: {
-            console.error(err)
-            this.alertService.error(err)
+            this.alertService.httpError(err)
             break
           }
           default: {
-            this.alertService.error(err)
-            console.error("something went wrong")
+            this.alertService.httpError(err)
           }
         }
       }
@@ -56,13 +54,11 @@ export class GameMenuComponent implements OnInit {
       error: err => {
         switch (err.status) {
           case 403: {
-            console.error(err)
-            this.alertService.error(err)
+            this.alertService.httpError(err)
             break
           }
           default: {
-            this.alertService.error(err)
-            console.error("something went wrong")
+            this.alertService.httpError(err)
           }
         }
       }
@@ -99,17 +95,15 @@ export class GameMenuComponent implements OnInit {
       error: err => {
         switch (err.status) {
           case 403: {
-            console.error(err)
-            this.alertService.error(err)
+            this.alertService.httpError(err)
             break
           }
           case 406: {
-            this.alertService.error(err)
+            this.alertService.httpError(err)
             break
           }
           default: {
-            this.alertService.error(err)
-            console.error("something went wrong")
+            this.alertService.httpError(err)
           }
         }
       }
@@ -134,6 +128,8 @@ export class GameMenuComponent implements OnInit {
   }
 
   logOut() {
+    console.log(this.cookieService.get("token"))
+    console.log(0)
     this.logOutService.logout()
   }
 }
