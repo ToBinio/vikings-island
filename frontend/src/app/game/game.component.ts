@@ -29,6 +29,8 @@ export class GameComponent implements OnInit {
   isDragging = false
   dragStart = {x: 0, y: 0}
 
+  downPostion = {x: 0, y: 0}
+
   initialPinchDistance: null | number = null
 
   ngOnInit(): void {
@@ -36,11 +38,11 @@ export class GameComponent implements OnInit {
     let canvas = this.canvas.nativeElement;
 
     canvas.addEventListener('mousedown', (e) => this.onPointerDown(e))
-    canvas.addEventListener('mouseup', () => this.onPointerUp())
+    canvas.addEventListener('mouseup', (e) => this.onPointerUp(e))
     canvas.addEventListener('mousemove', (e) => this.onPointerMove(e))
 
     canvas.addEventListener('touchstart', (e) => this.handleTouch(e, (e) => this.onPointerDown(e)))
-    canvas.addEventListener('touchend', (e) => this.handleTouch(e, () => this.onPointerUp()))
+    canvas.addEventListener('touchend', (e) => this.handleTouch(e, (e) => this.onPointerUp(e)))
     canvas.addEventListener('touchmove', (e) => this.handleTouch(e, (e) => this.onPointerMove(e)))
 
     canvas.addEventListener('DOMMouseScroll', (e) => this.handleZoom(e), false);
@@ -120,6 +122,26 @@ export class GameComponent implements OnInit {
     }
   }
 
+  onClick(pos: { x: number, y: number }) {
+    let worldPos = this.screenXToWorldX(pos);
+
+    console.log("x: " + Math.floor(worldPos.x / 100) + " y: " + Math.floor(worldPos.y / 100));
+  }
+
+  screenXToWorldX(pos: { x: number, y: number }): { x: number, y: number } {
+    const canvas = this.canvas.nativeElement;
+    const ctx = canvas.getContext("2d")!;
+
+    const transform = ctx.getTransform();
+    const invertedScaleX = 1 / transform.a;
+    const invertedScaleY = 1 / transform.d;
+
+    const transformedX = invertedScaleX * pos.x - invertedScaleX * transform.e;
+    const transformedY = invertedScaleY * pos.y - invertedScaleY * transform.f;
+
+    return {x: transformedX, y: transformedY}
+  }
+
   redraw() {
     const canvas = this.canvas.nativeElement;
     const ctx = canvas.getContext("2d")!;
@@ -149,9 +171,16 @@ export class GameComponent implements OnInit {
 
     this.dragStart.x = this.getEventLocation(e).x / this.cameraZoom - this.cameraOffset.x
     this.dragStart.y = this.getEventLocation(e).y / this.cameraZoom - this.cameraOffset.y
+
+    this.downPostion = this.getEventLocation(e);
   }
 
-  onPointerUp() {
+  onPointerUp(e: Event) {
+
+    if ((this.downPostion.x - this.getEventLocation(e).x) ** 2 + (this.downPostion.y - this.getEventLocation(e).y) ** 2 < 5) {
+      this.onClick(this.getEventLocation(e))
+    }
+
     this.isDragging = false
     this.initialPinchDistance = null
     this.lastZoom = this.cameraZoom
