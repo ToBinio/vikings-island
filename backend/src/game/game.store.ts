@@ -101,6 +101,7 @@ export class GameStore {
         return gameData;
     }
 
+    //todo write all back
     async setGameByID(game: GameData) {
 
         let promises = []
