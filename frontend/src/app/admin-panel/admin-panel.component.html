@@ -1,8 +1,18 @@
 <div>
-  <h1>ADMIN-PANEL</h1>
-  <div *ngFor="let game of gameMenu">
-    <button (click)="deleteGame(game.id)">DELETE</button>
-    <div>ID: {{game.id}}</div>
-    <div>NAME: {{game.name}}</div>
+  <div class="island">
+    <img src="assets/img/vikingsisland.png">
+  </div>
+
+  <div class="center">
+    <div *ngFor="let game of games">
+      <button (click)="deleteGame(game.id)">X</button>
+      <div>ID: {{game.id}}</div>
+      <div>NAME: {{game.name}}</div>
+    </div>
+    <div *ngFor="let user of users">
+      <button (click)="deleteUser(user.id)">X</button>
+      <div>ID: {{user.id}}</div>
+      <div>NAME: {{user.name}}</div>
+    </div>
   </div>
 </div>
