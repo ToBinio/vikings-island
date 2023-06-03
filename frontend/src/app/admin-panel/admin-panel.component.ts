@@ -3,8 +3,8 @@ import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {environment} from "../../environments/environment";
 import {CookieService} from "ngx-cookie-service";
 import {AlertService} from "../alert-system/alert.service";
-import {NewGames} from "../../../../types/games";
-import {Users} from "../../../../types/user";
+import {Game} from "../../../../types/games";
+import {User} from "../../../../types/user";
 import {hashPassword} from "../login/loginUtil";
 
 @Component({
@@ -23,7 +23,7 @@ export class AdminPanelComponent implements OnInit {
       'Authorization': `Bearer ${this.cookieService.get("token")}`
     })
 
-    this.httpClient.get<NewGames>(environment.apiUrl + "/new_game", {headers: headers}).subscribe({
+    this.httpClient.get<Game[]>(environment.apiUrl + "/game/all", {headers: headers}).subscribe({
       next: res => {
         console.log("ok");
         this.games = res;
@@ -44,10 +44,32 @@ export class AdminPanelComponent implements OnInit {
         }
       }
     });
+
+    this.httpClient.get<User[]>(environment.apiUrl + "/user", {headers: headers}).subscribe({
+      next: res => {
+        console.log("ok");
+        this.users = res;
+      },
+      error: err => {
+        switch (err.status) {
+          case 403: {
+            this.alertService.httpError(err)
+            break
+          }
+          case 406: {
+            this.alertService.httpError(err)
+            break
+          }
+          default: {
+            this.alertService.httpError(err)
+          }
+        }
+      }
+    });
   }
 
-  games: NewGames = [];
-  users: Users = [];
+  games: Game[] = [];
+  users: User[] = [];
 
   changePasswordActive: boolean = false;
 

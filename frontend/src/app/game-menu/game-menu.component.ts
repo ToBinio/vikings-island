@@ -49,6 +49,7 @@ export class GameMenuComponent implements OnInit {
     this.httpClient.get<Game[]>(environment.apiUrl + "/game", {headers: headers}).subscribe({
       next: res => {
         console.log("ok");
+        console.log(res)
         this.ownGameMenu = res;
       },
       error: err => {
