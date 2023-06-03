@@ -74,32 +74,31 @@ export class AdminPanelComponent implements OnInit {
 
   changePasswordActive: boolean = false;
 
+  deleteUserByID(id: number) {
+    for (let i = 0; i < this.users.length; i++) {
+      if (this.users[i].id == id) {
+        this.users.splice(i, 1);
+      }
+    }
+  }
+
+  deleteGameByID(id: number) {
+    for (let i = 0; i < this.games.length; i++) {
+      if (this.games[i].id == id) {
+        console.log(i)
+        this.games.splice(i, 1);
+      }
+    }
+  }
+
   deleteGame(gameID: number) {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${this.cookieService.get("token")}`
     })
 
-    this.httpClient.delete(environment.apiUrl + "/game/" + gameID, {headers: headers}).subscribe({
-      next: res => {
-        console.log(res);
-      },
-      error: err => {
-        switch (err.status) {
-          case 403: {
-            this.alertService.httpError(err)
-            break
-          }
-          case 406: {
-            this.alertService.httpError(err)
-            break
-          }
-          default: {
-            this.alertService.httpError(err)
-          }
-        }
-      }
-    });
+    this.httpClient.delete(environment.apiUrl + "/game/" + gameID, {headers: headers}).subscribe();
+    this.deleteGameByID(gameID);
   }
 
   deleteUser(userID: number) {
@@ -108,26 +107,8 @@ export class AdminPanelComponent implements OnInit {
       'Authorization': `Bearer ${this.cookieService.get("token")}`
     })
 
-    this.httpClient.delete(environment.apiUrl + "/user/" + userID, {headers: headers}).subscribe({
-      next: res => {
-        console.log(res);
-      },
-      error: err => {
-        switch (err.status) {
-          case 403: {
-            this.alertService.httpError(err)
-            break
-          }
-          case 406: {
-            this.alertService.httpError(err)
-            break
-          }
-          default: {
-            this.alertService.httpError(err)
-          }
-        }
-      }
-    });
+    this.httpClient.delete(environment.apiUrl + "/user/" + userID, {headers: headers}).subscribe();
+    this.deleteUserByID(userID);
   }
 
   changePassword(userID: number, password: string) {
