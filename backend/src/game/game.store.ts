@@ -157,6 +157,23 @@ export class GameStore {
                 .execute())
         }
 
+        let shipIds = await db.selectFrom("ships")
+            .where("game_id", "=", game.id)
+            .select(["ships.id"])
+            .execute();
+
+        outer: for (let shipId of shipIds) {
+            for (let ship of game.ships) {
+                if (ship.id == shipId.id) {
+                    continue outer
+                }
+            }
+
+            promises.push(db.deleteFrom("ships")
+                .where("ships.id", "=", shipId.id)
+                .execute());
+        }
+
         await Promise.all(promises)
     }
 
