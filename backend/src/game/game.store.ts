@@ -146,7 +146,6 @@ export class GameStore {
             .execute()
     }
 
-    //todo no islands on same spot!
     async createGame(newGame: NewGame) {
         let gameResult = await db.insertInto("games")
             .values({name: newGame.name, tick: newGame.tick})
@@ -190,16 +189,30 @@ export class GameStore {
                 .execute()
         }
 
-        for (let i = 0; i < 10; i++) {
+        let islands = []
+
+        outer: while (islands.length < 10) {
+
+            let x = getRandomInt(GameStore.gameSize);
+            let y = getRandomInt(GameStore.gameSize);
+
+            for (let island of islands) {
+                if (((island.x - x) ** 2 + (island.y - y) ** 2) < 5) {
+                    continue outer
+                }
+            }
+
             await db.insertInto("islands")
                 .values({
                     game_id: gameId,
                     player_id: undefined,
-                    x: getRandomInt(GameStore.gameSize),
-                    y: getRandomInt(GameStore.gameSize),
+                    x: x,
+                    y: y,
                     gold_per_tick: 5
                 })
                 .execute()
+
+            islands.push({x: x, y: y})
         }
 
         return gameId
