@@ -73,6 +73,9 @@ export class GameLoopService {
                     }
                 }
 
+                console.log(badShipNeighbours)
+                console.log(badIslandNeighbours)
+
                 if (badShipNeighbours.length != 0) {
                     let neighbourToAttack = badShipNeighbours[Math.floor(Math.random() * badShipNeighbours.length)];
                     neighbourToAttack.life -= ship.damage;
