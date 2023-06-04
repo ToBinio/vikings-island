@@ -1,0 +1,21 @@
+* {
+  color: white;
+}
+
+#main {
+  background-color: #4f8fba;
+  border-radius: 10px;
+  font-size: 18px;
+  padding: 15px;
+  margin: 5px;
+
+  #flex {
+    display: flex;
+    justify-content: center;
+
+    button {
+      margin-top: 15px;
+      color: black;
+    }
+  }
+}

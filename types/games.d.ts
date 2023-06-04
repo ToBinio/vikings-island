@@ -29,22 +29,7 @@ export interface GameData {
 
     ships: Ship[]
 
-    islands: {
-        id: number
-        playerId: number | undefined
-
-        life: number,
-        max_life: number,
-
-        upgrade_count: number,
-
-        damage: number,
-
-        x: number,
-        y: number,
-
-        goldPerTick: number
-    }[]
+    islands: Island[]
 }
 
 export interface Game {

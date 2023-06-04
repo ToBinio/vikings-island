@@ -10,6 +10,7 @@
 
 <div id="menu">
   <app-menu *ngIf="activeShip != undefined" [playerID]="playerID" [ship]="activeShip!"></app-menu>
+  <app-island-menu *ngIf="activeIsland != undefined" [island]="activeIsland!"></app-island-menu>
 </div>
 
 <main>

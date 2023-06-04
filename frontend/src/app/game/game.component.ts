@@ -160,7 +160,7 @@ export class GameComponent implements OnInit {
 
   gameData: GameData | undefined;
   tileSize: number = 50;
-  gameFieldSize: number = 17;
+  gameFieldSize: number = 33;
   width: number = 15;
 
   img = new Image(this.width, this.width);
@@ -344,6 +344,7 @@ export class GameComponent implements OnInit {
     for (let ship of this.gameData!.ships) {
       if (ship.x == x && ship.y == y) {
         this.activeShip = ship;
+        this.activeIsland = undefined;
         this.clickedCords = {x: x, y: y};
         this.redraw()
         return
@@ -353,6 +354,7 @@ export class GameComponent implements OnInit {
     for (let island of this.gameData!.islands) {
       if (island.x == x && island.y == y) {
         this.activeIsland = island;
+        this.activeShip = undefined;
         this.clickedCords = {x: x, y: y};
         this.redraw()
         return;
