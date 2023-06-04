@@ -26,3 +26,11 @@ export interface Ship {
     goalX: number | undefined,
     goalY: number | undefined
 }
+
+export interface ShipSpawnRequest {
+    gameId: number,
+    islandId: number,
+
+    goalX: number,
+    goalY: number,
+}
