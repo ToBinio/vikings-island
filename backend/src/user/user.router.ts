@@ -115,7 +115,7 @@ export function getUserRouter(): Router {
             return
         }
 
-        await UserService.get().changePassword(id, req.body)
+        await UserService.get().changePassword(id, req.body.password)
 
         res.status(200).end();
     })

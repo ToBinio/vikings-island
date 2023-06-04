@@ -16,7 +16,7 @@ const routes: Routes = [
   {path: 'admin', component: AdminPanelComponent, canActivate: [AuthGuard, AdminAuthGuard]},
   {path: 'logout', component: LogOutComponent},
   {path: 'waitlist', component: WaitlistComponent},
-  {path: '', pathMatch: 'full', redirectTo: 'login'}
+  {path: '**', pathMatch: 'full', redirectTo: 'login'}
 ];
 
 @NgModule({
