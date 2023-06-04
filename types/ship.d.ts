@@ -9,7 +9,4 @@ export interface ShipMoveRequest {
 export interface ShipSpawnRequest {
     gameId: number,
     islandId: number,
-
-    goalX: number,
-    goalY: number,
 }
