@@ -361,8 +361,10 @@ export class GameComponent implements OnInit {
 
     if (this.gameService.driveActive) {
       this.driveShip(x, y, this.gameData!.id, this.activeShip!.id);
-      this.activeShip = undefined;
+      this.clickedCords = {x: this.activeShip!.x, y: this.activeShip!.y}
       this.gameService.driveActive = false;
+      this.redraw()
+      return
     }
 
     for (let ship of this.gameData!.ships) {
