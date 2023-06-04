@@ -199,17 +199,18 @@ export class GameStore {
         let gameId = gameResult!.id;
 
         let colors = ["#ff0000", "#00ff00", "#0000ff", "#ffff00"];
-        let positions = [{x: Math.floor(GameStore.gameSize / 2), y: 1}, {
-            x: Math.floor(GameStore.gameSize / 2),
-            y: GameStore.gameSize - 2
-        }, {x: 1, y: Math.floor(GameStore.gameSize / 2)}, {
-            x: GameStore.gameSize - 2,
-            y: Math.floor(GameStore.gameSize / 2)
-        }];
+        let positions = [
+            {x: Math.floor(GameStore.gameSize / 2), y: 2}, {
+                x: Math.floor(GameStore.gameSize / 2),
+                y: GameStore.gameSize - 3
+            }, {x: 2, y: Math.floor(GameStore.gameSize / 2)}, {
+                x: GameStore.gameSize - 3,
+                y: Math.floor(GameStore.gameSize / 2)
+            }];
 
         for (let i = 0; i < newGame.players.length; i++) {
             let player_id = await db.insertInto("players")
-                .values({game_id: gameId, color: colors[i], gold: 0, user_id: newGame.players[i]})
+                .values({game_id: gameId, color: colors[i], gold: 500, user_id: newGame.players[i]})
                 .returning("players.id")
                 .executeTakeFirst()
 
@@ -245,13 +246,13 @@ export class GameStore {
 
         let islands = []
 
-        outer: while (islands.length < 10) {
+        outer: while (islands.length < 6) {
 
-            let x = getRandomInt(GameStore.gameSize);
-            let y = getRandomInt(GameStore.gameSize);
+            let x = getRandomInt(GameStore.gameSize - 4) + 2;
+            let y = getRandomInt(GameStore.gameSize - 4) + 2;
 
             for (let island of islands) {
-                if (((island.x - x) ** 2 + (island.y - y) ** 2) < 5) {
+                if (((island.x - x) ** 2 + (island.y - y) ** 2) < 7) {
                     continue outer
                 }
             }
