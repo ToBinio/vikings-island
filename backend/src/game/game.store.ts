@@ -7,7 +7,7 @@ export class GameStore {
 
     static instance: GameStore | undefined;
 
-    static readonly gameSize = 17;
+    static readonly gameSize = 33;
 
     static get(): GameStore {
         if (GameStore.instance == undefined) {
@@ -281,13 +281,13 @@ export class GameStore {
 
         let islands = []
 
-        outer: while (islands.length < 6) {
+        outer: while (islands.length < 10) {
 
             let x = getRandomInt(GameStore.gameSize - 4) + 2;
             let y = getRandomInt(GameStore.gameSize - 4) + 2;
 
             for (let island of islands) {
-                if (((island.x - x) ** 2 + (island.y - y) ** 2) < 7) {
+                if (((island.x - x) ** 2 + (island.y - y) ** 2) < 10) {
                     continue outer
                 }
             }
@@ -302,8 +302,8 @@ export class GameStore {
 
                     gold_per_tick: 5,
 
-                    life: 200,
-                    max_life: 200,
+                    life: 100,
+                    max_life: 100,
                     damage: 10,
 
                     upgrade_count: 0
