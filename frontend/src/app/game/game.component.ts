@@ -1,10 +1,15 @@
-import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, OnInit, Output, ViewChild} from '@angular/core';
 import {environment} from "../../environments/environment";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {CookieService} from "ngx-cookie-service";
 import {Router} from "@angular/router";
-import {MenuService} from "../game-menu/menu.service";
 import {AlertService} from "../alert-system/alert.service";
+import {GameData} from "../../../../types/games";
+import {UsernameService} from "../name-system/username.service";
+import {Ship, ShipMoveRequest} from "../../../../types/ship";
+import {Island} from "../../../../types/island";
+import {GameServiceService} from "./game-service.service";
+import {LoginService} from "../login/login.service";
 
 @Component({
   selector: 'app-game',
@@ -13,7 +18,7 @@ import {AlertService} from "../alert-system/alert.service";
 })
 export class GameComponent implements OnInit {
 
-  constructor(private router: Router, private cookieService: CookieService, private httpClient: HttpClient, private alertService: AlertService) {
+  constructor(public loginService: LoginService, private gameService: GameServiceService, private router: Router, public cookieService: CookieService, private httpClient: HttpClient, private alertService: AlertService, public nameService: UsernameService) {
   }
 
   @ViewChild('gameCanvas', {static: true})
@@ -33,7 +38,37 @@ export class GameComponent implements OnInit {
 
   initialPinchDistance: null | number = null
 
+  name: string = "";
+  playerID: number = 0;
+
   ngOnInit(): void {
+    this.nameService.getName(parseInt(this.cookieService.get("id"))).then((res) => {
+      this.name = res;
+    });
+
+    this.img.src = "assets/img/island.png";
+    this.imgBlue.src = "assets/img/islandBlue.png";
+    this.imgRed.src = "assets/img/islandRed.png";
+    this.imgGreen.src = "assets/img/islandGreen.png";
+    this.imgYellow.src = "assets/img/islandYellow.png";
+
+    this.imgShipBlue.src = "assets/img/shipBlue.png";
+    this.imgShipRed.src = "assets/img/shipRed.png";
+    this.imgShipGreen.src = "assets/img/shipGreen.png";
+    this.imgShipYellow.src = "assets/img/shipYellow.png";
+
+    this.imgWater1.src = "assets/img/water1.png";
+    this.imgWater2.src = "assets/img/water2.png";
+    this.imgWater3.src = "assets/img/water3.png";
+    this.imgWater4.src = "assets/img/water4.png";
+
+    for (let x = 0; x < this.gameFieldSize; x++) {
+      this.waters[x] = [];
+
+      for (let y = 0; y < this.gameFieldSize; y++) {
+        this.waters[x][y] = Math.floor(Math.random() * 4);
+      }
+    }
 
     let canvas = this.canvas.nativeElement;
 
@@ -70,9 +105,21 @@ export class GameComponent implements OnInit {
 
     let list = this.router.url.split("/");
 
-    this.httpClient.get(environment.apiUrl + "/game/" + list[list.length - 1], {headers: headers}).subscribe({
+    this.httpClient.get<GameData>(environment.apiUrl + "/game/" + list[list.length - 1], {headers: headers}).subscribe({
       next: res => {
         console.log("GotGameData", res);
+        this.gameData = res;
+
+        for (let player of this.gameData!.players) {
+          if (player.userId == parseInt(this.cookieService.get("id"))) {
+            this.playerID = player.playerId;
+          }
+        }
+
+        for (let player of this.gameData.players) {
+          this.users.push(this.nameService.getName(player.userId!));
+        }
+        this.redraw();
         this.startEvent();
       },
       error: err => {
@@ -106,28 +153,217 @@ export class GameComponent implements OnInit {
 
     this.source.addEventListener('message', message => {
       console.log('Got', message);
+      this.gameData = JSON.parse(message.data);
+      this.redraw();
     });
+  }
+
+  gameData: GameData | undefined;
+  tileSize: number = 50;
+  gameFieldSize: number = 17;
+  width: number = 15;
+
+  img = new Image(this.width, this.width);
+  imgBlue = new Image(this.width, this.width);
+  imgRed = new Image(this.width, this.width);
+  imgGreen = new Image(this.width, this.width);
+  imgYellow = new Image(this.width, this.width);
+
+  imgShipBlue = new Image(this.width, this.width);
+  imgShipRed = new Image(this.width, this.width);
+  imgShipGreen = new Image(this.width, this.width);
+  imgShipYellow = new Image(this.width, this.width);
+
+  imgWater1 = new Image(this.width, this.width);
+  imgWater2 = new Image(this.width, this.width);
+  imgWater3 = new Image(this.width, this.width);
+  imgWater4 = new Image(this.width, this.width);
+
+  waters: number[][] = [];
+
+  users: Promise<string>[] = [];
+
+  activeShip!: Ship | undefined;
+  activeIsland!: Island | undefined;
+
+  driveShip(x: number, y: number, gameID: number, shipID: number) {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${this.cookieService.get("token")}`
+    })
+
+    this.httpClient.post(environment.apiUrl + "/game/ship/goal", {
+      goalX: x,
+      goalY: y,
+      gameId: gameID,
+      shipId: shipID
+    } as ShipMoveRequest, {headers: headers}).subscribe({
+      next: res => {
+        console.log(res)
+      },
+      error: err => {
+        switch (err.status) {
+          case 403: {
+            this.alertService.httpError(err)
+            break
+          }
+          case 406: {
+            this.alertService.httpError(err)
+            break
+          }
+          default: {
+            this.alertService.httpError(err)
+          }
+        }
+      }
+    })
   }
 
   render(ctx: CanvasRenderingContext2D) {
     //render checker
-    for (let x = 0; x < 10; x++) {
-      for (let y = 0; y < 10; y++) {
-        if ((x + y) % 2) {
-          ctx.fillStyle = "gray";
-        } else {
-          ctx.fillStyle = "black";
+    if (this.gameData != undefined) {
+      for (let x = 0; x < this.gameFieldSize; x++) {
+        for (let y = 0; y < this.gameFieldSize; y++) {
+          let img;
+
+          switch (this.waters[x][y]) {
+            case 0: {
+              img = this.imgWater1
+              break
+            }
+            case 1: {
+              img = this.imgWater2
+              break
+            }
+            case 2: {
+              img = this.imgWater3
+              break
+            }
+            case 3: {
+              img = this.imgWater4
+              break
+            }
+          }
+
+          if (img != undefined) {
+            ctx.drawImage(img, (x - this.gameFieldSize / 2) * this.tileSize, (y - this.gameFieldSize / 2) * this.tileSize, this.tileSize + 1, this.tileSize + 1)
+          }
+        }
+      }
+
+      if (this.clickedCords != undefined) {
+        ctx.fillStyle = "black";
+        ctx.fillRect((this.clickedCords.x - this.gameFieldSize / 2) * this.tileSize, (this.clickedCords.y - this.gameFieldSize / 2) * this.tileSize, this.tileSize, this.tileSize)
+      }
+
+      for (let island of this.gameData.islands) {
+        let img = this.img;
+
+        for (let player of this.gameData.players) {
+          if (player.playerId == island.playerId) {
+            switch (player.color) {
+              case "#00ff00": {
+                img = this.imgGreen
+                break;
+              }
+              case "#ff0000": {
+                img = this.imgRed
+                break
+              }
+              case "#0000ff": {
+                img = this.imgBlue
+                break;
+              }
+              case "#ffff00": {
+                img = this.imgYellow
+                break;
+              }
+            }
+          }
+
+          ctx.drawImage(img, (island.x - this.gameFieldSize / 2) * this.tileSize, (island.y - this.gameFieldSize / 2) * this.tileSize, this.tileSize, this.tileSize);
+        }
+      }
+
+      let imgShip;
+
+      for (let ship of this.gameData.ships) {
+        if (this.activeShip != undefined && this.activeShip.goalX != undefined && this.activeShip.goalY != undefined && ship.x == this.activeShip!.x && ship.y == this.activeShip!.y) {
+          ctx.fillStyle = "green";
+          ctx.fillRect((ship.goalX! - this.gameFieldSize / 2) * this.tileSize, (ship.goalY! - this.gameFieldSize / 2) * this.tileSize, this.tileSize, this.tileSize)
         }
 
-        ctx.fillRect(x * 100, y * 100, 100, 100);
+        for (let player of this.gameData.players) {
+          if (player.playerId == ship.playerId) {
+            switch (player.color) {
+              case "#00ff00": {
+                imgShip = this.imgShipGreen
+                break;
+              }
+              case "#ff0000": {
+                imgShip = this.imgShipRed
+                break
+              }
+              case "#0000ff": {
+                imgShip = this.imgShipBlue
+                break;
+              }
+              case "#ffff00": {
+                imgShip = this.imgShipYellow
+                break;
+              }
+            }
+          }
+
+          if (imgShip != undefined) {
+            ctx.drawImage(imgShip, (ship.x - this.gameFieldSize / 2) * this.tileSize, (ship.y - this.gameFieldSize / 2) * this.tileSize, this.tileSize, this.tileSize);
+          }
+        }
       }
+
+
     }
   }
+
+  clickedCords!: { x: number, y: number } | undefined;
 
   onClick(pos: { x: number, y: number }) {
     let worldPos = this.screenXToWorldX(pos);
 
-    console.log("x: " + Math.floor(worldPos.x / 100) + " y: " + Math.floor(worldPos.y / 100));
+    let x = Math.floor(worldPos.x / this.tileSize + this.gameFieldSize / 2);
+    let y = Math.floor(worldPos.y / this.tileSize + this.gameFieldSize / 2);
+
+    console.log(x + "|" + y)
+
+    if (this.gameService.driveActive) {
+      this.driveShip(x, y, this.gameData!.id, this.activeShip!.id);
+      this.activeShip = undefined;
+      this.gameService.driveActive = false;
+    }
+
+    for (let ship of this.gameData!.ships) {
+      if (ship.x == x && ship.y == y) {
+        this.activeShip = ship;
+        this.clickedCords = {x: x, y: y};
+        this.redraw()
+        return
+      }
+    }
+
+    for (let island of this.gameData!.islands) {
+      if (island.x == x && island.y == y) {
+        this.activeIsland = island;
+        this.clickedCords = {x: x, y: y};
+        this.redraw()
+        return;
+      }
+    }
+
+    this.activeIsland = undefined;
+    this.activeShip = undefined
+
+    this.clickedCords = {x: x, y: y};
+    this.redraw();
   }
 
   screenXToWorldX(pos: { x: number, y: number }): { x: number, y: number } {
@@ -169,6 +405,9 @@ export class GameComponent implements OnInit {
   }
 
   onPointerDown(e: Event) {
+    // this.clickedCords = undefined;
+    // this.activeShip = undefined;
+    // this.activeIsland = undefined;
     this.isDragging = true
 
     this.dragStart.x = this.getEventLocation(e).x / this.cameraZoom - this.cameraOffset.x
@@ -192,9 +431,9 @@ export class GameComponent implements OnInit {
     if (this.isDragging) {
       this.cameraOffset.x = this.getEventLocation(e).x / this.cameraZoom - this.dragStart.x
       this.cameraOffset.y = this.getEventLocation(e).y / this.cameraZoom - this.dragStart.y
+      this.redraw()
     }
 
-    this.redraw()
   }
 
   handleTouch(e: any, singleTouchHandler: (event: Event) => void) {
@@ -244,4 +483,5 @@ export class GameComponent implements OnInit {
     }
   }
 
+  protected readonly parseInt = parseInt;
 }

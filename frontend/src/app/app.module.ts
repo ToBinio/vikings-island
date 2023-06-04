@@ -14,6 +14,7 @@ import { AlertSystemComponent } from './alert-system/alert-system.component';
 import { AdminPanelComponent } from './admin-panel/admin-panel.component';
 import { LogOutComponent } from './log-out/log-out.component';
 import { WaitlistComponent } from './waitlist/waitlist.component';
+import { MenuComponent } from './game/menu/menu.component';
 
 @NgModule({
   declarations: [
@@ -28,6 +29,7 @@ import { WaitlistComponent } from './waitlist/waitlist.component';
     AdminPanelComponent,
     LogOutComponent,
     WaitlistComponent,
+    MenuComponent,
   ],
   imports: [
     HttpClientModule,

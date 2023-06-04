@@ -15,6 +15,7 @@ export class UsernameService {
   }
 
   async getName(userId: number): Promise<string> {
+    console.log("func")
     if (this.names.has(userId)) {
       return this.names.get(userId)!;
     }

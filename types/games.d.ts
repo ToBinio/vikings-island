@@ -1,3 +1,6 @@
+import {Ship} from "./ship";
+import {Island} from "./island";
+
 export interface NewGame {
     id: number,
     tick: number,
@@ -24,36 +27,9 @@ export interface GameData {
         color: string
     }[]
 
-    ships: {
-        id: number
-        playerId: number
+    ships: Ship[]
 
-        x: number,
-        y: number,
-
-        ticksToMove: number,
-        maxTicksToMove: number,
-
-        life: number,
-        max_life: number,
-
-        upgrade_count: number,
-
-        damage: number,
-
-        goalX: number | undefined,
-        goalY: number | undefined
-    }[]
-
-    islands: {
-        id: number
-        playerId: number | undefined
-
-        x: number,
-        y: number,
-
-        goldPerTick: number
-    }[]
+    islands: Island[]
 }
 
 export interface Game {
