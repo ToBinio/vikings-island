@@ -107,7 +107,8 @@ export class GameStore {
         let islandInfo = await db.selectFrom('games')
             .innerJoin("islands", "islands.game_id", "games.id")
             .where("games.id", "=", gameId)
-            .select(["islands.id as island_id", "player_id", "x", "y", "gold_per_tick"])
+            .selectAll()
+            .select(["islands.id as island_id"])
             .execute()
 
         for (let island of islandInfo) {
@@ -116,7 +117,14 @@ export class GameStore {
                 playerId: island.player_id,
                 x: island.x,
                 y: island.y,
-                goldPerTick: island.gold_per_tick
+                goldPerTick: island.gold_per_tick,
+
+                damage: island.damage,
+
+                max_life: island.max_life,
+                life: island.life,
+
+                upgrade_count: island.upgrade_count
             })
         }
 
@@ -237,9 +245,17 @@ export class GameStore {
                 .values({
                     game_id: gameId,
                     player_id: player_id!.id,
+
                     x: positions[i].x,
                     y: positions[i].y,
-                    gold_per_tick: 5
+
+                    gold_per_tick: 5,
+
+                    life: 200,
+                    max_life: 200,
+                    damage: 10,
+
+                    upgrade_count: 0
                 })
                 .execute()
         }
@@ -261,9 +277,17 @@ export class GameStore {
                 .values({
                     game_id: gameId,
                     player_id: undefined,
+                    
                     x: x,
                     y: y,
-                    gold_per_tick: 5
+
+                    gold_per_tick: 5,
+
+                    life: 200,
+                    max_life: 200,
+                    damage: 10,
+
+                    upgrade_count: 0
                 })
                 .execute()
 
