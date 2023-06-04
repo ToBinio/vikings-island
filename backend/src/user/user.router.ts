@@ -106,7 +106,7 @@ export function getUserRouter(): Router {
             return
         }
 
-        let user = await UserService.get().getUser(token.id);
+        await UserService.get().getUser(token.id);
 
         let id = Number.parseInt(req.params.id);
 
@@ -117,7 +117,7 @@ export function getUserRouter(): Router {
 
         await UserService.get().changePassword(id, req.body)
 
-        res.status(200).end(user);
+        res.status(200).end();
     })
 
     return router;
