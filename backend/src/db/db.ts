@@ -54,6 +54,13 @@ export interface IslandTable {
     player_id: number | undefined,
     game_id: number,
 
+    life: number,
+    max_life: number,
+
+    upgrade_count: number,
+
+    damage: number,
+
     x: number,
     y: number,
 
