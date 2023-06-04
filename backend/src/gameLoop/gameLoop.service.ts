@@ -126,32 +126,45 @@ export class GameLoopService {
                     ship.ticksToMove = ship.maxTicksToMove;
                 }
             }
-            
-            for (let i = currentGame.ships.length - 1; i >= 0; i--) {
 
+            for (let island of currentGame.islands) {
+                if (island.life <= 0) {
+                    let shipNeighbours = [];
+
+                    for (let otherShip of currentGame.ships) {
+                        if (Math.abs(otherShip.x - island.x) <= 1 || Math.abs(otherShip.y - island.y) <= 1) {
+                            shipNeighbours.push(otherShip)
+                        }
+                    }
+
+                    let captureShip = shipNeighbours[Math.floor(Math.random() * shipNeighbours.length)];
+
+                    island.playerId = captureShip.playerId;
+
+                    island.life = island.max_life
+                } else if (island.playerId != undefined) {
+                    let shipNeighbours = [];
+
+                    for (let otherShip of currentGame.ships) {
+                        if (Math.abs(otherShip.x - island.x) <= 1 || Math.abs(otherShip.y - island.y) <= 1) {
+                            if (otherShip.playerId != island.playerId) {
+                                shipNeighbours.push(otherShip)
+                            }
+                        }
+                    }
+
+                    let shipToDamage = shipNeighbours[Math.floor(Math.random() * shipNeighbours.length)];
+
+                    shipToDamage.life -= island.damage;
+                }
+            }
+
+            for (let i = currentGame.ships.length - 1; i >= 0; i--) {
                 let ship = currentGame.ships[i];
 
                 if (ship.life <= 0) {
                     currentGame.ships.splice(i, 1);
                 }
-            }
-
-            for (let island of currentGame.islands) {
-                if (island.life > 0) continue
-
-                let shipNeighbours = [];
-
-                for (let otherShip of currentGame.ships) {
-                    if (Math.abs(otherShip.x - island.x) <= 1 || Math.abs(otherShip.y - island.y) <= 1) {
-                        shipNeighbours.push(otherShip)
-                    }
-                }
-
-                let captureShip = shipNeighbours[Math.floor(Math.random() * shipNeighbours.length)];
-
-                island.playerId = captureShip.playerId;
-
-                island.life = island.max_life
             }
 
             await GameService.get().setGameById(currentGame);
