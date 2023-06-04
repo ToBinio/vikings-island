@@ -9,8 +9,8 @@
     <div>nächster Move in: {{ship.ticksToMove}}</div>
   </div>
 
-  <div id="flex" *ngIf="ship.playerId == playerID">
-    <button (click)="drive()">Bewegen</button>
+  <div id="flex" *ngIf="ship.playerId == playerID" >
+    <button (click)="drive()" [class.active]="gameService.driveActive">Bewegen</button>
   </div>
 
 </div>
