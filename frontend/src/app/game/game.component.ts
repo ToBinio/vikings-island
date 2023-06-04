@@ -62,6 +62,8 @@ export class GameComponent implements OnInit {
     this.imgWater3.src = "assets/img/water3.png";
     this.imgWater4.src = "assets/img/water4.png";
 
+    this.imgBoarder.src = "assets/img/boarder.png";
+
     for (let x = 0; x < this.gameFieldSize; x++) {
       this.waters[x] = [];
 
@@ -148,12 +150,34 @@ export class GameComponent implements OnInit {
     console.log("listening?");
 
     this.source.addEventListener('open', message => {
-      console.log('Got', message);
+      console.log("listening game");
     });
 
     this.source.addEventListener('message', message => {
       console.log('Got', message);
       this.gameData = JSON.parse(message.data);
+
+      if (this.activeShip) {
+
+        let shipId = this.activeShip.id;
+        this.activeShip = undefined;
+
+        for (let ship of this.gameData!.ships) {
+          if (ship.id == shipId) {
+            this.activeShip = ship;
+            this.clickedCords = {x: ship.x, y: ship.y}
+          }
+        }
+      }
+
+      if (this.activeIsland) {
+        for (let island of this.gameData!.islands) {
+          if (island.id == this.activeIsland.id) {
+            this.activeIsland = island;
+          }
+        }
+      }
+
       this.redraw();
     });
   }
@@ -177,6 +201,8 @@ export class GameComponent implements OnInit {
   imgWater2 = new Image();
   imgWater3 = new Image();
   imgWater4 = new Image();
+
+  imgBoarder = new Image();
 
   waters: number[][] = [];
 
@@ -251,11 +277,6 @@ export class GameComponent implements OnInit {
         }
       }
 
-      if (this.clickedCords != undefined) {
-        ctx.fillStyle = "black";
-        ctx.fillRect((this.clickedCords.x - this.gameFieldSize / 2) * this.tileSize, (this.clickedCords.y - this.gameFieldSize / 2) * this.tileSize, this.tileSize, this.tileSize)
-      }
-
       for (let island of this.gameData.islands) {
         let img = this.img;
 
@@ -321,7 +342,9 @@ export class GameComponent implements OnInit {
         }
       }
 
-
+      if (this.clickedCords != undefined) {
+        ctx.drawImage(this.imgBoarder, (this.clickedCords.x - this.gameFieldSize / 2) * this.tileSize, (this.clickedCords.y - this.gameFieldSize / 2) * this.tileSize, this.tileSize, this.tileSize)
+      }
     }
   }
 
