@@ -88,6 +88,10 @@ export function getGamesRouter(): Router {
                     res.status(406).send("ship not found")
                     break;
                 }
+                case SetShipResult.locationNotInGame: {
+                    res.status(406).send("location not in game")
+                    break;
+                }
             }
         } else {
             res.sendStatus(200);
