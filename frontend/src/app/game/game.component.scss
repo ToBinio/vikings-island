@@ -42,8 +42,10 @@ main {
   position: absolute;
   margin-left: 50px;
   display: flex;
-  height: 100%;
   align-items: center;
+
+  top: 50%;
+  transform: translate(0, -50%);
 
   .own {
     background-color: #73bed3 !important;
@@ -66,7 +68,9 @@ main {
   position: absolute;
   right: 0;
   display: flex;
-  height: 100%;
   align-items: center;
   margin-right: 50px;
+
+  top: 50%;
+  transform: translate(0, -50%);
 }
