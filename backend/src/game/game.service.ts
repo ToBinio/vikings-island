@@ -94,10 +94,10 @@ export class GameService {
                 if (x == 0 && y == 0) continue
 
                 for (let ship of ships) {
-                    if (ship.x == island.x + x && ship.y == island.x + y) continue outer
+                    if (ship.x == island.x + x && ship.y == island.y + y) continue outer
                 }
 
-                validSpaces.push({x: island.x + x, y: island.x + y})
+                validSpaces.push({x: island.x + x, y: island.y + y})
             }
         }
 
