@@ -123,6 +123,13 @@ export class GameStore {
                 .execute())
         }
 
+        for (let ship of game.ships) {
+            promises.push(db.updateTable("ships")
+                .set({x: ship.x, y: ship.y, goal_x: ship.goal_x, goal_y: ship.goal_y})
+                .where("ships.id", "=", ship.id)
+                .execute())
+        }
+
         await Promise.all(promises)
     }
 
