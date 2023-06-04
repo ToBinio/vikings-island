@@ -335,6 +335,41 @@ export class GameStore {
             .selectAll()
             .executeTakeFirst()
     }
+
+    async getShips(gameId: number) {
+        return await db.selectFrom("ships")
+            .where("game_id", "=", gameId)
+            .selectAll()
+            .execute()
+    }
+
+    async getIsland(islandId: number) {
+        return await db.selectFrom("islands")
+            .where("islands.id", "=", islandId)
+            .selectAll()
+            .executeTakeFirst()
+    }
+
+    async spawnShip(gameId: number, playerId: number, x: number, y: number) {
+        await db.insertInto("ships")
+            .values({
+                game_id: gameId,
+                player_id: playerId,
+                x: x,
+                y: y,
+
+                ticks_to_move: 5,
+                max_ticks_to_move: 5,
+
+                life: 100,
+                max_life: 100,
+
+                damage: 25,
+
+                upgrade_count: 0
+            })
+            .execute()
+    }
 }
 
 function getRandomInt(max: number) {
