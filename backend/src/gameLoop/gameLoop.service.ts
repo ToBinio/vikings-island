@@ -51,7 +51,7 @@ export class GameLoopService {
                 }
             }
 
-            for (let ship of currentGame.ships) {
+            ships: for (let ship of currentGame.ships) {
 
                 let badShipNeighbours = [];
 
@@ -91,23 +91,39 @@ export class GameLoopService {
 
                     ship.ticksToMove--;
 
-                    if (ship.ticksToMove >= 0) continue
+                    if (ship.ticksToMove > 0) continue
 
                     let xOff = ship.goalX - ship.x;
                     let yOff = ship.goalY - ship.y;
 
+                    let newX = ship.x;
+                    let newY = ship.y;
+
                     if (Math.abs(xOff) > Math.abs(yOff)) {
-                        let change = xOff / Math.abs(xOff);
-                        ship.x += change;
+                        newX += xOff / Math.abs(xOff);
                     } else {
-                        let change = yOff / Math.abs(yOff);
-                        ship.y += change;
+                        newY += yOff / Math.abs(yOff);
                     }
+
+                    for (let otherShip of currentGame.ships) {
+                        if (otherShip.id != ship.id && otherShip.x == newX && otherShip.y == newY) {
+                            continue ships;
+                        }
+                    }
+
+                    for (let otherIsland of currentGame.islands) {
+                        if (otherIsland.x == newX && otherIsland.y == newY) {
+                            continue ships;
+                        }
+                    }
+
+                    ship.x = newX;
+                    ship.y = newY;
 
                     ship.ticksToMove = ship.maxTicksToMove;
                 }
             }
-
+            
             for (let i = currentGame.ships.length - 1; i >= 0; i--) {
 
                 let ship = currentGame.ships[i];
