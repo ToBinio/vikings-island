@@ -73,9 +73,6 @@ export class GameLoopService {
                     }
                 }
 
-                console.log(badShipNeighbours)
-                console.log(badIslandNeighbours)
-
                 if (badShipNeighbours.length != 0) {
                     let neighbourToAttack = badShipNeighbours[Math.floor(Math.random() * badShipNeighbours.length)];
                     neighbourToAttack.life -= ship.damage;
@@ -153,9 +150,11 @@ export class GameLoopService {
                         }
                     }
 
-                    let shipToDamage = shipNeighbours[Math.floor(Math.random() * shipNeighbours.length)];
+                    if(shipNeighbours.length > 0){
+                        let shipToDamage = shipNeighbours[Math.floor(Math.random() * shipNeighbours.length)];
 
-                    shipToDamage.life -= island.damage;
+                        shipToDamage.life -= island.damage;
+                    }
                 }
             }
 
