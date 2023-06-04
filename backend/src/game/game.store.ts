@@ -171,6 +171,8 @@ export class GameStore {
                     x: island.x,
                     y: island.y,
 
+                    player_id: island.playerId,
+
                     life: island.life,
                     max_life: island.max_life,
 
