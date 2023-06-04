@@ -6,6 +6,7 @@ import {AlertService} from "../alert-system/alert.service";
 import {Game} from "../../../../types/games";
 import {User} from "../../../../types/user";
 import {hashPassword} from "../login/loginUtil";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-admin-panel',
@@ -14,7 +15,7 @@ import {hashPassword} from "../login/loginUtil";
 })
 export class AdminPanelComponent implements OnInit {
 
-  constructor(private httpClient: HttpClient, private cookieService: CookieService, private alertService: AlertService) {
+  constructor(private httpClient: HttpClient, private cookieService: CookieService, private alertService: AlertService, private router: Router) {
   }
 
   ngOnInit(): void {
@@ -74,6 +75,11 @@ export class AdminPanelComponent implements OnInit {
 
   changePasswordActive: boolean = false;
 
+  userName: string = "";
+  password: string = "";
+  passwordCheck: string = "";
+  userID: number = 0;
+
   deleteUserByID(id: number) {
     for (let i = 0; i < this.users.length; i++) {
       if (this.users[i].id == id) {
@@ -111,17 +117,18 @@ export class AdminPanelComponent implements OnInit {
     this.deleteUserByID(userID);
   }
 
-  changePassword(userID: number, password: string) {
+  async changePassword() {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${this.cookieService.get("token")}`
     });
 
-    let hashedPassword = hashPassword(password);
+    let hashedPassword = await hashPassword(this.password);
 
-    this.httpClient.post(environment.apiUrl + "/user/password/" + userID, hashedPassword, {headers: headers}).subscribe({
+    this.httpClient.post(environment.apiUrl + "/user/password/" + this.userID, {password: hashedPassword}, {headers: headers}).subscribe({
       next: res => {
         console.log(res);
+        this.changePasswordActive = false;
       },
       error: err => {
         switch (err.status) {
@@ -141,7 +148,17 @@ export class AdminPanelComponent implements OnInit {
     });
   }
 
-  swapPasswordActive() {
-    this.changePasswordActive = !this.changePasswordActive;
+  changePWDActive(userID: number, userName: string) {
+    this.userID = userID;
+    this.userName = userName;
+    this.changePasswordActive = true;
+  }
+
+  close() {
+    this.changePasswordActive = false;
+  }
+
+  back() {
+    this.router.navigate(["/games"]);
   }
 }
