@@ -1,6 +1,7 @@
 import {GameService} from "../game/game.service";
 import {EventService} from "../event/event.service";
 import {GameStore} from "../game/game.store";
+import {getRandomValues} from "crypto";
 
 export class GameLoopService {
 
@@ -51,31 +52,56 @@ export class GameLoopService {
             }
 
             for (let ship of currentGame.ships) {
-                if (ship.goalX == undefined || ship.goalY == undefined) continue
 
-                if (ship.goalX == ship.x && ship.goalY == ship.y) {
-                    ship.goalX = undefined;
-                    ship.goalY = undefined;
+                let badNeighbours = [];
 
-                    continue
+                for (let otherShip of currentGame.ships) {
+                    if (otherShip.playerId == ship.playerId) continue
+
+                    if (Math.abs(otherShip.x - ship.x) <= 1 || Math.abs(otherShip.y - ship.y) <= 1) {
+                        badNeighbours.push(otherShip)
+                    }
                 }
 
-                ship.ticksToMove--;
-
-                if (ship.ticksToMove >= 0) continue
-
-                let xOff = ship.goalX - ship.x;
-                let yOff = ship.goalY - ship.y;
-
-                if (Math.abs(xOff) > Math.abs(yOff)) {
-                    let change = xOff / Math.abs(xOff);
-                    ship.x += change;
+                if (badNeighbours) {
+                    let neighbourToAttack = badNeighbours[Math.floor(Math.random() * badNeighbours.length)];
+                    neighbourToAttack.life -= ship.damage;
                 } else {
-                    let change = yOff / Math.abs(yOff);
-                    ship.y += change;
-                }
+                    if (ship.goalX == undefined || ship.goalY == undefined) continue
 
-                ship.ticksToMove = ship.maxTicksToMove;
+                    if (ship.goalX == ship.x && ship.goalY == ship.y) {
+                        ship.goalX = undefined;
+                        ship.goalY = undefined;
+
+                        continue
+                    }
+
+                    ship.ticksToMove--;
+
+                    if (ship.ticksToMove >= 0) continue
+
+                    let xOff = ship.goalX - ship.x;
+                    let yOff = ship.goalY - ship.y;
+
+                    if (Math.abs(xOff) > Math.abs(yOff)) {
+                        let change = xOff / Math.abs(xOff);
+                        ship.x += change;
+                    } else {
+                        let change = yOff / Math.abs(yOff);
+                        ship.y += change;
+                    }
+
+                    ship.ticksToMove = ship.maxTicksToMove;
+                }
+            }
+
+            for (let i = currentGame.ships.length - 1; i >= 0; i--) {
+
+                let ship = currentGame.ships[i];
+
+                if (ship.life <= 0) {
+                    currentGame.ships.splice(i, 1);
+                }
             }
 
             await GameService.get().setGameById(currentGame);
