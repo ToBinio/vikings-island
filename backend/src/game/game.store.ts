@@ -78,17 +78,21 @@ export class GameStore {
         let shipInfo = await db.selectFrom('games')
             .innerJoin("ships", "ships.game_id", "games.id")
             .where("games.id", "=", gameId)
-            .select(["ships.id as ship_id", "player_id", "x", "y", "goal_x", "goal_y"])
+            .select(["ships.id as ship_id", "player_id", "x", "y", "goal_x", "goal_y", "max_ticks_to_move", "ticks_to_move"])
             .execute()
 
         for (let ship of shipInfo) {
             gameData.ships.push({
                 id: ship.ship_id,
                 playerId: ship.player_id,
+
                 x: ship.x,
                 y: ship.y,
-                goal_x: ship.goal_x,
-                goal_y: ship.goal_y,
+                goalX: ship.goal_x,
+                goalY: ship.goal_y,
+
+                maxTicksToMove: ship.max_ticks_to_move,
+                ticksToMove: ship.ticks_to_move,
             })
         }
 
@@ -125,7 +129,15 @@ export class GameStore {
 
         for (let ship of game.ships) {
             promises.push(db.updateTable("ships")
-                .set({x: ship.x, y: ship.y, goal_x: ship.goal_x, goal_y: ship.goal_y})
+                .set({
+                    x: ship.x,
+                    y: ship.y,
+                    goal_x: ship.goalX,
+                    goal_y: ship.goalY,
+
+                    ticks_to_move: ship.ticksToMove,
+                    max_ticks_to_move: ship.maxTicksToMove
+                })
                 .where("ships.id", "=", ship.id)
                 .execute())
         }
@@ -174,7 +186,10 @@ export class GameStore {
                     game_id: gameId,
                     player_id: player_id!.id,
                     x: getRandomInt(GameStore.gameSize),
-                    y: getRandomInt(GameStore.gameSize)
+                    y: getRandomInt(GameStore.gameSize),
+
+                    ticks_to_move: 5,
+                    max_ticks_to_move: 5
                 })
                 .execute()
 

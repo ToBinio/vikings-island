@@ -51,17 +51,21 @@ export class GameLoopService {
             }
 
             for (let ship of currentGame.ships) {
-                if (ship.goal_x == undefined || ship.goal_y == undefined) continue
+                if (ship.goalX == undefined || ship.goalY == undefined) continue
 
-                if (ship.goal_x == ship.x && ship.goal_y == ship.y) {
-                    ship.goal_x = undefined;
-                    ship.goal_y = undefined;
+                if (ship.goalX == ship.x && ship.goalY == ship.y) {
+                    ship.goalX = undefined;
+                    ship.goalY = undefined;
 
                     continue
                 }
 
-                let xOff = ship.goal_x - ship.x;
-                let yOff = ship.goal_y - ship.y;
+                ship.ticksToMove--;
+
+                if (ship.ticksToMove >= 0) continue
+
+                let xOff = ship.goalX - ship.x;
+                let yOff = ship.goalY - ship.y;
 
                 if (Math.abs(xOff) > Math.abs(yOff)) {
                     let change = xOff / Math.abs(xOff);
@@ -70,6 +74,8 @@ export class GameLoopService {
                     let change = yOff / Math.abs(yOff);
                     ship.y += change;
                 }
+
+                ship.ticksToMove = ship.maxTicksToMove;
             }
 
             await GameService.get().setGameById(currentGame);
