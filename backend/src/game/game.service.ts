@@ -69,6 +69,8 @@ export class GameService {
 
         if (ship.player_id != player) return SetShipResult.notYourShip
 
+        if (req.goalX < 0 || req.goalX > GameStore.gameSize - 1 || req.goalY < 0 || req.goalY > GameStore.gameSize - 1) return SetShipResult.locationNotInGame
+
         await GameStore.get().setShipGoal(req);
         await EventService.get().updateGame((await GameStore.get().getGameByID(req.gameId))!);
         return undefined
@@ -114,6 +116,7 @@ export enum SetShipResult {
     notInGame,
     notYourShip,
     shipNotFound,
+    locationNotInGame
 }
 
 export enum SpawnShipResult {
