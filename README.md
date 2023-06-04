@@ -63,6 +63,13 @@ create table ships
     ticks_to_move     integer not null,
     max_ticks_to_move integer not null,
 
+    life              integer not null,
+    max_life          integer not null,
+
+    upgrade_count     integer not null,
+
+    damage            integer not null,
+
     x                 integer not null,
     y                 integer not null,
     goal_x            integer,

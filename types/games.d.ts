@@ -34,6 +34,13 @@ export interface GameData {
         ticksToMove: number,
         maxTicksToMove: number,
 
+        life: number,
+        max_life: number,
+
+        upgrade_count: number,
+
+        damage: number,
+
         goalX: number | undefined,
         goalY: number | undefined
     }[]

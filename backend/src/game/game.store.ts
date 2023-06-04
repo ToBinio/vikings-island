@@ -78,7 +78,8 @@ export class GameStore {
         let shipInfo = await db.selectFrom('games')
             .innerJoin("ships", "ships.game_id", "games.id")
             .where("games.id", "=", gameId)
-            .select(["ships.id as ship_id", "player_id", "x", "y", "goal_x", "goal_y", "max_ticks_to_move", "ticks_to_move"])
+            .selectAll()
+            .select(["ships.id as ship_id"])
             .execute()
 
         for (let ship of shipInfo) {
@@ -93,6 +94,13 @@ export class GameStore {
 
                 maxTicksToMove: ship.max_ticks_to_move,
                 ticksToMove: ship.ticks_to_move,
+
+                life: ship.life,
+                max_life: ship.max_life,
+
+                damage: ship.damage,
+
+                upgrade_count: ship.upgrade_count
             })
         }
 
@@ -136,7 +144,14 @@ export class GameStore {
                     goal_y: ship.goalY,
 
                     ticks_to_move: ship.ticksToMove,
-                    max_ticks_to_move: ship.maxTicksToMove
+                    max_ticks_to_move: ship.maxTicksToMove,
+
+                    life: ship.life,
+                    max_life: ship.max_life,
+
+                    damage: ship.damage,
+
+                    upgrade_count: ship.max_life,
                 })
                 .where("ships.id", "=", ship.id)
                 .execute())
@@ -189,7 +204,14 @@ export class GameStore {
                     y: getRandomInt(GameStore.gameSize),
 
                     ticks_to_move: 5,
-                    max_ticks_to_move: 5
+                    max_ticks_to_move: 5,
+
+                    life: 100,
+                    max_life: 100,
+
+                    damage: 25,
+
+                    upgrade_count: 0
                 })
                 .execute()
 

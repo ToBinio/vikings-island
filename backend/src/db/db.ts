@@ -36,6 +36,13 @@ export interface ShipTable {
     ticks_to_move: number,
     max_ticks_to_move: number,
 
+    life: number,
+    max_life: number,
+
+    upgrade_count: number,
+
+    damage: number,
+
     x: number,
     y: number,
     goal_x: Generated<number>,
