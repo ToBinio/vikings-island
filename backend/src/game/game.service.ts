@@ -67,7 +67,7 @@ export class GameService {
         let ship = await GameStore.get().getShip(req.shipId);
         if (ship == undefined) return SetShipResult.shipNotFound
 
-        if (ship.player_id != player) return SetShipResult.notYourShip
+        if (ship.player_id != player.id) return SetShipResult.notYourShip
 
         if (req.goalX < 0 || req.goalX > GameStore.gameSize - 1 || req.goalY < 0 || req.goalY > GameStore.gameSize - 1) return SetShipResult.locationNotInGame
 
@@ -83,7 +83,7 @@ export class GameService {
         let island = await GameStore.get().getIsland(req.islandId);
         if (island == undefined) return SpawnShipResult.islandNotFound
 
-        if (island.player_id != player) return SpawnShipResult.notYourIsland
+        if (island.player_id != player.id) return SpawnShipResult.notYourIsland
 
         let validSpaces = [];
 
@@ -105,7 +105,12 @@ export class GameService {
 
         let validSpace = validSpaces[Math.floor(Math.random() * validSpaces.length)];
 
-        await GameStore.get().spawnShip(req.gameId, player, validSpace.x, validSpace.y);
+        let newPlayer = await GameStore.get().getPlayerByUser(token.id, req.gameId);
+        if (newPlayer!.gold < 250) return SpawnShipResult.noGold
+
+        await GameStore.get().updatePlayerGold(newPlayer!.id, newPlayer!.gold - 250);
+
+        await GameStore.get().spawnShip(req.gameId, player.id, validSpace.x, validSpace.y);
 
         await EventService.get().updateGame((await GameStore.get().getGameByID(req.gameId))!);
         return undefined
@@ -123,5 +128,6 @@ export enum SpawnShipResult {
     notInGame,
     notYourIsland,
     islandNotFound,
-    noSpace
+    noSpace,
+    noGold
 }
