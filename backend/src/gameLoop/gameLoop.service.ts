@@ -129,7 +129,7 @@ export class GameLoopService {
                     let shipNeighbours = [];
 
                     for (let otherShip of currentGame.ships) {
-                        if (Math.abs(otherShip.x - island.x) <= 1 || Math.abs(otherShip.y - island.y) <= 1) {
+                        if (Math.abs(otherShip.x - island.x) <= 1 && Math.abs(otherShip.y - island.y) <= 1) {
                             shipNeighbours.push(otherShip)
                         }
                     }
@@ -143,7 +143,7 @@ export class GameLoopService {
                     let shipNeighbours = [];
 
                     for (let otherShip of currentGame.ships) {
-                        if (Math.abs(otherShip.x - island.x) <= 1 || Math.abs(otherShip.y - island.y) <= 1) {
+                        if (Math.abs(otherShip.x - island.x) <= 1 && Math.abs(otherShip.y - island.y) <= 1) {
                             if (otherShip.playerId != island.playerId) {
                                 shipNeighbours.push(otherShip)
                             }
