@@ -1,5 +1,7 @@
 import {Game, GameData, NewGame} from "../../../types/games";
 import {db} from "../db/db";
+import {ShipMoveRequest} from "../../../types/ship";
+import {TokenData} from "../util/token";
 
 export class GameStore {
 
@@ -28,6 +30,14 @@ export class GameStore {
             .where("users.id", "=", userId)
             .select(["games.id", "games.tick", "games.name"])
             .execute()
+    }
+
+    async getPlayerByUser(userId: number, gameId: number): Promise<number | undefined> {
+        return (await db.selectFrom('players')
+            .where("players.user_id", "=", userId)
+            .where("players.game_id", "=", gameId)
+            .select(["players.id"])
+            .executeTakeFirst())?.id
     }
 
     async getGameByID(gameId: number): Promise<GameData | undefined> {
@@ -192,6 +202,20 @@ export class GameStore {
         await db.deleteFrom("games")
             .where("games.id", "=", gameId)
             .execute()
+    }
+
+    async setShipGoal(req: ShipMoveRequest) {
+        await db.updateTable("ships")
+            .set({goal_x: req.goalX, goal_y: req.goalY})
+            .where("ships.id", "=", req.shipId)
+            .execute()
+    }
+
+    async getShip(shipId: number) {
+        return await db.selectFrom("ships")
+            .where("ships.id", "=", shipId)
+            .selectAll()
+            .executeTakeFirst()
     }
 }
 
