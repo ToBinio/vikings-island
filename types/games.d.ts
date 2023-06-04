@@ -31,8 +31,11 @@ export interface GameData {
         x: number,
         y: number,
 
-        goal_x: number | undefined,
-        goal_y: number | undefined
+        ticksToMove: number,
+        maxTicksToMove: number,
+
+        goalX: number | undefined,
+        goalY: number | undefined
     }[]
 
     islands: {

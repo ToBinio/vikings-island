@@ -54,16 +54,19 @@ tick integer      not null
 #### Ship
 
 ``` sql
-create table islands
+create table ships
 (
-    id        serial primary key,
-    player_id integer not null references players,
-    game_id   integer not null references games on delete cascade,
+    id                serial primary key,
+    player_id         integer not null references players,
+    game_id           integer not null references games on delete cascade,
 
-    x         integer not null,
-    y         integer not null,
-    goal_x    integer,
-    goal_y    integer
+    ticks_to_move     integer not null,
+    max_ticks_to_move integer not null,
+
+    x                 integer not null,
+    y                 integer not null,
+    goal_x            integer,
+    goal_y            integer
 );
 ```
 

@@ -33,6 +33,9 @@ export interface ShipTable {
     player_id: number,
     game_id: number,
 
+    ticks_to_move: number,
+    max_ticks_to_move: number,
+
     x: number,
     y: number,
     goal_x: Generated<number>,
