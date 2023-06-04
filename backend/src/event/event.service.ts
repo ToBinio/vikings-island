@@ -54,6 +54,9 @@ export class EventService {
         let dataString = JSON.stringify(game);
 
         for (let player of game!.players) {
+
+            if(player.userId == undefined) continue
+
             let loginEventData = EventStore.get().getGameListenerData(player.userId, game.id);
 
             if (loginEventData == undefined) continue

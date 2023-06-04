@@ -7,7 +7,7 @@ export class GameStore {
 
     static instance: GameStore | undefined;
 
-    static readonly gameSize = 17;
+    static readonly gameSize = 33;
 
     static get(): GameStore {
         if (GameStore.instance == undefined) {
@@ -107,7 +107,8 @@ export class GameStore {
         let islandInfo = await db.selectFrom('games')
             .innerJoin("islands", "islands.game_id", "games.id")
             .where("games.id", "=", gameId)
-            .select(["islands.id as island_id", "player_id", "x", "y", "gold_per_tick"])
+            .selectAll()
+            .select(["islands.id as island_id"])
             .execute()
 
         for (let island of islandInfo) {
@@ -116,7 +117,14 @@ export class GameStore {
                 playerId: island.player_id,
                 x: island.x,
                 y: island.y,
-                goldPerTick: island.gold_per_tick
+                goldPerTick: island.gold_per_tick,
+
+                damage: island.damage,
+
+                max_life: island.max_life,
+                life: island.life,
+
+                upgrade_count: island.upgrade_count
             })
         }
 
@@ -157,6 +165,42 @@ export class GameStore {
                 .execute())
         }
 
+        for (let island of game.islands) {
+            promises.push(db.updateTable("islands")
+                .set({
+                    x: island.x,
+                    y: island.y,
+
+                    life: island.life,
+                    max_life: island.max_life,
+
+                    damage: island.damage,
+
+                    upgrade_count: island.max_life,
+
+                    gold_per_tick: island.goldPerTick,
+                })
+                .where("islands.id", "=", island.id)
+                .execute())
+        }
+
+        let shipIds = await db.selectFrom("ships")
+            .where("game_id", "=", game.id)
+            .select(["ships.id"])
+            .execute();
+
+        outer: for (let shipId of shipIds) {
+            for (let ship of game.ships) {
+                if (ship.id == shipId.id) {
+                    continue outer
+                }
+            }
+
+            promises.push(db.deleteFrom("ships")
+                .where("ships.id", "=", shipId.id)
+                .execute());
+        }
+
         await Promise.all(promises)
     }
 
@@ -182,17 +226,18 @@ export class GameStore {
         let gameId = gameResult!.id;
 
         let colors = ["#ff0000", "#00ff00", "#0000ff", "#ffff00"];
-        let positions = [{x: Math.floor(GameStore.gameSize / 2), y: 1}, {
-            x: Math.floor(GameStore.gameSize / 2),
-            y: GameStore.gameSize - 2
-        }, {x: 1, y: Math.floor(GameStore.gameSize / 2)}, {
-            x: GameStore.gameSize - 2,
-            y: Math.floor(GameStore.gameSize / 2)
-        }];
+        let positions = [
+            {x: Math.floor(GameStore.gameSize / 2), y: 2}, {
+                x: Math.floor(GameStore.gameSize / 2),
+                y: GameStore.gameSize - 3
+            }, {x: 2, y: Math.floor(GameStore.gameSize / 2)}, {
+                x: GameStore.gameSize - 3,
+                y: Math.floor(GameStore.gameSize / 2)
+            }];
 
         for (let i = 0; i < newGame.players.length; i++) {
             let player_id = await db.insertInto("players")
-                .values({game_id: gameId, color: colors[i], gold: 0, user_id: newGame.players[i]})
+                .values({game_id: gameId, color: colors[i], gold: 500, user_id: newGame.players[i]})
                 .returning("players.id")
                 .executeTakeFirst()
 
@@ -219,9 +264,17 @@ export class GameStore {
                 .values({
                     game_id: gameId,
                     player_id: player_id!.id,
+
                     x: positions[i].x,
                     y: positions[i].y,
-                    gold_per_tick: 5
+
+                    gold_per_tick: 5,
+
+                    life: 200,
+                    max_life: 200,
+                    damage: 10,
+
+                    upgrade_count: 0
                 })
                 .execute()
         }
@@ -230,11 +283,11 @@ export class GameStore {
 
         outer: while (islands.length < 10) {
 
-            let x = getRandomInt(GameStore.gameSize);
-            let y = getRandomInt(GameStore.gameSize);
+            let x = getRandomInt(GameStore.gameSize - 4) + 2;
+            let y = getRandomInt(GameStore.gameSize - 4) + 2;
 
             for (let island of islands) {
-                if (((island.x - x) ** 2 + (island.y - y) ** 2) < 5) {
+                if (((island.x - x) ** 2 + (island.y - y) ** 2) < 10) {
                     continue outer
                 }
             }
@@ -243,9 +296,17 @@ export class GameStore {
                 .values({
                     game_id: gameId,
                     player_id: undefined,
+
                     x: x,
                     y: y,
-                    gold_per_tick: 5
+
+                    gold_per_tick: 5,
+
+                    life: 100,
+                    max_life: 100,
+                    damage: 10,
+
+                    upgrade_count: 0
                 })
                 .execute()
 

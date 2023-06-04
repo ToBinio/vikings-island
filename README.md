@@ -82,9 +82,16 @@ create table ships
 ``` sql
 create table islands
 (
-id            serial primary key,
-player_id     integer references players,
-game_id       integer not null references games on delete cascade,
+    id            serial primary key,
+    player_id     integer references players,
+    game_id       integer not null references games on delete cascade,
+
+    life          integer not null,
+    max_life      integer not null,
+
+    upgrade_count integer not null,
+
+    damage        integer not null,
 
     x             integer not null,
     y             integer not null,

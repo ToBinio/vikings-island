@@ -1,6 +1,7 @@
 import {GameService} from "../game/game.service";
 import {EventService} from "../event/event.service";
 import {GameStore} from "../game/game.store";
+import {getRandomValues} from "crypto";
 
 export class GameLoopService {
 
@@ -50,32 +51,104 @@ export class GameLoopService {
                 }
             }
 
-            for (let ship of currentGame.ships) {
-                if (ship.goalX == undefined || ship.goalY == undefined) continue
+            ships: for (let ship of currentGame.ships) {
 
-                if (ship.goalX == ship.x && ship.goalY == ship.y) {
-                    ship.goalX = undefined;
-                    ship.goalY = undefined;
+                let badShipNeighbours = [];
 
-                    continue
+                for (let otherShip of currentGame.ships) {
+                    if (otherShip.playerId == ship.playerId) continue
+
+                    if (Math.abs(otherShip.x - ship.x) <= 1 || Math.abs(otherShip.y - ship.y) <= 1) {
+                        badShipNeighbours.push(otherShip)
+                    }
                 }
 
-                ship.ticksToMove--;
+                let badIslandNeighbours = [];
 
-                if (ship.ticksToMove >= 0) continue
+                for (let otherIsland of currentGame.islands) {
+                    if (otherIsland.playerId == ship.playerId) continue
 
-                let xOff = ship.goalX - ship.x;
-                let yOff = ship.goalY - ship.y;
+                    if (Math.abs(otherIsland.x - ship.x) <= 1 || Math.abs(otherIsland.y - ship.y) <= 1) {
+                        badIslandNeighbours.push(otherIsland)
+                    }
+                }
 
-                if (Math.abs(xOff) > Math.abs(yOff)) {
-                    let change = xOff / Math.abs(xOff);
-                    ship.x += change;
+                if (badShipNeighbours.length != 0) {
+                    let neighbourToAttack = badShipNeighbours[Math.floor(Math.random() * badShipNeighbours.length)];
+                    neighbourToAttack.life -= ship.damage;
+                } else if (badIslandNeighbours.length != 0) {
+                    let neighbourToAttack = badIslandNeighbours[Math.floor(Math.random() * badIslandNeighbours.length)];
+                    neighbourToAttack.life -= ship.damage;
                 } else {
-                    let change = yOff / Math.abs(yOff);
-                    ship.y += change;
+                    if (ship.goalX == undefined || ship.goalY == undefined) continue
+
+                    if (ship.goalX == ship.x && ship.goalY == ship.y) {
+                        ship.goalX = undefined;
+                        ship.goalY = undefined;
+
+                        continue
+                    }
+
+                    ship.ticksToMove--;
+
+                    if (ship.ticksToMove > 0) continue
+
+                    let xOff = ship.goalX - ship.x;
+                    let yOff = ship.goalY - ship.y;
+
+                    let newX = ship.x;
+                    let newY = ship.y;
+
+                    if (Math.abs(xOff) > Math.abs(yOff)) {
+                        newX += xOff / Math.abs(xOff);
+                    } else {
+                        newY += yOff / Math.abs(yOff);
+                    }
+
+                    for (let otherShip of currentGame.ships) {
+                        if (otherShip.id != ship.id && otherShip.x == newX && otherShip.y == newY) {
+                            continue ships;
+                        }
+                    }
+
+                    for (let otherIsland of currentGame.islands) {
+                        if (otherIsland.x == newX && otherIsland.y == newY) {
+                            continue ships;
+                        }
+                    }
+
+                    ship.x = newX;
+                    ship.y = newY;
+
+                    ship.ticksToMove = ship.maxTicksToMove;
+                }
+            }
+            
+            for (let i = currentGame.ships.length - 1; i >= 0; i--) {
+
+                let ship = currentGame.ships[i];
+
+                if (ship.life <= 0) {
+                    currentGame.ships.splice(i, 1);
+                }
+            }
+
+            for (let island of currentGame.islands) {
+                if (island.life > 0) continue
+
+                let shipNeighbours = [];
+
+                for (let otherShip of currentGame.ships) {
+                    if (Math.abs(otherShip.x - island.x) <= 1 || Math.abs(otherShip.y - island.y) <= 1) {
+                        shipNeighbours.push(otherShip)
+                    }
                 }
 
-                ship.ticksToMove = ship.maxTicksToMove;
+                let captureShip = shipNeighbours[Math.floor(Math.random() * shipNeighbours.length)];
+
+                island.playerId = captureShip.playerId;
+
+                island.life = island.max_life
             }
 
             await GameService.get().setGameById(currentGame);
