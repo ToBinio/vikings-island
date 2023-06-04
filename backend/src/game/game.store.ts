@@ -165,6 +165,25 @@ export class GameStore {
                 .execute())
         }
 
+        for (let island of game.islands) {
+            promises.push(db.updateTable("islands")
+                .set({
+                    x: island.x,
+                    y: island.y,
+
+                    life: island.life,
+                    max_life: island.max_life,
+
+                    damage: island.damage,
+
+                    upgrade_count: island.max_life,
+
+                    gold_per_tick: island.goldPerTick,
+                })
+                .where("islands.id", "=", island.id)
+                .execute())
+        }
+
         let shipIds = await db.selectFrom("ships")
             .where("game_id", "=", game.id)
             .select(["ships.id"])
@@ -277,7 +296,7 @@ export class GameStore {
                 .values({
                     game_id: gameId,
                     player_id: undefined,
-                    
+
                     x: x,
                     y: y,
 
