@@ -1,6 +1,8 @@
 import {GameData, NewGame} from "../../../types/games";
 import {GameStore} from "./game.store";
 import {GameLoopService} from "../gameLoop/gameLoop.service";
+import {ShipMoveRequest} from "../../../types/ship";
+import {TokenData} from "../util/token";
 
 export class GameService {
 
@@ -55,4 +57,24 @@ export class GameService {
     async getGameByUser(userId: number) {
         return GameStore.get().getAllGamesFromUser(userId);
     }
+
+    async setShipGoal(req: ShipMoveRequest, token: TokenData) {
+
+        let player = await GameStore.get().getPlayerByUser(token.id, req.gameId);
+        if (player == undefined) return SetShipResult.notInGame
+
+        let ship = await GameStore.get().getShip(req.shipId);
+        if (ship == undefined) return SetShipResult.shipNotFound
+
+        if (ship.player_id != player) return SetShipResult.notYourShip
+
+        await GameStore.get().setShipGoal(req);
+        return undefined
+    }
+}
+
+export enum SetShipResult {
+    notInGame,
+    notYourShip,
+    shipNotFound,
 }
