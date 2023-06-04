@@ -50,6 +50,28 @@ export class GameLoopService {
                 }
             }
 
+            for (let ship of currentGame.ships) {
+                if (ship.goal_x == undefined || ship.goal_y == undefined) continue
+
+                if (ship.goal_x == ship.x && ship.goal_y == ship.y) {
+                    ship.goal_x = undefined;
+                    ship.goal_y = undefined;
+
+                    continue
+                }
+
+                let xOff = ship.goal_x - ship.x;
+                let yOff = ship.goal_y - ship.y;
+
+                if (Math.abs(xOff) > Math.abs(yOff)) {
+                    let change = xOff / Math.abs(xOff);
+                    ship.x += change;
+                } else {
+                    let change = yOff / Math.abs(yOff);
+                    ship.y += change;
+                }
+            }
+
             await GameService.get().setGameById(currentGame);
             await EventService.get().updateGame(currentGame);
         }, game!.tick * 1000)
