@@ -61,6 +61,8 @@ main {
     div {
       color: white;
     }
+
+    box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
   }
 }
 
@@ -73,4 +75,7 @@ main {
 
   top: 50%;
   transform: translate(0, -50%);
+
+  border-radius: 10px;
+  box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
 }
