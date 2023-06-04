@@ -8,4 +8,8 @@
     <div>Maximum Leben: {{island.max_life}}</div>
     <div>Goldproduktionsrate: {{island.goldPerTick}}</div>
   </div>
+
+  <div id="flex" *ngIf="island.playerId == playerID">
+    <button (click)="buyShip()">Schiff kaufen</button>
+  </div>
 </div>

@@ -419,7 +419,6 @@ export class GameComponent implements OnInit {
   }
 
   onPointerUp(e: Event) {
-
     if ((this.downPostion.x - this.getEventLocation(e).x) ** 2 + (this.downPostion.y - this.getEventLocation(e).y) ** 2 < 5) {
       this.onClick(this.getEventLocation(e))
     }
@@ -485,5 +484,7 @@ export class GameComponent implements OnInit {
     }
   }
 
-  protected readonly parseInt = parseInt;
+  getId(): number {
+    return parseInt(this.cookieService.get("id"));
+  }
 }
