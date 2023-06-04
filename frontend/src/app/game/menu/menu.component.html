@@ -6,10 +6,11 @@
     <div>Leben: {{ship.life}}</div>
     <div>Maximum Leben: {{ship.max_life}}</div>
     <div>Schnelligkeit: {{ship.maxTicksToMove}}</div>
+    <div>nächster Move in: {{ship.ticksToMove}}</div>
   </div>
 
-  <div id="flex" *ngIf="ship.playerId == playerID">
-    <button (click)="drive()">Bewegen</button>
+  <div id="flex" *ngIf="ship.playerId == playerID" >
+    <button (click)="drive()" [class.active]="gameService.driveActive">Bewegen</button>
   </div>
 
 </div>

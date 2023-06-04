@@ -62,6 +62,9 @@ export class GameComponent implements OnInit {
     this.imgWater3.src = "assets/img/water3.png";
     this.imgWater4.src = "assets/img/water4.png";
 
+    this.imgBoarder.src = "assets/img/boarder.png";
+    this.imgBoarderGreen.src = "assets/img/boarderGreen.png";
+
     for (let x = 0; x < this.gameFieldSize; x++) {
       this.waters[x] = [];
 
@@ -148,12 +151,34 @@ export class GameComponent implements OnInit {
     console.log("listening?");
 
     this.source.addEventListener('open', message => {
-      console.log('Got', message);
+      console.log("listening game");
     });
 
     this.source.addEventListener('message', message => {
       console.log('Got', message);
       this.gameData = JSON.parse(message.data);
+
+      if (this.activeShip) {
+
+        let shipId = this.activeShip.id;
+        this.activeShip = undefined;
+
+        for (let ship of this.gameData!.ships) {
+          if (ship.id == shipId) {
+            this.activeShip = ship;
+            this.clickedCords = {x: ship.x, y: ship.y}
+          }
+        }
+      }
+
+      if (this.activeIsland) {
+        for (let island of this.gameData!.islands) {
+          if (island.id == this.activeIsland.id) {
+            this.activeIsland = island;
+          }
+        }
+      }
+
       this.redraw();
     });
   }
@@ -161,23 +186,25 @@ export class GameComponent implements OnInit {
   gameData: GameData | undefined;
   tileSize: number = 50;
   gameFieldSize: number = 33;
-  width: number = 15;
 
-  img = new Image(this.width, this.width);
-  imgBlue = new Image(this.width, this.width);
-  imgRed = new Image(this.width, this.width);
-  imgGreen = new Image(this.width, this.width);
-  imgYellow = new Image(this.width, this.width);
+  img = new Image();
+  imgBlue = new Image();
+  imgRed = new Image();
+  imgGreen = new Image();
+  imgYellow = new Image();
 
-  imgShipBlue = new Image(this.width, this.width);
-  imgShipRed = new Image(this.width, this.width);
-  imgShipGreen = new Image(this.width, this.width);
-  imgShipYellow = new Image(this.width, this.width);
+  imgShipBlue = new Image();
+  imgShipRed = new Image();
+  imgShipGreen = new Image();
+  imgShipYellow = new Image();
 
-  imgWater1 = new Image(this.width, this.width);
-  imgWater2 = new Image(this.width, this.width);
-  imgWater3 = new Image(this.width, this.width);
-  imgWater4 = new Image(this.width, this.width);
+  imgWater1 = new Image();
+  imgWater2 = new Image();
+  imgWater3 = new Image();
+  imgWater4 = new Image();
+
+  imgBoarder = new Image();
+  imgBoarderGreen = new Image();
 
   waters: number[][] = [];
 
@@ -220,6 +247,7 @@ export class GameComponent implements OnInit {
   }
 
   render(ctx: CanvasRenderingContext2D) {
+
     //render checker
     if (this.gameData != undefined) {
       for (let x = 0; x < this.gameFieldSize; x++) {
@@ -249,11 +277,6 @@ export class GameComponent implements OnInit {
             ctx.drawImage(img, (x - this.gameFieldSize / 2) * this.tileSize, (y - this.gameFieldSize / 2) * this.tileSize, this.tileSize + 1, this.tileSize + 1)
           }
         }
-      }
-
-      if (this.clickedCords != undefined) {
-        ctx.fillStyle = "black";
-        ctx.fillRect((this.clickedCords.x - this.gameFieldSize / 2) * this.tileSize, (this.clickedCords.y - this.gameFieldSize / 2) * this.tileSize, this.tileSize, this.tileSize)
       }
 
       for (let island of this.gameData.islands) {
@@ -289,8 +312,7 @@ export class GameComponent implements OnInit {
 
       for (let ship of this.gameData.ships) {
         if (this.activeShip != undefined && this.activeShip.goalX != undefined && this.activeShip.goalY != undefined && ship.x == this.activeShip!.x && ship.y == this.activeShip!.y) {
-          ctx.fillStyle = "green";
-          ctx.fillRect((ship.goalX! - this.gameFieldSize / 2) * this.tileSize, (ship.goalY! - this.gameFieldSize / 2) * this.tileSize, this.tileSize, this.tileSize)
+          ctx.drawImage(this.imgBoarderGreen, (ship.goalX! - this.gameFieldSize / 2) * this.tileSize, (ship.goalY! - this.gameFieldSize / 2) * this.tileSize, this.tileSize, this.tileSize)
         }
 
         for (let player of this.gameData.players) {
@@ -321,7 +343,9 @@ export class GameComponent implements OnInit {
         }
       }
 
-
+      if (this.clickedCords != undefined) {
+        ctx.drawImage(this.imgBoarder, (this.clickedCords.x - this.gameFieldSize / 2) * this.tileSize, (this.clickedCords.y - this.gameFieldSize / 2) * this.tileSize, this.tileSize, this.tileSize)
+      }
     }
   }
 
@@ -337,8 +361,10 @@ export class GameComponent implements OnInit {
 
     if (this.gameService.driveActive) {
       this.driveShip(x, y, this.gameData!.id, this.activeShip!.id);
-      this.activeShip = undefined;
+      this.clickedCords = {x: this.activeShip!.x, y: this.activeShip!.y}
       this.gameService.driveActive = false;
+      this.redraw()
+      return
     }
 
     for (let ship of this.gameData!.ships) {

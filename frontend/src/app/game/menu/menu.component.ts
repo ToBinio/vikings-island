@@ -9,7 +9,7 @@ import {GameServiceService} from "../game-service.service";
 })
 export class MenuComponent implements OnInit {
 
-  constructor(private gameService: GameServiceService) { }
+  constructor(public gameService: GameServiceService) { }
 
   ngOnInit(): void {
   }
@@ -18,7 +18,7 @@ export class MenuComponent implements OnInit {
   @Input() playerID!: number;
 
   drive() {
-    this.gameService.driveActive = true;
+    this.gameService.driveActive = !this.gameService.driveActive;
   }
 
 }

@@ -32,12 +32,19 @@ export class GameStore {
             .execute()
     }
 
-    async getPlayerByUser(userId: number, gameId: number): Promise<number | undefined> {
-        return (await db.selectFrom('players')
+    async getPlayerByUser(userId: number, gameId: number) {
+        return await db.selectFrom('players')
             .where("players.user_id", "=", userId)
             .where("players.game_id", "=", gameId)
-            .select(["players.id"])
-            .executeTakeFirst())?.id
+            .selectAll()
+            .executeTakeFirst()
+    }
+
+    async updatePlayerGold(playerId: number, gold: number) {
+        return await db.updateTable('players')
+            .where("players.id", "=", playerId)
+            .set({gold: gold})
+            .execute()
     }
 
     async getGameByID(gameId: number): Promise<GameData | undefined> {
