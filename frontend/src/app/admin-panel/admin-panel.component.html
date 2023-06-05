@@ -9,8 +9,9 @@
 
   <div class="admin-panel">
     <div class="game-container">
+      <h1>Spiele</h1>
       <div class="game" *ngFor="let game of games">
-        <button class="delete-button" (click)="deleteGame(game.id)">X</button>
+        <button class="delete-button" (click)="deleteGame(game.id)">Löschen</button>
         <div class="info">
           <div>ID: {{ game.id }}</div>
           <div>NAME: {{ game.name }}</div>
@@ -18,9 +19,10 @@
       </div>
     </div>
     <div class="user-container">
+      <h1>Benutzer</h1>
       <div class="user" *ngFor="let user of users">
-        <button class="delete-button" (click)="deleteUser(user.id)">X</button>
-        <button class="change-button" (click)="changePWDActive(user.id, user.name)">C</button>
+        <button class="delete-button" (click)="deleteUser(user.id)">Löschen</button>
+        <button class="change-button" (click)="changePWDActive(user.id, user.name)">Ändern</button>
         <div class="info">
           <div>ID: {{ user.id }}</div>
           <div>NAME: {{ user.name }}</div>

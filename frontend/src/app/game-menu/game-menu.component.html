@@ -33,7 +33,10 @@
           <h2>{{game.name}}</h2>
         </div>
         <div>
-          <div>Spieler: <span *ngFor="let name of game.playerNames">{{name}}</span></div>
+          <div>
+            Spieler
+            <span *ngFor="let name of game.playerNames">{{name}}</span>
+          </div>
           <div>TickSpeed: {{game.tick}}</div>
         </div>
       </button>
