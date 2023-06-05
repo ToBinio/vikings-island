@@ -169,7 +169,7 @@ export class GameStore {
 
                     damage: ship.damage,
 
-                    upgrade_count: ship.max_life,
+                    upgrade_count: 0,
                 })
                 .where("ships.id", "=", ship.id)
                 .execute())
@@ -188,7 +188,7 @@ export class GameStore {
 
                     damage: island.damage,
 
-                    upgrade_count: island.max_life,
+                    upgrade_count: 0,
 
                     gold_per_tick: island.goldPerTick,
                 })
