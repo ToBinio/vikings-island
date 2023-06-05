@@ -10,7 +10,7 @@ main {
 }
 
 main {
-  background-color: #3c5e8b;
+  background-color: #4f8fba;
 }
 
 .logout-button, #adminBtn {
@@ -31,11 +31,11 @@ main {
 
 .logout-button {
   right: 0;
-  background-color: red;
+  background-color: #3c5e8b;
 }
 
 .logout-button:hover {
-  background-color: #cc0000;
+  background-color: #304c74;
 }
 
 .gameData {
@@ -52,7 +52,7 @@ main {
   }
 
   #player {
-    background-color: #4f8fba;
+    background-color: #3c5e8b;
     border-radius: 10px;
     font-size: 18px;
     padding: 15px;
@@ -86,7 +86,7 @@ main {
   h1 {
     color: white;
   }
-  
+
   top: 10px;
   left: 50%;
   transform: translate(-50%, 0);

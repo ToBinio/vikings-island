@@ -1,23 +1,30 @@
 <div id="main">
-  <h2 *ngIf="island.playerId != undefined">Inseldaten von {{userName}}</h2>
-  <h2 *ngIf="island.playerId == undefined">Inseldaten</h2>
+  <h2 class="center" *ngIf="island.playerId != undefined">Inseldaten von {{userName}}</h2>
+  <h2 class="center" *ngIf="island.playerId == undefined">Inseldaten</h2>
 
   <div id="islandData">
-    <div>Schaden: {{island.damage}}</div>
-    <div>Leben: {{island.life}}</div>
-    <div>Maximum Leben: {{island.max_life}}</div>
-    <div>Goldproduktionsrate: {{island.goldPerTick}}</div>
+    <div class="val">Schaden: {{island.damage}}</div>
+    <div class="val">Leben: {{island.life}}</div>
+    <div class="val">Maximum Leben: {{island.max_life}}</div>
+    <div class="val">Goldproduktionsrate: {{island.goldPerTick}}</div>
   </div>
 
-  <div id="flex" *ngIf="island.playerId == playerID">
-    <button (click)="buyShip()">Schiff kaufen 250g</button>
+  <br *ngIf="island.playerId == playerID">
+  <br *ngIf="island.playerId == playerID">
+
+  <div class="flex" *ngIf="island.playerId == playerID">
+    <div>Schiff-Kosten: 250 Gold</div>
+    <button (click)="buyShip()">Schiff kaufen</button>
   </div>
 
-  <div>
-    <div>price: {{250 + island.upgrade_count * 250}}</div>
-    <button (click)="gameService.upgradeIsland('damage',island.id)">upgrade damage</button>
-    <button (click)="gameService.upgradeIsland('life',island.id)">upgrade max life</button>
-    <button (click)="gameService.upgradeIsland('heal',island.id)">heal</button>
-    <button (click)="gameService.upgradeIsland('gold',island.id)">upgrade gold per tick</button>
+  <br *ngIf="island.playerId == playerID">
+  <br *ngIf="island.playerId == playerID">
+
+  <div class="flex" *ngIf="island.playerId == playerID">
+    <div>Upgrade-Kosten: {{250 + (island.upgrade_count * 250)}} Gold</div>
+    <button (click)="gameService.upgradeIsland('damage',island.id)">Schaden + 5</button>
+    <button (click)="gameService.upgradeIsland('life',island.id)">max. Leben + 50</button>
+    <button (click)="gameService.upgradeIsland('gold',island.id)">Goldproduktionsrate + 5</button>
+    <button (click)="gameService.upgradeIsland('heal',island.id)">Heilen</button>
   </div>
 </div>

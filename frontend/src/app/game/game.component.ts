@@ -361,6 +361,12 @@ export class GameComponent implements OnInit {
       if (this.clickedCords != undefined) {
         ctx.drawImage(this.imgBoarder, (this.clickedCords.x - this.gameFieldSize / 2) * this.tileSize, (this.clickedCords.y - this.gameFieldSize / 2) * this.tileSize, this.tileSize, this.tileSize)
       }
+
+      ctx.beginPath()
+      ctx.strokeStyle = "#3c5e8b";
+      ctx.lineWidth = 3
+      ctx.rect(-(this.gameFieldSize / 2) * this.tileSize,-(this.gameFieldSize / 2) * this.tileSize, this.tileSize * this.gameFieldSize, this.tileSize * this.gameFieldSize);
+      ctx.stroke()
     }
   }
 

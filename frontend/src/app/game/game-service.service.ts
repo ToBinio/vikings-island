@@ -3,7 +3,7 @@ import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {environment} from "../../environments/environment";
 import {CookieService} from "ngx-cookie-service";
 import {AlertService} from "../alert-system/alert.service";
-import {Router} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {GameData} from "../../../../types/games";
 import {IslandUpgradeRequest} from "../../../../types/island";
 import {ShipUpgradeRequest} from "../../../../types/ship";
@@ -15,15 +15,15 @@ export class GameServiceService implements OnInit {
 
   gameId!: number;
 
-  constructor(private cookieService: CookieService, private httpClient: HttpClient, private alertService: AlertService, private router: Router) {
-  }
-
-  ngOnInit(): void {
+  constructor(private cookieService: CookieService, private httpClient: HttpClient, private alertService: AlertService, private router: Router, private route: ActivatedRoute) {
     let list = this.router.url.split("/");
 
     this.gameId = parseInt(list[list.length - 1]);
   }
 
+  ngOnInit(): void {
+
+  }
 
   driveActive: boolean = false;
 
@@ -68,8 +68,11 @@ export class GameServiceService implements OnInit {
 
     let request: IslandUpgradeRequest = {islandId: islandId, gameId: this.gameId}
 
+    console.log(request)
+
     this.httpClient.post<GameData>(environment.apiUrl + "/game/island/upgrade/" + what, request, {headers: headers}).subscribe({
       next: res => {
+        console.log(res)
       },
       error: err => {
         switch (err.status) {
@@ -99,6 +102,7 @@ export class GameServiceService implements OnInit {
 
     this.httpClient.post<GameData>(environment.apiUrl + "/game/ship/upgrade/" + what, request, {headers: headers}).subscribe({
       next: res => {
+        console.log(res)
       },
       error: err => {
         switch (err.status) {

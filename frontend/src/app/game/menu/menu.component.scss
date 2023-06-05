@@ -3,22 +3,41 @@
 }
 
 #main {
-  background-color: #4f8fba;
+  background-color: #3c5e8b;
   border-radius: 10px;
   font-size: 18px;
   padding: 15px;
 
-  #flex {
-    display: flex;
-    justify-content: center;
-
-    button {
-      margin-top: 15px;
-      color: black;
-    }
+  .center {
+    text-align: center;
   }
 
-  .active{
-    background-color: gray;
+  .val {
+    margin: 5px;
+  }
+
+  .flex {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    margin: 10px;
+
+    button {
+      color: black;
+      background-color: #73bed3;
+      border: none;
+      border-radius: 4px;
+      width: 80%;
+      margin: 15px auto auto;
+      transition: 0.33s;
+    }
+
+    button:hover {
+      background-color: #4191ab;
+    }
+
+    .active {
+      background-color: #4f8fba;
+    }
   }
 }
