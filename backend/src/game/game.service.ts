@@ -120,7 +120,7 @@ export class GameService {
     async upgradeShipSpeed(req: ShipUpgradeRequest, token: TokenData) {
 
         const ship = await this.handleShipUpgrade(req, token);
-        if (typeof ship != "object") return
+        if (typeof ship != "object") return ship
 
         if (ship.max_ticks_to_move <= 1) return UpgradeShipResult.maxUpgrade
 
@@ -132,7 +132,7 @@ export class GameService {
     async upgradeShipLife(req: ShipUpgradeRequest, token: TokenData) {
 
         const ship = await this.handleShipUpgrade(req, token);
-        if (typeof ship != "object") return
+        if (typeof ship != "object") return ship
 
         await GameStore.get().upgradeShipLife(ship.id, ship.max_life + 50, ship.upgrade_count + 1);
         await EventService.get().updateGame((await GameStore.get().getGameByID(req.gameId))!);
@@ -142,7 +142,7 @@ export class GameService {
     async upgradeShipDamage(req: ShipUpgradeRequest, token: TokenData) {
 
         const ship = await this.handleShipUpgrade(req, token);
-        if (typeof ship != "object") return
+        if (typeof ship != "object") return ship
 
         await GameStore.get().upgradeShipDamage(ship.id, ship.damage + 5, ship.upgrade_count + 1);
         await EventService.get().updateGame((await GameStore.get().getGameByID(req.gameId))!);
@@ -152,7 +152,7 @@ export class GameService {
     async upgradeShipHeal(req: ShipUpgradeRequest, token: TokenData) {
 
         const ship = await this.handleShipUpgrade(req, token);
-        if (typeof ship != "object") return
+        if (typeof ship != "object") return ship
 
         await GameStore.get().upgradeShipHeal(ship.id, ship.max_life, ship.upgrade_count + 1);
         await EventService.get().updateGame((await GameStore.get().getGameByID(req.gameId))!);
@@ -162,7 +162,7 @@ export class GameService {
     async upgradeIslandGold(req: IslandUpgradeRequest, token: TokenData) {
 
         const island = await this.handleIslandUpgrade(req, token);
-        if (typeof island != "object") return
+        if (typeof island != "object") return island
 
         await GameStore.get().upgradeIslandGold(island.id, island.gold_per_tick + 5, island.upgrade_count + 1);
         await EventService.get().updateGame((await GameStore.get().getGameByID(req.gameId))!);
@@ -172,7 +172,7 @@ export class GameService {
     async upgradeIslandLife(req: IslandUpgradeRequest, token: TokenData) {
 
         const island = await this.handleIslandUpgrade(req, token);
-        if (typeof island != "object") return
+        if (typeof island != "object") return island
 
         await GameStore.get().upgradeIslandLife(island.id, island.max_life + 50, island.upgrade_count + 1);
         await EventService.get().updateGame((await GameStore.get().getGameByID(req.gameId))!);
@@ -182,7 +182,7 @@ export class GameService {
     async upgradeIslandDamage(req: IslandUpgradeRequest, token: TokenData) {
 
         const island = await this.handleIslandUpgrade(req, token);
-        if (typeof island != "object") return
+        if (typeof island != "object") return island
 
         await GameStore.get().upgradeIslandDamage(island.id, island.damage + 5, island.upgrade_count + 1);
         await EventService.get().updateGame((await GameStore.get().getGameByID(req.gameId))!);
@@ -192,8 +192,8 @@ export class GameService {
     async upgradeIslandHeal(req: IslandUpgradeRequest, token: TokenData) {
 
         const island = await this.handleIslandUpgrade(req, token);
-        if (typeof island != "object") return
-
+        if (typeof island != "object") return island
+ 
         await GameStore.get().upgradeIslandHeal(island.id, island.max_life, island.upgrade_count + 1);
         await EventService.get().updateGame((await GameStore.get().getGameByID(req.gameId))!);
         return undefined
