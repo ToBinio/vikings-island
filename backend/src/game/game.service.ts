@@ -135,6 +135,7 @@ export class GameService {
         if (typeof ship != "object") return ship
 
         await GameStore.get().upgradeShipLife(ship.id, ship.max_life + 50, ship.upgrade_count + 1);
+        await GameStore.get().upgradeShipHeal(ship.id, ship.life + 50, ship.upgrade_count + 1);
         await EventService.get().updateGame((await GameStore.get().getGameByID(req.gameId))!);
         return undefined
     }
@@ -175,6 +176,7 @@ export class GameService {
         if (typeof island != "object") return island
 
         await GameStore.get().upgradeIslandLife(island.id, island.max_life + 50, island.upgrade_count + 1);
+        await GameStore.get().upgradeIslandHeal(island.id, island.life + 50, island.upgrade_count + 1);
         await EventService.get().updateGame((await GameStore.get().getGameByID(req.gameId))!);
         return undefined
     }
@@ -193,7 +195,7 @@ export class GameService {
 
         const island = await this.handleIslandUpgrade(req, token);
         if (typeof island != "object") return island
- 
+
         await GameStore.get().upgradeIslandHeal(island.id, island.max_life, island.upgrade_count + 1);
         await EventService.get().updateGame((await GameStore.get().getGameByID(req.gameId))!);
         return undefined
