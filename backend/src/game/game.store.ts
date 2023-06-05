@@ -253,25 +253,6 @@ export class GameStore {
                 .returning("players.id")
                 .executeTakeFirst()
 
-            await db.insertInto("ships")
-                .values({
-                    game_id: gameId,
-                    player_id: player_id!.id,
-                    x: getRandomInt(GameStore.gameSize),
-                    y: getRandomInt(GameStore.gameSize),
-
-                    ticks_to_move: 5,
-                    max_ticks_to_move: 5,
-
-                    life: 100,
-                    max_life: 100,
-
-                    damage: 25,
-
-                    upgrade_count: 0
-                })
-                .execute()
-
             await db.insertInto("islands")
                 .values({
                     game_id: gameId,
