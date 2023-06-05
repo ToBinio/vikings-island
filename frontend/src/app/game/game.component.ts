@@ -63,7 +63,7 @@ export class GameComponent implements OnInit {
     this.imgWater4.src = "assets/img/water4.png";
 
     this.imgBoarder.src = "assets/img/boarder.png";
-    this.imgBoarderGreen.src = "assets/img/boarderGreen.png";
+    this.imgBoarderRed.src = "assets/img/boarderRed.png";
 
     for (let x = 0; x < this.gameFieldSize; x++) {
       this.waters[x] = [];
@@ -217,7 +217,7 @@ export class GameComponent implements OnInit {
   imgWater4 = new Image();
 
   imgBoarder = new Image();
-  imgBoarderGreen = new Image();
+  imgBoarderRed = new Image();
 
   waters: number[][] = [];
 
@@ -327,7 +327,7 @@ export class GameComponent implements OnInit {
 
       for (let ship of this.gameData.ships) {
         if (this.activeShip != undefined && this.activeShip.goalX != undefined && this.activeShip.goalY != undefined && ship.x == this.activeShip!.x && ship.y == this.activeShip!.y) {
-          ctx.drawImage(this.imgBoarderGreen, (ship.goalX! - this.gameFieldSize / 2) * this.tileSize, (ship.goalY! - this.gameFieldSize / 2) * this.tileSize, this.tileSize, this.tileSize)
+          ctx.drawImage(this.imgBoarderRed, (ship.goalX! - this.gameFieldSize / 2) * this.tileSize, (ship.goalY! - this.gameFieldSize / 2) * this.tileSize, this.tileSize, this.tileSize)
         }
 
         for (let player of this.gameData.players) {
