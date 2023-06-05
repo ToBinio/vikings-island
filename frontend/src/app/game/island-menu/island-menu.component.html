@@ -12,4 +12,12 @@
   <div id="flex" *ngIf="island.playerId == playerID">
     <button (click)="buyShip()">Schiff kaufen 250g</button>
   </div>
+
+  <div>
+    <div>price: {{250 + island.upgrade_count * 250}}</div>
+    <button (click)="gameService.upgradeIsland('damage',island.id)">upgrade damage</button>
+    <button (click)="gameService.upgradeIsland('life',island.id)">upgrade max life</button>
+    <button (click)="gameService.upgradeIsland('heal',island.id)">heal</button>
+    <button (click)="gameService.upgradeIsland('gold',island.id)">upgrade gold per tick</button>
+  </div>
 </div>

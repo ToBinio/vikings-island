@@ -2,6 +2,9 @@ import {Component, Input, OnInit} from '@angular/core';
 import {Ship} from "../../../../../types/ship";
 import {GameServiceService} from "../game-service.service";
 import {UsernameService} from "../../name-system/username.service";
+import {HttpClient} from "@angular/common/http";
+import {CookieService} from "ngx-cookie-service";
+import {AlertService} from "../../alert-system/alert.service";
 
 @Component({
   selector: 'app-menu',
@@ -10,7 +13,7 @@ import {UsernameService} from "../../name-system/username.service";
 })
 export class MenuComponent implements OnInit {
 
-  constructor(public gameService: GameServiceService, private nameService: UsernameService) {
+  constructor(public cookieService: CookieService, private httpClient: HttpClient, private alertService: AlertService, public gameService: GameServiceService, private nameService: UsernameService) {
   }
 
   ngOnInit(): void {
@@ -30,5 +33,4 @@ export class MenuComponent implements OnInit {
   drive() {
     this.gameService.driveActive = !this.gameService.driveActive;
   }
-
 }
