@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import {Ship} from "../../../../../types/ship";
 import {GameServiceService} from "../game-service.service";
 import {UsernameService} from "../../name-system/username.service";
@@ -11,17 +11,25 @@ import {AlertService} from "../../alert-system/alert.service";
   templateUrl: './menu.component.html',
   styleUrls: ['./menu.component.scss']
 })
-export class MenuComponent implements OnInit {
+export class MenuComponent implements OnInit, OnChanges {
 
   constructor(public cookieService: CookieService, private httpClient: HttpClient, private alertService: AlertService, public gameService: GameServiceService, private nameService: UsernameService) {
   }
 
-  ngOnInit(): void {
+  setName() {
     if (this.userID != undefined) {
       this.nameService.getName(this.userID).then((name) => {
         this.userName = name
       })
     }
+  }
+
+  ngOnInit(): void {
+    this.setName();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    this.setName();
   }
 
   @Input() ship!: Ship;

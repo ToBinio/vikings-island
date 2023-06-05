@@ -216,6 +216,8 @@ export function getGamesRouter(): Router {
 
     router.post("/island/upgrade/damage", async (req, res) => {
 
+        console.log(0)
+
         let token = await verifyRequest(req.headers.authorization, res, false);
 
         if (token == undefined) {

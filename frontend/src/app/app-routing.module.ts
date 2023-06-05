@@ -11,11 +11,11 @@ import {WaitlistComponent} from "./waitlist/waitlist.component";
 
 const routes: Routes = [
   {path: 'login', component: LoginPageComponent},
+  {path: 'waitlist', component: WaitlistComponent},
   {path: 'games', component: GameMenuComponent, canActivate: [AuthGuard]},
   {path: 'game/:id', component: GameComponent, canActivate: [AuthGuard]},
   {path: 'admin', component: AdminPanelComponent, canActivate: [AuthGuard, AdminAuthGuard]},
   {path: 'logout', component: LogOutComponent},
-  {path: 'waitlist', component: WaitlistComponent},
   {path: '**', pathMatch: 'full', redirectTo: 'login'}
 ];
 

@@ -20,8 +20,17 @@ export class GameMenuComponent implements OnInit {
   constructor(public menuService: MenuService, public logOutService: LogOutService, private httpClient: HttpClient, public cookieService: CookieService, private alertService: AlertService, private router: Router, public adminAuth: AdminAuthService, private nameService: UsernameService) {
   }
 
+  name: string = "";
+
+  getName() {
+    this.nameService.getName(parseInt(this.cookieService.get("id"))).then((name) => {
+      this.name = name;
+    });
+  }
+
   ngOnInit(): void {
     //needed to cache the result
+    this.getName()
     this.adminAuth.tryUpdateCache();
 
     const headers = new HttpHeaders({
@@ -33,13 +42,10 @@ export class GameMenuComponent implements OnInit {
       next: res => {
         this.gameMenu = res;
 
-        console.log(this.gameMenu);
-
         for (let game of this.gameMenu) {
           game.playerNames = []
 
           for (let player of game.players) {
-
             this.nameService.getName(player).then((name) => {
               game.playerNames.push(name);
             })
@@ -103,7 +109,7 @@ export class GameMenuComponent implements OnInit {
         console.log("ok -> created");
         this.menuService.joinNewGame(res).then(() => {
           this.changeCreateActive();
-          this.router.navigate(["/waitlist"]);
+          this.router.navigate(["waitlist"]);
         });
       },
       error: err => {

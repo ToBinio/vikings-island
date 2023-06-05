@@ -4,16 +4,11 @@
   </div>
 
   <div>
-    <div>ID: {{cookieService.get("id")}}</div>
-    <div>TOKEN: {{cookieService.get("token")}}</div>
-  </div>
-
-  <div>
-    <button class="logout-button" (click)="logOut()">Abmelden</button>
+    <button class="logout-button" (click)="logOut()"><span>{{name}}</span> Abmelden</button>
   </div>
 
   <div *ngIf="adminAuth.isAuth">
-    <button id="adminBtn" (click)="admin()">Admin Site</button>
+    <button id="adminBtn" (click)="admin()">Admin</button>
   </div>
 
   <div class="btnCenter">
