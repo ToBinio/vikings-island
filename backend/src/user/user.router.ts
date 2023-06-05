@@ -2,7 +2,6 @@ import {Router} from "express";
 import {UserLoginError, UserRegisterError, UserService} from "./user.service";
 import {UserLoginRequest} from "../../../types/user";
 import {verifyRequest} from "../util/token";
-import {UserStore} from "./user.store";
 
 export function getUserRouter(): Router {
     let router = Router();
@@ -82,7 +81,7 @@ export function getUserRouter(): Router {
 
         await UserService.get().deleteUser(id);
 
-        res.sendStatus(200).end();
+        res.status(200).send({}).end();
     })
 
     router.get("/", async (req, res) => {

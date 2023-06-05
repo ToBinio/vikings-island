@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {Router} from "@angular/router";
 import {CookieService} from "ngx-cookie-service";
 
@@ -7,10 +7,11 @@ import {CookieService} from "ngx-cookie-service";
 })
 export class LogOutService {
 
-  constructor(private router: Router, private cookies: CookieService) { }
+  constructor(private router: Router, private cookies: CookieService) {
+  }
 
   logout() {
-    this.cookies.deleteAll();
+    this.cookies.set("token", "");
     console.log("->" + this.cookies.get("token"))
     this.router.navigate(["/login"]);
   }

@@ -1,5 +1,5 @@
 <div id="main">
-  <h2>Schiffsdaten von {{ship.playerId}}</h2>
+  <h2>Schiffsdaten von {{userName}}</h2>
 
   <div id="shipData">
     <div>Schaden: {{ship.damage}}</div>
@@ -9,8 +9,16 @@
     <div>nächster Move in: {{ship.ticksToMove}}</div>
   </div>
 
-  <div id="flex" *ngIf="ship.playerId == playerID" >
+  <div id="flex" *ngIf="ship.playerId == playerID">
     <button (click)="drive()" [class.active]="gameService.driveActive">Bewegen</button>
   </div>
 
+
+  <div>
+    <div>price: {{250 + ship.upgrade_count * 250}}</div>
+    <button (click)="gameService.upgradeShip('damage',ship.id)">upgrade damage</button>
+    <button (click)="gameService.upgradeShip('life',ship.id)">upgrade max life</button>
+    <button (click)="gameService.upgradeShip('heal',ship.id)">heal</button>
+    <button (click)="gameService.upgradeShip('speed',ship.id)">upgrade speed</button>
+  </div>
 </div>

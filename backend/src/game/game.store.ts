@@ -1,7 +1,7 @@
 import {Game, GameData, NewGame} from "../../../types/games";
 import {db} from "../db/db";
 import {ShipMoveRequest} from "../../../types/ship";
-import {TokenData} from "../util/token";
+import {GameLoopService} from "../gameLoop/gameLoop.service";
 
 export class GameStore {
 
@@ -58,6 +58,7 @@ export class GameStore {
             return undefined
 
         let gameData: GameData = {
+            hasWon: undefined,
             id: gameInfo.id,
             name: gameInfo.name,
             tick: gameInfo.tick,
@@ -134,6 +135,8 @@ export class GameStore {
                 upgrade_count: island.upgrade_count
             })
         }
+
+        gameData.hasWon = GameLoopService.get().calcWinner(gameData);
 
         return gameData;
     }
@@ -335,6 +338,68 @@ export class GameStore {
         await db.updateTable("ships")
             .set({goal_x: req.goalX, goal_y: req.goalY})
             .where("ships.id", "=", req.shipId)
+            .execute()
+    }
+
+    async upgradeShipSpeed(shipId: number, newSpeed: number, newUpgradeCount: number) {
+        await db.updateTable("ships")
+            .set({max_ticks_to_move: newSpeed, upgrade_count: newUpgradeCount})
+            .where("ships.id", "=", shipId)
+            .execute()
+
+        await db.updateTable("ships")
+            .set({ticks_to_move: newSpeed})
+            .where("ships.id", "=", shipId)
+            .where("ships.ticks_to_move", ">", newSpeed)
+            .execute()
+    }
+
+    async upgradeShipLife(shipId: number, newLife: number, newUpgradeCount: number) {
+        await db.updateTable("ships")
+            .set({max_life: newLife, upgrade_count: newUpgradeCount})
+            .where("ships.id", "=", shipId)
+            .execute()
+    }
+
+    async upgradeShipDamage(shipId: number, newDamage: number, newUpgradeCount: number) {
+        await db.updateTable("ships")
+            .set({damage: newDamage, upgrade_count: newUpgradeCount})
+            .where("ships.id", "=", shipId)
+            .execute()
+    }
+
+    async upgradeShipHeal(shipId: number, maxLife: number, newUpgradeCount: number) {
+        await db.updateTable("ships")
+            .set({life: maxLife, upgrade_count: newUpgradeCount})
+            .where("ships.id", "=", shipId)
+            .execute()
+    }
+
+    async upgradeIslandGold(islandId: number, maxGold: number, newUpgradeCount: number) {
+        await db.updateTable("islands")
+            .set({gold_per_tick: maxGold, upgrade_count: newUpgradeCount})
+            .where("islands.id", "=", islandId)
+            .execute()
+    }
+
+    async upgradeIslandLife(islandId: number, maxLife: number, newUpgradeCount: number) {
+        await db.updateTable("islands")
+            .set({max_life: maxLife, upgrade_count: newUpgradeCount})
+            .where("islands.id", "=", islandId)
+            .execute()
+    }
+
+    async upgradeIslandDamage(islandId: number, maxDamage: number, newUpgradeCount: number) {
+        await db.updateTable("islands")
+            .set({damage: maxDamage, upgrade_count: newUpgradeCount})
+            .where("islands.id", "=", islandId)
+            .execute()
+    }
+
+    async upgradeIslandHeal(islandId: number, maxLife: number, newUpgradeCount: number) {
+        await db.updateTable("islands")
+            .set({life: maxLife, upgrade_count: newUpgradeCount})
+            .where("islands.id", "=", islandId)
             .execute()
     }
 

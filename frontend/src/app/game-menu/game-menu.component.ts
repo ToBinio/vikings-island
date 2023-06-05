@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {environment} from "../../environments/environment";
 import {CookieService} from "ngx-cookie-service";
@@ -7,7 +7,8 @@ import {Router} from "@angular/router";
 import {AdminAuthService} from "../auth/adminAuth/admin-auth.service";
 import {LogOutService} from "../log-out/log-out.service";
 import {MenuService} from "./menu.service";
-import {CreateNewGame, Game, NewGames} from "../../../../types/games";
+import {CreateNewGame, Game, NewGame} from "../../../../types/games";
+import {UsernameService} from "../name-system/username.service";
 
 @Component({
   selector: 'app-game-menu',
@@ -16,7 +17,7 @@ import {CreateNewGame, Game, NewGames} from "../../../../types/games";
 })
 export class GameMenuComponent implements OnInit {
 
-  constructor(public menuService: MenuService, public logOutService: LogOutService, private httpClient: HttpClient, public cookieService: CookieService, private alertService: AlertService, private router: Router, public adminAuth: AdminAuthService) {
+  constructor(public menuService: MenuService, public logOutService: LogOutService, private httpClient: HttpClient, public cookieService: CookieService, private alertService: AlertService, private router: Router, public adminAuth: AdminAuthService, private nameService: UsernameService) {
   }
 
   ngOnInit(): void {
@@ -28,10 +29,22 @@ export class GameMenuComponent implements OnInit {
       'Authorization': `Bearer ${this.cookieService.get("token")}`
     })
 
-    this.httpClient.get<NewGames>(environment.apiUrl + "/new_game", {headers: headers}).subscribe({
+    this.httpClient.get<LocalNewGame[]>(environment.apiUrl + "/new_game", {headers: headers}).subscribe({
       next: res => {
-        console.log("ok");
         this.gameMenu = res;
+
+        console.log(this.gameMenu);
+
+        for (let game of this.gameMenu) {
+          game.playerNames = []
+
+          for (let player of game.players) {
+
+            this.nameService.getName(player).then((name) => {
+              game.playerNames.push(name);
+            })
+          }
+        }
       },
       error: err => {
         switch (err.status) {
@@ -66,7 +79,7 @@ export class GameMenuComponent implements OnInit {
     });
   }
 
-  gameMenu: NewGames = [];
+  gameMenu: LocalNewGame[] = [];
   ownGameMenu: Game[] = [];
   gameMenuActive: boolean = true;
 
@@ -88,10 +101,10 @@ export class GameMenuComponent implements OnInit {
     } as CreateNewGame, {headers: headers}).subscribe({
       next: res => {
         console.log("ok -> created");
-        this.menuService.gameID = res;
-        this.menuService.listenWaitlist().then();
-        this.changeCreateActive();
-        this.router.navigate(["/waitlist"]);
+        this.menuService.joinNewGame(res).then(() => {
+          this.changeCreateActive();
+          this.router.navigate(["/waitlist"]);
+        });
       },
       error: err => {
         switch (err.status) {
@@ -133,4 +146,8 @@ export class GameMenuComponent implements OnInit {
     console.log(0)
     this.logOutService.logout()
   }
+}
+
+export interface LocalNewGame extends NewGame {
+  playerNames: string[]
 }

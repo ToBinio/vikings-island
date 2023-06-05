@@ -14,3 +14,8 @@ export interface Island {
 
     goldPerTick: number
 }
+
+export interface IslandUpgradeRequest {
+    gameId: number,
+    islandId: number,
+}

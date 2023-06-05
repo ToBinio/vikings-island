@@ -7,19 +7,20 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {AdminAuthService} from "../auth/adminAuth/admin-auth.service";
 import {environment} from "../../environments/environment";
 import {WaitListEvent} from "../../../../types/waitList";
+import {UsernameService} from "../name-system/username.service";
 
 @Injectable({
   providedIn: 'root'
 })
 export class MenuService {
 
-  constructor(private route: ActivatedRoute, public logOutService: LogOutService, private httpClient: HttpClient, private cookieService: CookieService, private alertService: AlertService, private router: Router, public adminAuth: AdminAuthService) {
+  constructor(private route: ActivatedRoute, public logOutService: LogOutService, private httpClient: HttpClient, private cookieService: CookieService, private alertService: AlertService, private router: Router, public adminAuth: AdminAuthService, private nameService: UsernameService) {
   }
 
   waitListSource: EventSource | undefined;
   gameID: number | undefined;
 
-  waitListPlayers: number[] = [];
+  waitListPlayers: string[] = [];
 
   listenWaitlist(): Promise<void> {
     return new Promise<void>((resolve) => {
@@ -35,12 +36,19 @@ export class MenuService {
       this.waitListSource.addEventListener('message', message => {
         console.log('Got', message);
         let waitListEvent = JSON.parse(message.data) as WaitListEvent;
-        this.waitListPlayers = waitListEvent.players
+
+        this.waitListPlayers = [];
+
+        for (let player of waitListEvent.players) {
+          this.nameService.getName(player).then((name) => {
+            this.waitListPlayers.push(name)
+          })
+        }
 
         if (waitListEvent.gameId != -1) {
           this.joinRunningGame(waitListEvent.gameId);
           this.unListenWaitlist();
-          this.router.navigate(["/game/" + this.gameID]);
+          this.router.navigate(["/game/" + this.gameID]).then();
         }
       });
     })

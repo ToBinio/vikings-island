@@ -1,4 +1,4 @@
-import {Component, ElementRef, OnInit, Output, ViewChild} from '@angular/core';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {environment} from "../../environments/environment";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {CookieService} from "ngx-cookie-service";
@@ -122,6 +122,13 @@ export class GameComponent implements OnInit {
         for (let player of this.gameData.players) {
           this.users.push(this.nameService.getName(player.userId!));
         }
+
+        if (this.gameData?.hasWon) {
+          this.nameService.getName(this.gameData.hasWon).then((name) => {
+            this.winner = name;
+          });
+        }
+
         this.redraw();
         this.startEvent();
       },
@@ -179,6 +186,12 @@ export class GameComponent implements OnInit {
         }
       }
 
+      if (this.gameData?.hasWon) {
+        this.nameService.getName(this.gameData.hasWon).then((name) => {
+          this.winner = name;
+        });
+      }
+
       this.redraw();
     });
   }
@@ -209,6 +222,8 @@ export class GameComponent implements OnInit {
   waters: number[][] = [];
 
   users: Promise<string>[] = [];
+
+  winner: string | undefined = undefined;
 
   activeShip!: Ship | undefined;
   activeIsland!: Island | undefined;
@@ -356,6 +371,8 @@ export class GameComponent implements OnInit {
 
     let x = Math.floor(worldPos.x / this.tileSize + this.gameFieldSize / 2);
     let y = Math.floor(worldPos.y / this.tileSize + this.gameFieldSize / 2);
+
+    if (x < 0 || x >= this.gameFieldSize || y < 0 || y >= this.gameFieldSize) return;
 
     console.log(x + "|" + y)
 
@@ -512,5 +529,18 @@ export class GameComponent implements OnInit {
 
   getId(): number {
     return parseInt(this.cookieService.get("id"));
+  }
+
+  getUserFromId(playerId: number | undefined): number | undefined {
+
+    if (this.gameData == undefined || playerId == undefined) return undefined
+
+    for (let player of this.gameData.players) {
+      if (player.playerId == playerId) {
+        return player.userId
+      }
+    }
+
+    return undefined;
   }
 }
