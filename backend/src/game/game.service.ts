@@ -1,9 +1,10 @@
 import {GameData, NewGame} from "../../../types/games";
 import {GameStore} from "./game.store";
 import {GameLoopService} from "../gameLoop/gameLoop.service";
-import {ShipMoveRequest, ShipSpawnRequest} from "../../../types/ship";
+import {ShipMoveRequest, ShipSpawnRequest, ShipUpgradeRequest} from "../../../types/ship";
 import {TokenData} from "../util/token";
 import {EventService} from "../event/event.service";
+import {IslandUpgradeRequest} from "../../../types/island";
 
 export class GameService {
 
@@ -115,6 +116,129 @@ export class GameService {
         await EventService.get().updateGame((await GameStore.get().getGameByID(req.gameId))!);
         return undefined
     }
+
+    async upgradeShipSpeed(req: ShipUpgradeRequest, token: TokenData) {
+
+        const ship = await this.handleShipUpgrade(req, token);
+        if (typeof ship != "object") return
+
+        if (ship.max_ticks_to_move <= 1) return UpgradeShipResult.maxUpgrade
+
+        await GameStore.get().upgradeShipSpeed(ship.id, ship.max_ticks_to_move - 1, ship.upgrade_count + 1);
+        await EventService.get().updateGame((await GameStore.get().getGameByID(req.gameId))!);
+        return undefined
+    }
+
+    async upgradeShipLife(req: ShipUpgradeRequest, token: TokenData) {
+
+        const ship = await this.handleShipUpgrade(req, token);
+        if (typeof ship != "object") return
+
+        await GameStore.get().upgradeShipLife(ship.id, ship.max_life + 50, ship.upgrade_count + 1);
+        await EventService.get().updateGame((await GameStore.get().getGameByID(req.gameId))!);
+        return undefined
+    }
+
+    async upgradeShipDamage(req: ShipUpgradeRequest, token: TokenData) {
+
+        const ship = await this.handleShipUpgrade(req, token);
+        if (typeof ship != "object") return
+
+        await GameStore.get().upgradeShipDamage(ship.id, ship.damage + 5, ship.upgrade_count + 1);
+        await EventService.get().updateGame((await GameStore.get().getGameByID(req.gameId))!);
+        return undefined
+    }
+
+    async upgradeShipHeal(req: ShipUpgradeRequest, token: TokenData) {
+
+        const ship = await this.handleShipUpgrade(req, token);
+        if (typeof ship != "object") return
+
+        await GameStore.get().upgradeShipHeal(ship.id, ship.max_life, ship.upgrade_count + 1);
+        await EventService.get().updateGame((await GameStore.get().getGameByID(req.gameId))!);
+        return undefined
+    }
+
+    async upgradeIslandGold(req: IslandUpgradeRequest, token: TokenData) {
+
+        const island = await this.handleIslandUpgrade(req, token);
+        if (typeof island != "object") return
+
+        await GameStore.get().upgradeIslandGold(island.id, island.gold_per_tick + 5, island.upgrade_count + 1);
+        await EventService.get().updateGame((await GameStore.get().getGameByID(req.gameId))!);
+        return undefined
+    }
+
+    async upgradeIslandLife(req: IslandUpgradeRequest, token: TokenData) {
+
+        const island = await this.handleIslandUpgrade(req, token);
+        if (typeof island != "object") return
+
+        await GameStore.get().upgradeIslandLife(island.id, island.max_life + 50, island.upgrade_count + 1);
+        await EventService.get().updateGame((await GameStore.get().getGameByID(req.gameId))!);
+        return undefined
+    }
+
+    async upgradeIslandDamage(req: IslandUpgradeRequest, token: TokenData) {
+
+        const island = await this.handleIslandUpgrade(req, token);
+        if (typeof island != "object") return
+
+        await GameStore.get().upgradeIslandDamage(island.id, island.damage + 5, island.upgrade_count + 1);
+        await EventService.get().updateGame((await GameStore.get().getGameByID(req.gameId))!);
+        return undefined
+    }
+
+    async upgradeIslandHeal(req: IslandUpgradeRequest, token: TokenData) {
+
+        const island = await this.handleIslandUpgrade(req, token);
+        if (typeof island != "object") return
+
+        await GameStore.get().upgradeIslandHeal(island.id, island.max_life, island.upgrade_count + 1);
+        await EventService.get().updateGame((await GameStore.get().getGameByID(req.gameId))!);
+        return undefined
+    }
+
+    async handleShipUpgrade(req: ShipUpgradeRequest, token: TokenData) {
+        let player = await GameStore.get().getPlayerByUser(token.id, req.gameId);
+        if (player == undefined) return UpgradeShipResult.notInGame
+
+        let ship = await GameStore.get().getShip(req.shipId);
+        if (ship == undefined) return UpgradeShipResult.shipNotFound
+
+        if (ship.player_id != player.id) return UpgradeShipResult.notYourShip
+
+        let newPlayer = await GameStore.get().getPlayerByUser(token.id, req.gameId);
+
+        let cost = (250 + 250 * ship.upgrade_count);
+
+        if (newPlayer!.gold < cost) return UpgradeShipResult.noGold
+
+        await GameStore.get().updatePlayerGold(newPlayer!.id, newPlayer!.gold - cost);
+
+        return ship;
+    }
+
+    async handleIslandUpgrade(req: IslandUpgradeRequest, token: TokenData) {
+        let player = await GameStore.get().getPlayerByUser(token.id, req.gameId);
+        if (player == undefined) return UpgradeIslandResult.notInGame
+
+        let island = await GameStore.get().getIsland(req.islandId);
+        if (island == undefined) return UpgradeIslandResult.islandNotFound
+
+        if (island.player_id != player.id) return UpgradeIslandResult.notYourIsland
+
+        let newPlayer = await GameStore.get().getPlayerByUser(token.id, req.gameId);
+
+        let cost = (250 + 250 * island.upgrade_count);
+
+        if (newPlayer!.gold < cost) return UpgradeIslandResult.noGold
+
+        await GameStore.get().updatePlayerGold(newPlayer!.id, newPlayer!.gold - cost);
+
+        return island;
+    }
+
 }
 
 export enum SetShipResult {
@@ -130,4 +254,20 @@ export enum SpawnShipResult {
     islandNotFound,
     noSpace,
     noGold
+}
+
+export enum UpgradeShipResult {
+    notInGame,
+    notYourShip,
+    shipNotFound,
+    noGold,
+    maxUpgrade
+}
+
+export enum UpgradeIslandResult {
+    notInGame,
+    notYourIsland,
+    islandNotFound,
+    noGold,
+    maxUpgrade
 }

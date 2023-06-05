@@ -1,19 +1,17 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {environment} from "../../environments/environment";
-import {ShipMoveRequest} from "../../../../types/ship";
 import {CookieService} from "ngx-cookie-service";
 import {AlertService} from "../alert-system/alert.service";
-import * as fs from "fs";
-import {GameData} from "../../../../types/games";
-import {Route, Router} from "@angular/router";
+import {Router} from "@angular/router";
 
 @Injectable({
   providedIn: 'root'
 })
 export class GameServiceService {
 
-  constructor(private cookieService: CookieService, private httpClient: HttpClient, private alertService: AlertService, private router: Router) { }
+  constructor(private cookieService: CookieService, private httpClient: HttpClient, private alertService: AlertService, private router: Router) {
+  }
 
   driveActive: boolean = false;
 
@@ -25,7 +23,10 @@ export class GameServiceService {
 
     let list = this.router.url.split("/");
 
-    this.httpClient.post(environment.apiUrl + "/game/ship/spawn", {islandId: islandId, gameId: parseInt(list[list.length - 1])}, {headers: headers}).subscribe({
+    this.httpClient.post(environment.apiUrl + "/game/ship/spawn", {
+      islandId: islandId,
+      gameId: parseInt(list[list.length - 1])
+    }, {headers: headers}).subscribe({
       next: res => {
         console.log(res);
       },
@@ -40,6 +41,7 @@ export class GameServiceService {
             break
           }
           default: {
+            console.log(err);
             this.alertService.httpError(err)
           }
         }

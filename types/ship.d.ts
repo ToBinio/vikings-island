@@ -31,3 +31,8 @@ export interface ShipSpawnRequest {
     gameId: number,
     islandId: number,
 }
+
+export interface ShipUpgradeRequest {
+    gameId: number,
+    shipId: number,
+}

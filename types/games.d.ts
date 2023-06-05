@@ -20,6 +20,8 @@ export interface GameData {
     name: string
     tick: number
 
+    hasWon: number | undefined
+
     players: {
         userId: number | undefined,
         playerId: number,

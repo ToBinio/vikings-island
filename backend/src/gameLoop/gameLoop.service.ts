@@ -1,7 +1,6 @@
 import {GameService} from "../game/game.service";
 import {EventService} from "../event/event.service";
-import {GameStore} from "../game/game.store";
-import {getRandomValues} from "crypto";
+import {GameData} from "../../../types/games";
 
 export class GameLoopService {
 
@@ -150,7 +149,7 @@ export class GameLoopService {
                         }
                     }
 
-                    if(shipNeighbours.length > 0){
+                    if (shipNeighbours.length > 0) {
                         let shipToDamage = shipNeighbours[Math.floor(Math.random() * shipNeighbours.length)];
 
                         shipToDamage.life -= island.damage;
@@ -165,6 +164,8 @@ export class GameLoopService {
                     currentGame.ships.splice(i, 1);
                 }
             }
+
+            currentGame.hasWon = GameLoopService.get().calcWinner(currentGame);
 
             await GameService.get().setGameById(currentGame);
             await EventService.get().updateGame(currentGame);
@@ -181,6 +182,24 @@ export class GameLoopService {
         }
     }
 
+    public calcWinner(gameData: GameData): number | undefined {
+        let currentWinner = undefined;
+
+        for (let island of gameData.islands) {
+
+            if (island.playerId == undefined) continue
+
+            if (currentWinner == undefined) {
+                currentWinner = island.playerId;
+            } else {
+                if (currentWinner != island.playerId) {
+                    return undefined
+                }
+            }
+        }
+        
+        return currentWinner;
+    }
 }
 
 interface GameLoopElement {

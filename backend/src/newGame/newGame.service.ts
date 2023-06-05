@@ -36,9 +36,6 @@ export class NewGameService {
 
         let gameId = NewGameStore.get().createGame(gameCreateRequest);
 
-        NewGameStore.get().addPLayerToGame(gameId, token.id);
-        EventService.get().updateWaitList(gameId, -1)
-
         return {ok: gameId};
     }
 

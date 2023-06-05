@@ -39,7 +39,7 @@ export class LoginFormComponent {
           this.cookieService.set("token", this.loginService.token);
           this.cookieService.set("id", String(this.loginService.id))
 
-          this.router.navigateByUrl("/games").then();
+          this.router.navigate(["games"]).then();
 
           //needed to cache the result
           this.adminAuthService.updateCache();

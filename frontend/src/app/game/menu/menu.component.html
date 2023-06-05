@@ -1,5 +1,5 @@
 <div id="main">
-  <h2>Schiffsdaten von {{ship.playerId}}</h2>
+  <h2>Schiffsdaten von {{userName}}</h2>
 
   <div id="shipData">
     <div>Schaden: {{ship.damage}}</div>
@@ -9,7 +9,7 @@
     <div>nächster Move in: {{ship.ticksToMove}}</div>
   </div>
 
-  <div id="flex" *ngIf="ship.playerId == playerID" >
+  <div id="flex" *ngIf="ship.playerId == playerID">
     <button (click)="drive()" [class.active]="gameService.driveActive">Bewegen</button>
   </div>
 

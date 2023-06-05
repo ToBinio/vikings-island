@@ -1,15 +1,23 @@
 <div class="gameData">
   <div id="players">
     <div [class.own]="getId() == player.userId" id="player" *ngFor="let player of this.gameData?.players; index as i">
-      <div  [style.color]="player.color">NAME: {{this.users[i] | async}}</div>
+      <div [style.color]="player.color">NAME: {{this.users[i] | async}}</div>
       <div>GOLD: {{player.gold}}</div>
     </div>
   </div>
 </div>
 
 <div id="menu">
-  <app-menu *ngIf="activeShip != undefined" [playerID]="playerID" [ship]="activeShip!"></app-menu>
-  <app-island-menu *ngIf="activeIsland != undefined" [playerID]="playerID" [island]="activeIsland!"></app-island-menu>
+  <app-menu *ngIf="activeShip != undefined" [playerID]="playerID" [ship]="activeShip!"
+            [userID]="getUserFromId(activeShip?.playerId)"></app-menu>
+  <app-island-menu *ngIf="activeIsland != undefined" [playerID]="playerID" [island]="activeIsland!"
+                   [userID]="getUserFromId(activeIsland?.playerId)"></app-island-menu>
+</div>
+
+<div id="won" *ngIf="gameData?.hasWon != undefined">
+  <h1>
+    Player {{gameData?.hasWon}} has won
+  </h1>
 </div>
 
 <main>

@@ -21,8 +21,8 @@
       <div (click)="changeCreateActive()" id="newGame">Neues Spiel</div>
       <div class="eye">
         <span *ngIf="!switchOn" (click)="toggleSwitch()" matTooltip="Es werden alle Spiele angezeigt!"
-          matTooltipClass="custom-tooltip"
-          matTooltipPosition="below">👁</span>
+              matTooltipClass="custom-tooltip"
+              matTooltipPosition="below">👁</span>
         <span *ngIf="switchOn" class="active" (click)="toggleSwitch()"
               matTooltip="Es werden nur eigene Spiele angezeigt!"
               matTooltipClass="custom-tooltip"
@@ -38,7 +38,7 @@
           <h2>{{game.name}}</h2>
         </div>
         <div>
-          <div>Spieler: {{game.players}}</div>
+          <div>Spieler: <span *ngFor="let name of game.playerNames">{{name}}</span></div>
           <div>TickSpeed: {{game.tick}}</div>
         </div>
       </button>

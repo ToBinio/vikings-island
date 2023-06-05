@@ -1,4 +1,4 @@
-import {Component, ElementRef, OnInit, Output, ViewChild} from '@angular/core';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {environment} from "../../environments/environment";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {CookieService} from "ngx-cookie-service";
@@ -357,6 +357,8 @@ export class GameComponent implements OnInit {
     let x = Math.floor(worldPos.x / this.tileSize + this.gameFieldSize / 2);
     let y = Math.floor(worldPos.y / this.tileSize + this.gameFieldSize / 2);
 
+    if (x < 0 || x >= this.gameFieldSize || y < 0 || y >= this.gameFieldSize) return;
+
     console.log(x + "|" + y)
 
     if (this.gameService.driveActive) {
@@ -512,5 +514,18 @@ export class GameComponent implements OnInit {
 
   getId(): number {
     return parseInt(this.cookieService.get("id"));
+  }
+
+  getUserFromId(playerId: number | undefined): number | undefined {
+
+    if (this.gameData == undefined || playerId == undefined) return undefined
+
+    for (let player of this.gameData.players) {
+      if (player.playerId == playerId) {
+        return player.userId
+      }
+    }
+
+    return undefined;
   }
 }
