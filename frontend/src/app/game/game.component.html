@@ -14,9 +14,9 @@
                    [userID]="getUserFromId(activeIsland?.playerId)"></app-island-menu>
 </div>
 
-<div id="won" *ngIf="gameData?.hasWon != undefined">
+<div id="won" *ngIf="winner != undefined">
   <h1>
-    Player {{gameData?.hasWon}} has won
+    Player {{winner}} has won
   </h1>
 </div>
 

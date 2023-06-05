@@ -122,6 +122,13 @@ export class GameComponent implements OnInit {
         for (let player of this.gameData.players) {
           this.users.push(this.nameService.getName(player.userId!));
         }
+
+        if (this.gameData?.hasWon) {
+          this.nameService.getName(this.gameData.hasWon).then((name) => {
+            this.winner = name;
+          });
+        }
+
         this.redraw();
         this.startEvent();
       },
@@ -179,6 +186,12 @@ export class GameComponent implements OnInit {
         }
       }
 
+      if (this.gameData?.hasWon) {
+        this.nameService.getName(this.gameData.hasWon).then((name) => {
+          this.winner = name;
+        });
+      }
+
       this.redraw();
     });
   }
@@ -209,6 +222,8 @@ export class GameComponent implements OnInit {
   waters: number[][] = [];
 
   users: Promise<string>[] = [];
+
+  winner: string | undefined = undefined;
 
   activeShip!: Ship | undefined;
   activeIsland!: Island | undefined;
