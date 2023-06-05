@@ -199,6 +199,17 @@ export class GameLoopService {
                 }
             }
         }
+
+        for (let ship of gameData.ships) {
+
+            if (currentWinner == undefined) {
+                currentWinner = ship.playerId;
+            } else {
+                if (currentWinner != ship.playerId) {
+                    return undefined
+                }
+            }
+        }
         
         return currentWinner;
     }

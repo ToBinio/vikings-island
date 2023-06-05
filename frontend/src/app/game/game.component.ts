@@ -367,6 +367,9 @@ export class GameComponent implements OnInit {
   clickedCords!: { x: number, y: number } | undefined;
 
   onClick(pos: { x: number, y: number }) {
+
+    if (this.gameData?.hasWon != undefined) return;
+
     let worldPos = this.screenXToWorldX(pos);
 
     let x = Math.floor(worldPos.x / this.tileSize + this.gameFieldSize / 2);
