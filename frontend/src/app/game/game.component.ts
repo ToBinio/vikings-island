@@ -124,7 +124,7 @@ export class GameComponent implements OnInit {
         }
 
         if (this.gameData?.hasWon) {
-          this.nameService.getName(this.gameData.hasWon).then((name) => {
+          this.nameService.getName(this.getUserFromId(this.gameData.hasWon)!).then((name) => {
             this.winner = name;
           });
         }
@@ -187,7 +187,7 @@ export class GameComponent implements OnInit {
       }
 
       if (this.gameData?.hasWon) {
-        this.nameService.getName(this.gameData.hasWon).then((name) => {
+        this.nameService.getName(this.getUserFromId(this.gameData.hasWon)!).then((name) => {
           this.winner = name;
         });
       }

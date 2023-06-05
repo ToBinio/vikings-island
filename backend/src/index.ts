@@ -6,6 +6,7 @@ import {getNewGamesRouter} from "./newGame/newGame.router";
 import {getEventRouter} from "./event/event.router";
 import {getGamesRouter} from "./game/game.router";
 import {GameService} from "./game/game.service";
+import path from "path";
 
 dotenv.config();
 const PORT: number = parseInt(process.env.PORT as string, 10);
@@ -20,9 +21,7 @@ server.use(express.json())
 server.use(cors())
 
 //default response
-server.get("/", (req, res) => {
-    res.send("Hello from Server!");
-})
+server.use(express.static(path.join(__dirname, '../../frontend/dist/frontend')));
 
 //add routers
 server.use("/api/user/", getUserRouter())
