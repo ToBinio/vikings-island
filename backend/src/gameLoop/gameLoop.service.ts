@@ -106,12 +106,14 @@ export class GameLoopService {
 
                     for (let otherShip of currentGame.ships) {
                         if (otherShip.id != ship.id && otherShip.x == newX && otherShip.y == newY) {
+                            ship.ticksToMove = 0;
                             continue ships;
                         }
                     }
 
                     for (let otherIsland of currentGame.islands) {
                         if (otherIsland.x == newX && otherIsland.y == newY) {
+                            ship.ticksToMove = 0;
                             continue ships;
                         }
                     }
